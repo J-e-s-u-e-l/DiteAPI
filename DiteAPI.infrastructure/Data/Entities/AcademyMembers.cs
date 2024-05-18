@@ -1,0 +1,37 @@
+﻿using DiteAPI.Models;
+using Microsoft.AspNetCore.Identity;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using static DiteAPI.infrastructure.Infrastructures.Utilities.Enums.Enums;
+
+namespace DiteAPI.infrastructure.Data.Entities
+{
+    // Linking Entity between GenericUser and Acadmey to resolve M:M relationship
+    public class AcademyMembers : BaseEntity
+    {
+#nullable disable
+        [Required]
+        [ForeignKey(nameof(GenericUser))]
+        public Guid GenericUserId { get; set; }
+
+        [Required]
+        [ForeignKey(nameof(Academy))]
+        public Guid AcademyId { get; set; }
+
+        [Required]
+        [ForeignKey(nameof(IdentityRole))]
+        public Guid RoleId { get; set; }
+        public DateTime JoinedDate { get; set; } = DateTime.UtcNow;
+
+        // Navigation properties
+        public virtual GenericUser GenericUser { get; set; }
+        public virtual Academy Academy { get; set; }
+        public virtual ApplicationRole IdentityRole { get; set; }
+
+    }
+}
