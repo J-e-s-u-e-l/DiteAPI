@@ -1,9 +1,7 @@
-﻿using System;
+﻿using DiteAPI.infrastructure.Infrastructures.Utilities.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DiteAPI.infrastructure.Data.Entities
 {
@@ -51,9 +49,44 @@ namespace DiteAPI.infrastructure.Data.Entities
 
     public class JwtSettings
     {
-#nullable disable
         public string Secret { get; set; }
         public int ExpiryMinutes { get; set; }
         public string Issuer { get; set; }
+    }
+
+    public class OtpRequestResult
+    {
+        public Guid UserId { get; set; }
+        public string? Recipent { get; set; }   // Phone number or Email
+    }
+
+    public class SendOTPRequest
+    {
+        public Guid UserId { get; set;}
+        public string FirstName { get; set; } = default!;
+        public string Recipient { get; set; } = default!;
+        public OtpCodeLengthEnum OtpCodeLength { get; set; }
+        public OtpRecipientTypeEnum RecipientType { get; set; }
+        public OtpVerificationPurposeEnum Purpose { get; set; }
+    }
+
+    public class ValidateOtpRequest
+    {
+        public Guid UserId { get; set; }
+        public string? Code { get; set;  }
+        public OtpVerificationPurposeEnum Purpose { get; set; }
+    }
+
+    public class EmailBodyResponse
+    {
+        public string? PlainBody { get; set; }
+        public string? HtmlBody { get; set; }
+    }
+
+    public class EmailBodyRequest
+    {
+        public string? FirstName { get; set; }
+        public string? Email { get; set; }
+        public EmailTitleEnum EmailTitle{ get; set; }
     }
 }

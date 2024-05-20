@@ -96,6 +96,7 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                          IsEmailVerified = user.EmailConfirmed,
                      });
                     await transaction.CommitAsync(cancellationToken);
+                    _logger.LogInformation($"User signed in successfully at {DateTime.UtcNow}\nUser name: {user.UserName}\nUser ID: {user.Id}");
                     return new BaseResponse<LoginResponse>(true, "Sign-in Successful", loginResponse);
                  }
                  catch (Exception ex)

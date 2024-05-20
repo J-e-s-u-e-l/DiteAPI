@@ -19,10 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Application\CQRS\Commands\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\DiteAPI.infrastructure\DiteAPI.infrastructure.csproj" />
   </ItemGroup>
 

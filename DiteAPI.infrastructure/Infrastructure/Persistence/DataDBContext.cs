@@ -3,7 +3,6 @@ using DiteAPI.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using static DiteAPI.infrastructure.Infrastructure.Persistence.Extensions;
 
 namespace DiteAPI.infrastructure.Infrastructure.Persistence
 {

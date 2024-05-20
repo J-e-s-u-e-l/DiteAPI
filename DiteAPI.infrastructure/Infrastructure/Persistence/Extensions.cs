@@ -1,4 +1,5 @@
 ﻿using DiteAPI.infrastructure.Data.Entities;
+using DiteAPI.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -19,7 +20,7 @@ namespace DiteAPI.infrastructure.Infrastructure.Persistence
 
         public static void Seed(this ModelBuilder modelBuilder)
         {
-        #region User Roles
+            #region User Roles
             modelBuilder.Entity<ApplicationRole>().HasData(
                 new ApplicationRole
                 {
@@ -52,7 +53,19 @@ namespace DiteAPI.infrastructure.Infrastructure.Persistence
                     TimeUpdated = DateTime.UtcNow
                 }
                 );
-        #endregion
+            #endregion
+
+            #region Unique UserName
+            modelBuilder.Entity<GenericUser>()
+                .HasIndex(u => u.UserName)
+                .IsUnique();
+            #endregion
+            
+            #region Unique Email
+            modelBuilder.Entity<GenericUser>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
+            #endregion
         }
 
         private static readonly Func<string> GenerateCode = () =>

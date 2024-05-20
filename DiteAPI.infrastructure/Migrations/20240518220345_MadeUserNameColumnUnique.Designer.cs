@@ -4,6 +4,7 @@ using DiteAPI.infrastructure.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DiteAPI.infrastructure.Migrations
 {
     [DbContext(typeof(DataDBContext))]
-    partial class DataDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240518220345_MadeUserNameColumnUnique")]
+    partial class MadeUserNameColumnUnique
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -120,14 +123,7 @@ namespace DiteAPI.infrastructure.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<string>("signupsessionkey")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("Email")
-                        .IsUnique()
-                        .HasFilter("[Email] IS NOT NULL");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -249,33 +245,33 @@ namespace DiteAPI.infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("c5ca2e3a-38f7-41f4-9cdb-30d1ad9f192e"),
-                            ConcurrencyStamp = "B25F7EF0A77A0040BE695C146575E1AC",
+                            Id = new Guid("54936eee-ca99-4e2b-b60b-8a129d3cd298"),
+                            ConcurrencyStamp = "6BF23851C2B9B84E919F8EEE9E60B471",
                             Description = "",
                             Name = "Admin",
                             NormalizedName = "ADMIN",
-                            TimeCreated = new DateTimeOffset(new DateTime(2024, 5, 19, 13, 51, 21, 189, DateTimeKind.Unspecified).AddTicks(5621), new TimeSpan(0, 0, 0, 0, 0)),
-                            TimeUpdated = new DateTimeOffset(new DateTime(2024, 5, 19, 13, 51, 21, 189, DateTimeKind.Unspecified).AddTicks(5635), new TimeSpan(0, 0, 0, 0, 0))
+                            TimeCreated = new DateTimeOffset(new DateTime(2024, 5, 18, 22, 3, 45, 67, DateTimeKind.Unspecified).AddTicks(2204), new TimeSpan(0, 0, 0, 0, 0)),
+                            TimeUpdated = new DateTimeOffset(new DateTime(2024, 5, 18, 22, 3, 45, 67, DateTimeKind.Unspecified).AddTicks(2218), new TimeSpan(0, 0, 0, 0, 0))
                         },
                         new
                         {
-                            Id = new Guid("8522f3db-94ad-4853-a7b3-d4798faae500"),
-                            ConcurrencyStamp = "F194F8ADD583334899C9EA68E2DF8672",
+                            Id = new Guid("4269470b-eeb2-403b-9357-981c35d4b340"),
+                            ConcurrencyStamp = "08AA676F2B40764093C7A4531172790E",
                             Description = "",
                             Name = "Facilitator",
                             NormalizedName = "FACILITATOR",
-                            TimeCreated = new DateTimeOffset(new DateTime(2024, 5, 19, 13, 51, 21, 189, DateTimeKind.Unspecified).AddTicks(5657), new TimeSpan(0, 0, 0, 0, 0)),
-                            TimeUpdated = new DateTimeOffset(new DateTime(2024, 5, 19, 13, 51, 21, 189, DateTimeKind.Unspecified).AddTicks(5658), new TimeSpan(0, 0, 0, 0, 0))
+                            TimeCreated = new DateTimeOffset(new DateTime(2024, 5, 18, 22, 3, 45, 67, DateTimeKind.Unspecified).AddTicks(2242), new TimeSpan(0, 0, 0, 0, 0)),
+                            TimeUpdated = new DateTimeOffset(new DateTime(2024, 5, 18, 22, 3, 45, 67, DateTimeKind.Unspecified).AddTicks(2243), new TimeSpan(0, 0, 0, 0, 0))
                         },
                         new
                         {
-                            Id = new Guid("c45310bf-4c44-4214-894a-7c8a4a143b5f"),
-                            ConcurrencyStamp = "DA43409EB384CC4F8574E7B97A6ADCCC",
+                            Id = new Guid("74b04a72-58b5-47c5-845a-9f0b28d8bf50"),
+                            ConcurrencyStamp = "6AE95E83F536644E9C344570B2B62EFC",
                             Description = "",
                             Name = "Member",
                             NormalizedName = "MEMBER",
-                            TimeCreated = new DateTimeOffset(new DateTime(2024, 5, 19, 13, 51, 21, 189, DateTimeKind.Unspecified).AddTicks(5697), new TimeSpan(0, 0, 0, 0, 0)),
-                            TimeUpdated = new DateTimeOffset(new DateTime(2024, 5, 19, 13, 51, 21, 189, DateTimeKind.Unspecified).AddTicks(5698), new TimeSpan(0, 0, 0, 0, 0))
+                            TimeCreated = new DateTimeOffset(new DateTime(2024, 5, 18, 22, 3, 45, 67, DateTimeKind.Unspecified).AddTicks(2265), new TimeSpan(0, 0, 0, 0, 0)),
+                            TimeUpdated = new DateTimeOffset(new DateTime(2024, 5, 18, 22, 3, 45, 67, DateTimeKind.Unspecified).AddTicks(2266), new TimeSpan(0, 0, 0, 0, 0))
                         });
                 });
 

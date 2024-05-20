@@ -1,7 +1,7 @@
 ﻿using DiteAPI.infrastructure.Data.Entities;
+using DiteAPI.infrastructure.Infrastructures.Utilities.Enums;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
-using static DiteAPI.infrastructure.Infrastructures.Utilities.Enums.Enums;
 
 namespace DiteAPI.Models
 {
@@ -18,6 +18,7 @@ namespace DiteAPI.Models
         [Required]
         public Gender UserGender { get; set; }
         public bool IsActive { get; set; }
+        public string? signupsessionkey { get; set; }
         public DateTimeOffset LastLogin { get; set; } 
         public DateTimeOffset TimeCreated { get; set; }
         public DateTimeOffset TimeUpdated { get; set; }

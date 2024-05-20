@@ -3,26 +3,50 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DiteAPI.infrastructure.Infrastructures.Utilities.Enums
 {
-    public class Enums
+internal class Enums { }
+    
+    public enum Gender
     {
-        public enum Gender
-        {
-            [Description("Male")]
-            Male = 1,
-            [Description("Female")]
-            Female,
-            [Description("Other")]
-            Other
-        }
+        [Description("Male")]
+        Male = 1,
+        [Description("Female")]
+        Female,
+        [Description("Other")]
+        Other
+    }
 
-        /*public enum UserRoleInAcademy
-        {
-            [Description("Admin")]
-            Admin = 1,
-            [Description("Facilitator")]
-            Facilitator,
-            [Description("Member")]
-            Member
-        }*/
+    public enum OtpVerificationPurposeEnum
+    {
+        [Description("Email Confirmation")]
+        EmailConfirmation,
+            
+        [Description("Password Reset")]
+        PasswordReset
+    }
+
+    public enum OtpRecipientTypeEnum
+    {
+        [Description("Phone Number")]
+        PhoneNumber,
+            
+        [Description("Email Address")]
+        EmailAddress
+    }
+
+    public enum OtpCodeLengthEnum
+    {
+        [Description("Four")]
+        Four = 1,
+            
+        [Description("Six")]
+        Six
+    }
+
+    public enum EmailTitleEnum
+    {
+        EMAILVERIFICATION = 1,
+        PASSWORDRESET,
+        WELCOME
     }
 }
+
