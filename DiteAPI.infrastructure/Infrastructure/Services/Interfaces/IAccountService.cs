@@ -10,6 +10,7 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Interfaces
     public interface IAccountService
     {
         Task<BaseResponse<OtpRequestResult>> SendOTPAsync(SendOTPRequest request, CancellationToken cancellationToken);
+        Task<BaseResponse> SendWelcomeEmailAsync(SendWelcomeRequest request, string applicationName, CancellationToken cancellationToken);
         Task<BaseResponse> ValidateOTPCodeAsync(ValidateOtpRequest otpRequest, CancellationToken cancellationToken);
     }
 }

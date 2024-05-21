@@ -14,9 +14,6 @@ namespace DiteAPI.infrastructure.Data.Models
         public string? EmailSubject { get; set; }
         public string? HtmlEmailBody { get; set; }
         public string? PlainEmailBody { get; set; }
-        public List<string>? AttachmentBase64 { get; set; }
-        public List<string>? AttachmentName { get; set; }
-        public List<string>? AttachmentType { get; set; }
     }
 
     public class MultipleEmailRequest
@@ -26,5 +23,22 @@ namespace DiteAPI.infrastructure.Data.Models
         public string? EmailSubject { get; set; }
         public string? HtmlEmailBody { get; set; }
         public string? PlainEmailBody { get; set; }
+    }
+
+    public class MeetchopraValidResponse
+    {
+        public bool status { get; set; }
+    }
+
+    public class SendGridSingleEmailResponseError
+    {
+        public string? Message { get; set; }
+        public string? Field { get; set; }
+        public string? Help { get; set; }
+    }
+
+    public class SendGridErrorResponse
+    {
+        public IEnumerable<SendGridSingleEmailResponseError>? Errors { get; set; }
     }
 }

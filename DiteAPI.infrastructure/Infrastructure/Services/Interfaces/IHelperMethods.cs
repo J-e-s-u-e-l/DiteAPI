@@ -9,6 +9,6 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Interfaces
     public interface IHelperMethods
     {
         string GenerateUniqueString();
-        string GenerateRandomNumber();
+        string GenerateRandomNumber(int length);
     }
 }

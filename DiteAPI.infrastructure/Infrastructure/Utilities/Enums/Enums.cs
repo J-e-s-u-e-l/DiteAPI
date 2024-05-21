@@ -1,10 +1,31 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Reflection;
 
 namespace DiteAPI.infrastructure.Infrastructures.Utilities.Enums
 {
-internal class Enums { }
+public static class Enums 
+{
+    public static string GetDescription(this Enum GenericEnum)
+    {
+        Type genericEnumType = GenericEnum.GetType();
+        MemberInfo[] memberInfo = genericEnumType.GetMember(GenericEnum.ToString());
+
+        if ((memberInfo != null && memberInfo.Length > 0))
+        {
+            var _Attribs = memberInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
+            if ((_Attribs != null && _Attribs.Length > 0))
+            {
+                return ((DescriptionAttribute)_Attribs.ElementAt(0)).Description
+            }
+        }
+
+        return GenericEnum.ToString();
+    }
+}
+
     
+
     public enum Gender
     {
         [Description("Male")]
@@ -20,8 +41,8 @@ internal class Enums { }
         [Description("Email Confirmation")]
         EmailConfirmation,
             
-        [Description("Password Reset")]
-        PasswordReset
+        [Description("Password Reset Request")]
+        PasswordResetRequest
     }
 
     public enum OtpRecipientTypeEnum
@@ -29,8 +50,8 @@ internal class Enums { }
         [Description("Phone Number")]
         PhoneNumber,
             
-        [Description("Email Address")]
-        EmailAddress
+        [Description("Email")]
+        Email
     }
 
     public enum OtpCodeLengthEnum
@@ -47,6 +68,19 @@ internal class Enums { }
         EMAILVERIFICATION = 1,
         PASSWORDRESET,
         WELCOME
+    }
+
+    public enum OtpCodeStatusEnum
+    {
+        [Description("Sent")]
+        Sent = 1,
+        [Description("Verified")]
+        Verified,
+        [Description("Expired")]
+        Expired,
+        [Description("Invalidated")]
+        Invalidated
+
     }
 }
 

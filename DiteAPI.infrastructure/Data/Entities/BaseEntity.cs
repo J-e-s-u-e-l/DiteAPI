@@ -77,6 +77,13 @@ namespace DiteAPI.infrastructure.Data.Entities
         public OtpVerificationPurposeEnum Purpose { get; set; }
     }
 
+    public class SendWelcomeRequest
+    {
+        public Guid UserId { get; set; }
+        public string? FirstName { get; set; }
+        public string? Email { get; set; }
+    }
+
     public class EmailBodyResponse
     {
         public string? PlainBody { get; set; }
