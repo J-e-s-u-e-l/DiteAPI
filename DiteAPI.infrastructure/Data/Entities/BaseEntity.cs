@@ -44,6 +44,7 @@ namespace DiteAPI.infrastructure.Data.Entities
         {
             Status = status;
             Message = message;
+            Data = data;
         }
     }
 
@@ -52,6 +53,20 @@ namespace DiteAPI.infrastructure.Data.Entities
         public string Secret { get; set; }
         public int ExpiryMinutes { get; set; }
         public string Issuer { get; set; }
+    }
+
+    public class ContactInformation
+    {
+        public string EmailAddress { get; set; }
+        public string PhoneNumber { get; set; }
+    }
+
+    public class MailKitSection
+    {
+        public string EmailHost { get; set; }
+        public string Port { get; set; }
+        public string EmailUsername { get; set; }
+        public string EmailPassword { get; set; }
     }
 
     public class OtpRequestResult

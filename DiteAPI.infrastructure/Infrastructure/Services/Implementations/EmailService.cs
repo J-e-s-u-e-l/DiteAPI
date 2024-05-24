@@ -5,22 +5,30 @@ using DiteAPI.infrastructure.Infrastructures.Utilities.Enums;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DiteAPI.infrastructure.Infrastructure.Services.Implementations
 {
     public class EmailService : IEmailService
     {
         private readonly IWebHostEnvironment _webHostEnvironment;
-        private readonly IHttpClientFactory _httpClientFactory;
-        private readonly ISendGridService _sendGridService;
+        //private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IMailkitService _mailkitService;
         private readonly ILogger<EmailService> _logger;
 
-        public async Task<BaseResponse> CheckDisposableEmailAsync(string email)
+        public EmailService(
+            ILogger<EmailService> logger,
+            IMailkitService mailkitService,
+            IWebHostEnvironment webHostEnvironment
+            //IHttpClientFactory httpClientFactory
+            )
+        {
+            _logger = logger;
+            _webHostEnvironment = webHostEnvironment;
+            //_httpClientFactory = httpClientFactory;
+            _mailkitService = mailkitService;
+        }
+
+     /*   public async Task<BaseResponse> CheckDisposableEmailAsync(string email)
         {
             _logger.LogInformation($"EMAIL_SERVICE => Checkinig disposable email | Email - {email}");
 
@@ -57,7 +65,7 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Implementations
                 _logger.LogError($"EMAIL_SERVICE => Checking disposable email failed with exception \n{ex.StackTrace}: {ex.Message}");
                 return new BaseResponse(true, "Operation finished with exception");
             }
-        }
+        }*/
 
         public async Task<BaseResponse<EmailBodyResponse>> GetEmailBody(EmailBodyRequest request)
         {
@@ -139,7 +147,7 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Implementations
         public async Task<BaseResponse> SendEmailAsync(SingleEmailRequest request)
         {
             _logger.LogInformation($"EMAIL_SERVICE => Sending email to {request.RecipientEmailAddress}");
-            var response = await _sendGridService.SendEmailAsync(new SingleEmailRequest
+            var response = await _mailkitService.SendEmailAsync(new SingleEmailRequest
             {
                 RecipientEmailAddress = request.RecipientEmailAddress,
                 RecipientName = request.RecipientName,
@@ -154,7 +162,7 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Implementations
         public async Task<BaseResponse> SendMultipleEmailAsync(MultipleEmailRequest request)
         {
             _logger?.LogInformation($"EMAIL_SERVICE => Sending email to {string.Join(",", request.RecipientEmailAddress!)}");
-            var response = await _sendGridService.SendEmailToMultipleRecipientsAsync(new MultipleEmailRequest
+            var response = await _mailkitService.SendEmailToMultipleRecipientsAsync(new MultipleEmailRequest
             {
                 RecipientEmailAddress = request.RecipientEmailAddress,
                 RecipientName = request.RecipientName,

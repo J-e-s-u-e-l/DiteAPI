@@ -41,4 +41,12 @@ namespace DiteAPI.infrastructure.Data.Models
     {
         public IEnumerable<SendGridSingleEmailResponseError>? Errors { get; set; }
     }
+
+    public class ErrorResponse
+    {
+        public bool Status { get; set; } = false;
+        public string? Message { get; set; }
+        public List<string> Errors { get; set; } = new();
+        public string? TraceId { get; set; }
+    }
 }

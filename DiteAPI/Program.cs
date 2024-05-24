@@ -1,10 +1,11 @@
+using DiteAPI.Api.Application.CQRS.Commands;
 using DiteAPI.infrastructure.Data.Models;
 using DiteAPI.infrastructure.Infrastructure.Auth;
 using DiteAPI.infrastructure.Infrastructure.Persistence;
 using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace DiteAPI
 {
@@ -13,22 +14,18 @@ namespace DiteAPI
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json", true, true).Build();
 
-            /*var env = builder.Environment;
-            var parentPath = Directory.GetParent(env.ContentRootPath)?.FullName ?? "";
-            builder.Configuration
-                .AddJsonFile(Path.Combine(parentPath, ""))*/
-
-
-            builder.Services.RegisterPersistence(builder.Configuration);
+            builder.Services.RegisterApplication();
+            //builder.Services.RegisterCors();
+            builder.Services.RegisterPersistence(configuration);
             builder.Services.RegisterIdentity();
-            builder.Services.RegisterJwt(builder.Configuration);
-            //DataContext
-            /*builder.Services.AddDbContext<DataDBContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-*/
-            
+            builder.Services.RegisterJwt(configuration);
+            builder.Services.RegisterContactInformation(configuration);
+            builder.Services.RegisterMailKitSection(configuration);
 
+            builder.Services.AddFluentValidationAutoValidation();
+            builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             builder.Services.AddControllers().ConfigureApiBehaviorOptions(options =>
             {
                 options.InvalidModelStateResponseFactory = context =>
@@ -41,7 +38,7 @@ namespace DiteAPI
 
                     var result = new ValidationResultModel
                     {
-                        Status = false,
+                        Status = true,
                         Message = "Some Errors were found ",
                         Errors = errors
                     };
@@ -73,10 +70,8 @@ namespace DiteAPI
             }
 
             app.UseHttpsRedirection();
-
+            //app.UseCors("MyCorsPolicy");
             app.UseAuthorization();
-
-
             app.MapControllers();
 
             app.Run();

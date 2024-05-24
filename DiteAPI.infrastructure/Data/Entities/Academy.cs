@@ -1,4 +1,5 @@
 ﻿using DiteAPI.infrastructure.Infrastructure.Services.Implementations;
+using DiteAPI.infrastructure.Infrastructure.Services.Interfaces;
 using DiteAPI.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,8 +8,36 @@ namespace DiteAPI.infrastructure.Data.Entities
 {
     public class Academy : BaseEntity
     {
+        /*private Academy()
+        {
+            AcademyCode = GenerateUniqueString();
+        }
+
+        private string? GenerateUniqueString()
+        {
+
+        }
+
+        // This method is called for instantiating this class
+        public static Academy Create()
+        {
+            return new Academy();
+        }*/
+
+        private readonly IHelperMethods _helperMethods;
+
+        protected Academy() { }
+
+        public Academy(IHelperMethods helperMethods)
+        {
+            _helperMethods = helperMethods;
+            AcademyCode = _helperMethods.GenerateUniqueString();
+        }
+
+
+        // Class Properties:
         public string AcademyName { get; set; }
-        public string AcademyCode { get; set; } = new HelperMethods().GenerateUniqueString();
+        public string AcademyCode { get; private set; }
 
         public string? Description{ get; set; }
 

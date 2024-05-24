@@ -4,13 +4,9 @@ using DiteAPI.infrastructure.Infrastructure.Persistence;
 using DiteAPI.infrastructure.Infrastructure.Services.Interfaces;
 using DiteAPI.infrastructure.Infrastructures.Utilities.Enums;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.Identity.Client;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 
 namespace DiteAPI.infrastructure.Infrastructure.Services.Implementations
 {
@@ -20,7 +16,26 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Implementations
         private readonly DataDBContext _dbContext;
         private readonly IEmailService _emailService;
         private readonly IHelperMethods _helperMethods;
-        private readonly object applicationName;
+        //private readonly IOptions<ContactInformation> _contactInformation;
+        private readonly IConfiguration _configuration;
+
+
+        public AccountService(
+            ILogger<AccountService> logger,
+            DataDBContext dbContext,
+            IEmailService emailService,
+            IHelperMethods helperMethods,
+            //IOptions<ContactInformation> contactInformation
+            IConfiguration configuration
+            )
+        {
+            _logger = logger;
+            _dbContext = dbContext;
+            _emailService = emailService;
+            _helperMethods = helperMethods;
+            //_contactInformation = contactInformation;
+            _configuration = configuration;
+        }
 
         public async Task<BaseResponse<OtpRequestResult>> SendOTPAsync(SendOTPRequest request, CancellationToken cancellationToken)
         {
@@ -103,11 +118,11 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Implementations
                 Console.WriteLine(htmlEmailBody);
                 plainEmailBody = plainEmailBody?.Replace("[[RECIPIENT NAME]]", request.FirstName);
                 Console.WriteLine(plainEmailBody);
-                
-                /*htmlEmailBody = htmlEmailBody?.Replace("[[CONTACT INFORMATION]]", );
+
+                htmlEmailBody = htmlEmailBody?.Replace("[[CONTACT INFORMATION]]", _configuration["ContactInformation:EmailAddress"]);
                 Console.WriteLine(htmlEmailBody);
-                plainEmailBody = plainEmailBody?.Replace("[[CONTACT INFORMATION]]", );
-                Console.WriteLine(plainEmailBody);*/
+                plainEmailBody = plainEmailBody?.Replace("[[CONTACT INFORMATION]]", _configuration["ContactInformation:EmailAddress"]);
+                Console.WriteLine(plainEmailBody);
 
                 await _emailService.SendEmailAsync(new SingleEmailRequest
                 {
@@ -137,17 +152,16 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Implementations
             plainEmailBody = plainEmailBody?.Replace("[[RECIPIENT NAME]]", request.FirstName);
             Console.WriteLine(plainEmailBody);
 
-            /*htmlEmailBody = htmlEmailBody?.Replace("[[CONTACT INFORMATION]]", );
+            htmlEmailBody = htmlEmailBody?.Replace("[[CONTACT INFORMATION]]", _configuration["ContactInformation:EmailAddress"]);
             Console.WriteLine(htmlEmailBody);
-            plainEmailBody = plainEmailBody?.Replace("[[CONTACT INFORMATION]]", );
-            Console.WriteLine(plainEmailBody);*/
+            plainEmailBody = plainEmailBody?.Replace("[[CONTACT INFORMATION]]", _configuration["ContactInformation:EmailAddress"]);
+            Console.WriteLine(plainEmailBody);
 
             await _emailService.SendEmailAsync(new SingleEmailRequest
             {
                 RecipientEmailAddress = request.Email,
                 RecipientName = request.FirstName,
-                EmailSubject = $"Welcome to {applicationName}!",
-
+                EmailSubject = $"Welcome to {applicationName}!"
             });
 
             return new BaseResponse(true, "Sent");

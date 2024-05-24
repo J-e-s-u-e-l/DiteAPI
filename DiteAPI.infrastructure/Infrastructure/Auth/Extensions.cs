@@ -5,11 +5,6 @@ using DiteAPI.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DiteAPI.infrastructure.Infrastructure.Auth
 {
@@ -44,11 +39,11 @@ namespace DiteAPI.infrastructure.Infrastructure.Auth
         public static IServiceCollection RegisterJwt(this  IServiceCollection services, IConfiguration configuration)
         {
             var jwtSettings = new JwtSettings();
-
             configuration.Bind(nameof(JwtSettings), jwtSettings);
-
             services.AddSingleton(jwtSettings);
-            services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
+
+            //services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
+
             services.AddSingleton<IJwtHandler, JwtHandler>();
 
             return services;

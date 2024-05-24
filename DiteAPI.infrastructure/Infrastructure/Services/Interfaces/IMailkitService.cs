@@ -8,12 +8,9 @@ using System.Threading.Tasks;
 
 namespace DiteAPI.infrastructure.Infrastructure.Services.Interfaces
 {
-    public interface IEmailService
+    public interface IMailkitService
     {
-        //Task<BaseResponse> CheckDisposableEmailAsync(string email);
         Task<BaseResponse> SendEmailAsync(SingleEmailRequest request);
-        Task<BaseResponse> SendMultipleEmailAsync(MultipleEmailRequest request);
-        Task<string> GetTemplateFileAsync(string folderName, string fileName);
-        Task<BaseResponse<EmailBodyResponse>> GetEmailBody(EmailBodyRequest request);
+        Task<BaseResponse> SendEmailToMultipleRecipientsAsync(MultipleEmailRequest request);
     }
 }

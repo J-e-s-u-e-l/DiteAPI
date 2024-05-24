@@ -7,15 +7,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using SendGrid;
-using SendGrid.Helpers.Errors.Model;
 using SendGrid.Helpers.Mail;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
-using System.Threading.Tasks;
 using SendGridErrorResponse = DiteAPI.infrastructure.Data.Models.SendGridErrorResponse;
 
 namespace DiteAPI.infrastructure.Infrastructure.Services.Implementations
@@ -49,6 +44,7 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Implementations
                 var response = await client.SendEmailAsync(msg).ConfigureAwait(false);
 
                 if (response?.StatusCode == HttpStatusCode.Accepted) return new BaseResponse(true, "Email Sent Successfully");
+
                 string errorMessage = "";
                 if (response != null)
                 {

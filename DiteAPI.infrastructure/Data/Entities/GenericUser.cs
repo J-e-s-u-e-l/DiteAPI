@@ -18,7 +18,7 @@ namespace DiteAPI.Models
         [Required]
         public Gender UserGender { get; set; }
         public bool IsActive { get; set; }
-        public string? signupsessionkey { get; set; }
+        public string Signupsessionkey { get; set; }
         public DateTimeOffset LastLogin { get; set; } 
         public DateTimeOffset TimeCreated { get; set; }
         public DateTimeOffset TimeUpdated { get; set; }
