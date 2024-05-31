@@ -4,6 +4,7 @@ using DiteAPI.infrastructure.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DiteAPI.infrastructure.Migrations
 {
     [DbContext(typeof(DataDBContext))]
-    partial class DataDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240525023428_Added_VerificationLinks")]
+    partial class Added_VerificationLinks
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -250,33 +253,33 @@ namespace DiteAPI.infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("abf5d03a-d4f2-4f50-9888-bdeff993368d"),
-                            ConcurrencyStamp = "6B734209E75C8D488B3D81C2FAB5B25A",
+                            Id = new Guid("cbc6664f-037f-4b21-b3d8-af7be93c13a2"),
+                            ConcurrencyStamp = "0B83B15A5E86F649A71717321BE596CE",
                             Description = "",
                             Name = "Admin",
                             NormalizedName = "ADMIN",
-                            TimeCreated = new DateTimeOffset(new DateTime(2024, 5, 30, 14, 57, 54, 976, DateTimeKind.Unspecified).AddTicks(2758), new TimeSpan(0, 0, 0, 0, 0)),
-                            TimeUpdated = new DateTimeOffset(new DateTime(2024, 5, 30, 14, 57, 54, 976, DateTimeKind.Unspecified).AddTicks(2772), new TimeSpan(0, 0, 0, 0, 0))
+                            TimeCreated = new DateTimeOffset(new DateTime(2024, 5, 25, 2, 34, 27, 227, DateTimeKind.Unspecified).AddTicks(9898), new TimeSpan(0, 0, 0, 0, 0)),
+                            TimeUpdated = new DateTimeOffset(new DateTime(2024, 5, 25, 2, 34, 27, 227, DateTimeKind.Unspecified).AddTicks(9917), new TimeSpan(0, 0, 0, 0, 0))
                         },
                         new
                         {
-                            Id = new Guid("c86458cd-8053-4999-afd6-69b8f17e7205"),
-                            ConcurrencyStamp = "5B2EDE6B665317419DB7BC7E6A7D422E",
+                            Id = new Guid("c051e964-649c-44c6-bda2-94f05fea37d3"),
+                            ConcurrencyStamp = "E212BCD46B5B7646AB865E4E5254325E",
                             Description = "",
                             Name = "Facilitator",
                             NormalizedName = "FACILITATOR",
-                            TimeCreated = new DateTimeOffset(new DateTime(2024, 5, 30, 14, 57, 54, 976, DateTimeKind.Unspecified).AddTicks(2807), new TimeSpan(0, 0, 0, 0, 0)),
-                            TimeUpdated = new DateTimeOffset(new DateTime(2024, 5, 30, 14, 57, 54, 976, DateTimeKind.Unspecified).AddTicks(2809), new TimeSpan(0, 0, 0, 0, 0))
+                            TimeCreated = new DateTimeOffset(new DateTime(2024, 5, 25, 2, 34, 27, 228, DateTimeKind.Unspecified).AddTicks(38), new TimeSpan(0, 0, 0, 0, 0)),
+                            TimeUpdated = new DateTimeOffset(new DateTime(2024, 5, 25, 2, 34, 27, 228, DateTimeKind.Unspecified).AddTicks(39), new TimeSpan(0, 0, 0, 0, 0))
                         },
                         new
                         {
-                            Id = new Guid("1b3fd20b-1a8d-4bdd-9227-801b319b1256"),
-                            ConcurrencyStamp = "9BFB0FDFAADE7644B954A552D21A5AA0",
+                            Id = new Guid("0b0c9cd8-e062-4332-973f-808e70019b62"),
+                            ConcurrencyStamp = "C3513BD06C2F8B4483D390DF20BFB00F",
                             Description = "",
                             Name = "Member",
                             NormalizedName = "MEMBER",
-                            TimeCreated = new DateTimeOffset(new DateTime(2024, 5, 30, 14, 57, 54, 976, DateTimeKind.Unspecified).AddTicks(2841), new TimeSpan(0, 0, 0, 0, 0)),
-                            TimeUpdated = new DateTimeOffset(new DateTime(2024, 5, 30, 14, 57, 54, 976, DateTimeKind.Unspecified).AddTicks(2843), new TimeSpan(0, 0, 0, 0, 0))
+                            TimeCreated = new DateTimeOffset(new DateTime(2024, 5, 25, 2, 34, 27, 228, DateTimeKind.Unspecified).AddTicks(71), new TimeSpan(0, 0, 0, 0, 0)),
+                            TimeUpdated = new DateTimeOffset(new DateTime(2024, 5, 25, 2, 34, 27, 228, DateTimeKind.Unspecified).AddTicks(73), new TimeSpan(0, 0, 0, 0, 0))
                         });
                 });
 
@@ -343,12 +346,10 @@ namespace DiteAPI.infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("OtpVerifications");
                 });
 
-            modelBuilder.Entity("DiteAPI.infrastructure.Data.Entities.VerificationTokens", b =>
+            modelBuilder.Entity("DiteAPI.infrastructure.Data.Entities.VerificationLinks", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -384,7 +385,7 @@ namespace DiteAPI.infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("VerificationTokens");
+                    b.ToTable("VerificationLinks");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -543,26 +544,15 @@ namespace DiteAPI.infrastructure.Migrations
                     b.Navigation("Academy");
                 });
 
-            modelBuilder.Entity("DiteAPI.infrastructure.Data.Entities.OtpVerification", b =>
+            modelBuilder.Entity("DiteAPI.infrastructure.Data.Entities.VerificationLinks", b =>
                 {
-                    b.HasOne("DiteAPI.Models.GenericUser", "LinkedUser")
+                    b.HasOne("DiteAPI.Models.GenericUser", "GenericUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("LinkedUser");
-                });
-
-            modelBuilder.Entity("DiteAPI.infrastructure.Data.Entities.VerificationTokens", b =>
-                {
-                    b.HasOne("DiteAPI.Models.GenericUser", "LinkedUser")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("LinkedUser");
+                    b.Navigation("GenericUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>

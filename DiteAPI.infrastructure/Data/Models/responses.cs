@@ -21,8 +21,6 @@ namespace DiteAPI.infrastructure.Data.Models
         public string Firstname { get; set; }
         public string Lastname { get; set; }
         public string Middlename { get; set; }
-        public long RoleId { get; set; }
-        public string RoleText { get; set; }
         public string Token { get; set; }
         public bool IsEmailVerified { get; set; }
         public long Expires { get; set; }

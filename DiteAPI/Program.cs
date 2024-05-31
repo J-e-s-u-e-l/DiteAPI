@@ -14,15 +14,17 @@ namespace DiteAPI
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json", true, true).Build();
+            builder.Configuration.AddJsonFile("appsettings.json", true);
+            //builder.Configuration.AddJsonFile("appsettings.json", true, true).Build();
 
             builder.Services.RegisterApplication();
             //builder.Services.RegisterCors();
-            builder.Services.RegisterPersistence(configuration);
+            builder.Services.RegisterPersistence(builder.Configuration);
             builder.Services.RegisterIdentity();
-            builder.Services.RegisterJwt(configuration);
-            builder.Services.RegisterContactInformation(configuration);
-            builder.Services.RegisterMailKitSection(configuration);
+            builder.Services.RegisterJwt(builder.Configuration);
+            builder.Services.RegisterContactInformation(builder.Configuration);
+            builder.Services.RegisterMailKitSection(builder.Configuration);
+            builder.Services.RegisterEmailVerification(builder.Configuration);
 
             builder.Services.AddFluentValidationAutoValidation();
             builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());

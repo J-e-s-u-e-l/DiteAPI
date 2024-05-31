@@ -11,19 +11,19 @@ using Microsoft.Extensions.Options;
 
 namespace DiteAPI.Api.Application.CQRS.Handlers
 {
-    public class RegistrationHandler : IRequestHandler<Registration, BaseResponse<string>>
+    public class RegistrationCommandHandler : IRequestHandler<RegistrationCommand, BaseResponse>
     {
         private readonly DataDBContext _dbContext;
         private UserManager<GenericUser> _userManager;
-        private readonly ILogger<Registration> _logger;
+        private readonly ILogger<RegistrationCommand> _logger;
         private readonly IAccountService _accountService;
         private readonly IEmailService _emailService;
         private readonly IConfiguration _configuration;
 
-        public RegistrationHandler(
+        public RegistrationCommandHandler(
             DataDBContext dbContext,
             UserManager<GenericUser> userManager,
-            ILogger<Registration> logger,
+            ILogger<RegistrationCommand> logger,
             IAccountService accountService,
             IEmailService emailService,
             IConfiguration configuration
@@ -37,7 +37,7 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
             _configuration = configuration;
         }
 
-        public async Task<BaseResponse<string>> Handle(Registration request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(RegistrationCommand request, CancellationToken cancellationToken)
         {
             try
             {
@@ -59,46 +59,57 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                         UserGender = request.UserGender,
                         UserName = request.UserName,
                         NormalizedUserName = request.UserName!.ToUpperInvariant(),
+                        PhoneNumber = request.PhoneNumber,
                         TimeCreated = DateTime.UtcNow,
                         TimeUpdated = DateTime.UtcNow,
                         Signupsessionkey = Guid.NewGuid().ToString(),
+                        EmailConfirmed = false
                     };
-
                     await _dbContext.AddAsync(user, cancellationToken);
                     await _dbContext.SaveChangesAsync(cancellationToken);
 
-                    // Send Email Verification Code to the New User email
-                    var sendEmail = await _accountService.SendOTPAsync(new SendOTPRequest
-                    {
-                        FirstName = request.FirstName,
-                        OtpCodeLength = OtpCodeLengthEnum.Six,
-                        Purpose = OtpVerificationPurposeEnum.EmailConfirmation,
-                        Recipient = request.Email,
-                        RecipientType = OtpRecipientTypeEnum.Email,
-                        UserId = user.Id
-                    }, cancellationToken);
-                    if (!sendEmail.Status)
-                        return new BaseResponse<string>(false, sendEmail.Message!);
-
-                    // Persist password after user email address has been verified
+                    // Persist password
                     var addPassword = await _userManager.AddPasswordAsync(user, request.Password!);
                     if (!addPassword.Succeeded)
-                        return new BaseResponse<string>(false, $"We encountered an issue while processing your registration request. You may try to register again, or for further assistance, please contact our Support Team at {_configuration["ContactInformation:EmailAddress"]}");
+                    {
+                        await transaction.RollbackAsync(cancellationToken);
+                        return new BaseResponse(false, $"We encountered an issue while processing your registration request. You may try to register again, or for further assistance, please contact our Support Team at {_configuration["ContactInformation:EmailAddress"]}");
+                    }
+
+                    // Send Verification Email to the New User email
+                    var sendEmail = await _accountService.SendOTPAsync(new SendOTPToUser
+                    {
+                        UserId = user.Id,
+                        FirstName = request.FirstName,
+                        Recipient = request.Email,
+                        Purpose = VerificationPurposeEnum.EmailConfirmation,
+                        OtpCodeLength = OtpCodeLengthEnum.Six,
+                        RecipientType = OtpRecipientTypeEnum.Email
+
+                    }, cancellationToken);
+                    if (!sendEmail.Status)
+                    {
+                        await transaction.RollbackAsync(cancellationToken);
+                        return new BaseResponse(false, sendEmail.Message!);
+
+                    }
 
                     await _dbContext.SaveChangesAsync(cancellationToken);
-                    return new BaseResponse<string>(true, "Your registration has been completed successfully. Please verify your email address to activate your account.", user.Signupsessionkey);
+                    await transaction.CommitAsync(cancellationToken);
+
+                    return new BaseResponse(true, "Your registration has been completed successfully. An email verification has been sent to you, please verify your email address to activate your account.");
                 }
                 catch(Exception ex)
                 {
                     _logger.LogError($"REGISTRATION_HANDLER => Something went wrong\n{ex.StackTrace}: {ex.Message}");
                     await transaction.RollbackAsync(cancellationToken).ConfigureAwait(false);
-                    return new BaseResponse<string>(false, $"We encountered an issue while processing your registration request. You may try to register again, or for further assistance, please contact our Support Team at {_configuration["ContactInformation:EmailAddress"]}");
+                    return new BaseResponse(false, $"We encountered an issue while processing your registration request. You may try to register again, or for further assistance, please contact our Support Team at {_configuration["ContactInformation:EmailAddress"]}");
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError($"REGISTRATION_HANDLER => Something went wrong\n{ex.StackTrace}: {ex.Message}");
-                return new BaseResponse<string>(false, $"We encountered an issue while processing your registration request. You may try to register again, or for further assistance, please contact our Support Team at {_configuration["ContactInformation:EmailAddress"]}");
+                return new BaseResponse(false, $"We encountered an issue while processing your registration request. You may try to register again, or for further assistance, please contact our Support Team at {_configuration["ContactInformation:EmailAddress"]}");
             }
         }
     }

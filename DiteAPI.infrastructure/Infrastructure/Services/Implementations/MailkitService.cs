@@ -22,11 +22,6 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Implementations
 
         public async Task<BaseResponse> SendEmailAsync(SingleEmailRequest request)
         {
-            return new BaseResponse(true, "Email sent successfully");
-        }
-
-        /*        public async Task<BaseResponse> SendEmailAsync(SingleEmailRequest request)
-       {
            try
            {
                _logger?.LogInformation($"MAILKIT_SEND_MAIL_SERVICE => Sending email attempt with mailkit | Email - {request.RecipientEmailAddress}");
@@ -56,7 +51,7 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Implementations
                _logger?.LogError($"MAILKIT_SEND_MAIL_SERVICE => Application ran into an error while trying to send email\n {ex.StackTrace}: {ex.Message}");
                return new BaseResponse(false, "Application ran into an error while trying to send email");
            }
-       }*/
+        }
 
         public Task<BaseResponse> SendEmailToMultipleRecipientsAsync(MultipleEmailRequest request)
         {

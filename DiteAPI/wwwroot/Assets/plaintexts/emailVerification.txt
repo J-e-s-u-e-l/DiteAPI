@@ -1,8 +1,10 @@
 Dear [[RECIPIENT NAME]],
 
-Thank you for registering with us. Your confirmation code is [[CODE]]
+Thank you for registering with us. Your confirmation code is [[CODE]].
 
-Please retain this code for your records. If you have any questions, contact us at [[CONTACT INFORMATION]]
- 
-Best regards, 
-Dite Team.
+If you did not create an account with us, please ignore this email.
+
+For any inquiries, please contact us at [[CONTACT INFORMATION]].
+
+Best regards,
+DITE Team

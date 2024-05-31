@@ -9,17 +9,17 @@ using System.Threading.Tasks;
 
 namespace DiteAPI.infrastructure.Data.Entities
 {
-    public class OtpVerification : BaseEntity
+    public class VerificationTokens : BaseEntity
     {
         [ForeignKey(nameof(LinkedUser))]
         public Guid UserId { get; set; }
+        public string Token { get; set; } = default!;
         public string Recipient { get; set; }
-        public OtpRecipientTypeEnum RecipientType { get; set; }
-        public string Code { get; set; } = default!;
-        public OtpTokenStatusEnum Status { get; set; }
         public VerificationPurposeEnum Purpose { get; set; }
         public DateTimeOffset ConfirmedOn { get; set; }
+        public OtpTokenStatusEnum Status { get; set; }
 
         public virtual GenericUser LinkedUser { get; set; }
+
     }
 }

@@ -16,6 +16,7 @@ namespace DiteAPI.infrastructure.Infrastructure.Persistence
         public DbSet<AcademyMembers> AcademyMembers { get; set; }
         public DbSet<Course> Course { get; set; }
         public DbSet<OtpVerification> OtpVerifications { get; set; }
+        public DbSet<VerificationTokens> VerificationTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelbuilder)
         {

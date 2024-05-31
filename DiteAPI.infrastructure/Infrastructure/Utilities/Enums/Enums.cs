@@ -4,27 +4,6 @@ using System.Reflection;
 
 namespace DiteAPI.infrastructure.Infrastructures.Utilities.Enums
 {
-public static class Enums 
-{
-    public static string GetDescription(this Enum GenericEnum)
-    {
-        Type genericEnumType = GenericEnum.GetType();
-        MemberInfo[] memberInfo = genericEnumType.GetMember(GenericEnum.ToString());
-
-        if ((memberInfo != null && memberInfo.Length > 0))
-        {
-            var _Attribs = memberInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
-            if ((_Attribs != null && _Attribs.Length > 0))
-            {
-                    return ((DescriptionAttribute)_Attribs.ElementAt(0)).Description;
-            }
-        }
-
-        return GenericEnum.ToString();
-    }
-}
-
-    
 
     public enum Gender
     {
@@ -36,22 +15,22 @@ public static class Enums
         Other
     }
 
-    public enum OtpVerificationPurposeEnum
+    public enum VerificationPurposeEnum
     {
         [Description("Email Confirmation")]
-        EmailConfirmation,
+        EmailConfirmation = 1,
             
-        [Description("Password Reset Request")]
-        PasswordResetRequest
+        [Description("Password Reset")]
+        PasswordReset
     }
 
     public enum OtpRecipientTypeEnum
-    {
-        [Description("Phone Number")]
-        PhoneNumber,
-            
+    {    
         [Description("Email")]
-        Email
+        Email = 1,
+        [Description("Phone Number")]
+        PhoneNumber
+        
     }
 
     public enum OtpCodeLengthEnum
@@ -70,7 +49,7 @@ public static class Enums
         WELCOME
     }
 
-    public enum OtpCodeStatusEnum
+    public enum OtpTokenStatusEnum
     {
         [Description("Sent")]
         Sent = 1,
@@ -80,7 +59,27 @@ public static class Enums
         Expired,
         [Description("Invalidated")]
         Invalidated
+    }
 
+    public static class Enums 
+    {
+        public static string GetDescription(this Enum GenericEnum)
+        {
+            Type genericEnumType = GenericEnum.GetType();
+            MemberInfo[] memberInfo = genericEnumType.GetMember(GenericEnum.ToString());
+
+            if ((memberInfo != null && memberInfo.Length > 0))
+            {
+                var _Attribs = memberInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
+                if ((_Attribs != null && _Attribs.Length > 0))
+                {
+                        return ((DescriptionAttribute)_Attribs.ElementAt(0)).Description;
+                }
+            }
+
+            return GenericEnum.ToString();
+        }
     }
 }
+
 

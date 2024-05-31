@@ -28,7 +28,7 @@ namespace DiteAPI.infrastructure.Infrastructure.Auth.JWT
         {
             _options = options.Value;
             _configuration = configuration;
-            _issuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_options.Secret));
+            _issuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration["JwtSettings:Secret"]!));
             _signingCredentials = new SigningCredentials(_issuerSigningKey, SecurityAlgorithms.HmacSha256);
             _jwtHeader = new JwtHeader(_signingCredentials);
             _configuration = configuration;

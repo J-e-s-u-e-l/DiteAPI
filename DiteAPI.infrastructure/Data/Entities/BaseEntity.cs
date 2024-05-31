@@ -67,29 +67,47 @@ namespace DiteAPI.infrastructure.Data.Entities
         public string Port { get; set; }
         public string EmailUsername { get; set; }
         public string EmailPassword { get; set; }
-    }
 
+    }
+    public class Verification
+    {
+        public string VerificationLinkTemplate { get; set; }
+    }
     public class OtpRequestResult
     {
         public Guid UserId { get; set; }
         public string? Recipent { get; set; }   // Phone number or Email
     }
 
-    public class SendOTPRequest
+    public class VerificationLinkRequestResult
+    {
+        public Guid UserId { get; set; }
+        public string? Recipent { get; set; }   // Phone number or Email
+    }
+
+    public class SendOTPToUser
     {
         public Guid UserId { get; set;}
         public string FirstName { get; set; } = default!;
         public string Recipient { get; set; } = default!;
         public OtpCodeLengthEnum OtpCodeLength { get; set; }
         public OtpRecipientTypeEnum RecipientType { get; set; }
-        public OtpVerificationPurposeEnum Purpose { get; set; }
+        public VerificationPurposeEnum Purpose { get; set; }
     }
 
-    public class ValidateOtpRequest
+    public class SendVerificationLinkToUser
+    {
+        public Guid UserId { get; set; }
+        public string FirstName { get; set; } = default!;
+        public string Recipient { get; set; } = default!;
+        public VerificationPurposeEnum VerificationPurpose { get; set; }
+    }
+
+    public class ValidateCodeRequest
     {
         public Guid UserId { get; set; }
         public string? Code { get; set;  }
-        public OtpVerificationPurposeEnum Purpose { get; set; }
+        public VerificationPurposeEnum Purpose { get; set; }
     }
 
     public class SendWelcomeRequest

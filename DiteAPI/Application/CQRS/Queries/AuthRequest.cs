@@ -16,8 +16,8 @@ namespace DiteAPI.Api.Application.CQRS.Queries
     {
         public LoginRequestValidator()
         {
-            RuleFor(x => x.Email).NotNull().NotEmpty().EmailAddress();
-            RuleFor(x => x.Password).NotNull().NotEmpty();
+            RuleFor(x => x.Email).NotNull().NotEmpty().WithMessage("Email is required").EmailAddress();
+            RuleFor(x => x.Password).NotNull().NotEmpty().WithMessage("Password is required");
         }
     }
 

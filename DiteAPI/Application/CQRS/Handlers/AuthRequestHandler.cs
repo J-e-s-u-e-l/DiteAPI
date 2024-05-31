@@ -10,18 +10,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DiteAPI.Api.Application.CQRS.Handlers
 {
-    public class AuthHandler : IRequestHandler<AuthRequest, BaseResponse<LoginResponse>>
+    public class AuthRequestHandler : IRequestHandler<AuthRequest, BaseResponse<LoginResponse>>
     {
         private readonly DataDBContext _dbContext;
         private SignInManager<GenericUser> _signInManager;
         private UserManager<GenericUser> _userManager;
-        private readonly ILogger<AuthHandler> _logger;
+        private readonly ILogger<AuthRequestHandler> _logger;
         private readonly IJwtHandler _jwtHandler;
 
-        public AuthHandler(SignInManager<GenericUser> signInManager,
+        public AuthRequestHandler(SignInManager<GenericUser> signInManager,
             UserManager<GenericUser> userManager,
             DataDBContext dBContext,
-            ILogger<AuthHandler> logger,
+            ILogger<AuthRequestHandler> logger,
             IJwtHandler jwtHandler)
         {
             _signInManager = signInManager;
@@ -35,7 +35,7 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
          {
              try
              {
-                 var user = await _dbContext.GenericUser.Where(x => x.Email.ToLower() == request.Email.ToLower()).FirstOrDefaultAsync(cancellationToken);
+                 var user = await _dbContext.GenericUser.Where(x => x.Email!.ToLower() == request.Email.ToLower()).FirstOrDefaultAsync(cancellationToken);
 
                  if (user == null)
                  {

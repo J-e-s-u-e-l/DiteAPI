@@ -70,6 +70,15 @@ namespace DiteAPI.infrastructure.Infrastructure.Persistence
             //services.Configure<MailKitSection>(configuration.GetSection("MailKitSection"));
             return services;
         }
+        
+        public static IServiceCollection RegisterEmailVerification(this IServiceCollection services, IConfiguration configuration)
+        {
+            var verification = new Verification();
+            configuration.Bind("Verification", verification);
+            services.AddSingleton(verification);
+
+            return services;
+        }
 
         public static void Seed(this ModelBuilder modelBuilder)
         {

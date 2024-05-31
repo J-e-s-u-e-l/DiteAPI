@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registration Confirmation</title>
+    <title>Email Verification</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -11,6 +11,7 @@
             padding: 0;
             background-color: #f4f4f4;
         }
+
         .container {
             width: 100%;
             max-width: 600px;
@@ -20,59 +21,80 @@
             overflow: hidden;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
+
         .header {
             background-color: #1b485e;
             color: #ffffff;
             padding: 20px;
             text-align: center;
         }
-        .header h2 {
-            margin: 0;
-            font-size: 24px;
-        }
+
+            .header h2 {
+                margin: 0;
+                font-size: 24px;
+            }
+
         .content {
             padding: 20px;
             color: #122740;
         }
-        .content p {
-            margin: 10px 0;
-            font-size: 16px;
-            line-height: 1.5;
-        }
-        .content strong {
-            color: #568b87;
-        }
+
+            .content p {
+                margin: 10px 0;
+                font-size: 16px;
+                line-height: 1.5;
+            }
+
+            .content strong {
+                color: #568b87;
+            }
+
+            .content .btn {
+                display: inline-block;
+                background-color: #007bff;
+                color: #ffffff;
+                text-decoration: none;
+                padding: 10px 20px;
+                border-radius: 5px;
+                font-size: 16px;
+                margin-top: 20px;
+            }
+
         .footer {
             background-color: #326b77;
             color: #ffffff;
             padding: 20px;
             text-align: center;
         }
-        .footer p {
-            margin: 0;
-            font-size: 14px;
-        }
+
+            .footer p {
+                margin: 0;
+                font-size: 14px;
+            }
+
         a {
             color: #80ae9a;
             text-decoration: none;
         }
-        a:hover {
-            text-decoration: underline;
-        }
+
+            a:hover {
+                text-decoration: underline;
+            }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h2>Dite Team</h2>
+            <h2>DITE Team</h2>
         </div>
         <div class="content">
             <p>Dear [[RECIPIENT NAME]],</p>
             <p>Thank you for registering with us. Your confirmation code is <strong>[[CODE]]</strong></p>
-            <p>Please retain this code for your records. If you have any questions, contact us at <a href="mailto:[[CONTACT INFORMATION]]">[[CONTACT INFORMATION]]</a></p>
+            <p>If you did not create an account with us, please ignore this email.</p>
+            <p>For any inquiries, please contact us at <a href="mailto:[[CONTACT INFORMATION]]">[[CONTACT INFORMATION]]</a></p>
         </div>
         <div class="footer">
-            <p>Best regards,<br>Dite Team</p>
+            <p>Best regards,<br>DITE Team</p>
         </div>
     </div>
 </body>

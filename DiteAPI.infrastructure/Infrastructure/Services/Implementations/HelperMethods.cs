@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,6 +16,22 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Implementations
         public HelperMethods(ILogger<HelperMethods> logger)
         {
             _logger = logger;
+        }
+
+        public string GenerateVerificationToken(int tokenSize)
+        {
+            _logger.LogInformation($"HELPER_METHODS Generate_Verification_Token => Process started");
+
+            byte[] takenByte = new byte[tokenSize];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(takenByte);
+            }
+
+            _logger.LogInformation($"HELPER_METHODS Generate_Verification_Token => Process completed");
+
+            // Convert token bytes to base64 string (URL-safe)
+            return Convert.ToBase64String(takenByte).Trim('=');
         }
         public string GenerateUniqueString()
         {

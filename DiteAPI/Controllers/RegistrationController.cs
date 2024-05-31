@@ -1,5 +1,4 @@
 ﻿using DiteAPI.Api.Application.CQRS.Commands;
-using DiteAPI.Api.Application.CQRS.Queries;
 using DiteAPI.infrastructure.Data.Entities;
 using DiteAPI.infrastructure.Infrastructure.Persistence;
 using MediatR;
@@ -16,15 +15,13 @@ namespace DiteAPI.Api.Controllers
     {
         private readonly IMediator _mediator;
         private readonly ILogger<RegistrationController> _logger;
-        private readonly IOptions<ContactInformation> _contactOptions;
-        private readonly DataDBContext _dbContext;
+        private readonly IConfiguration _configuration;
 
-        public RegistrationController(IMediator mediator, ILogger<RegistrationController> logger, IOptions<ContactInformation> contactOptions, DataDBContext dbContext)
+        public RegistrationController(IMediator mediator, ILogger<RegistrationController> logger, IConfiguration configuration, DataDBContext dbContext)
         {
             _mediator = mediator;
             _logger = logger;
-            _contactOptions = contactOptions;
-            _dbContext = dbContext;
+            _configuration = configuration;
         }
 
       /*  /// <summary>
@@ -38,10 +35,10 @@ namespace DiteAPI.Api.Controllers
         [ProducesResponseType(typeof(BaseResponse), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]*/
 
-        [HttpPost("RegisterNewUser")]
-        public async Task<IActionResult> RegisterNewUser([FromForm] Registration request)
+        [HttpPost("user")]
+        public async Task<IActionResult> RegisterNewUser([FromForm] RegistrationCommand request)
         {
-            BaseResponse<string> response;
+            BaseResponse response;
             try
             {
                 response = await _mediator.Send(request);
@@ -51,29 +48,10 @@ namespace DiteAPI.Api.Controllers
             catch(Exception ex)
             {
                 _logger.LogInformation($"REGISTRATION_CONTOLLER => Something went wrong\n {ex.StackTrace}: {ex.Message}");
-                return StatusCode(500, $"We encountered an issue while processing your registration request. You may try to register again, or for further assistance, please contact our Support Team at {_contactOptions.Value.EmailAddress}");
-            }
-
-            return Ok(response);
-        }
-
-        [HttpPatch("VerifyEmail")]
-        public async Task<IActionResult> VerifyAccountEmail([FromBody] VerifyAccountOtpRequest request)
-        {
-            BaseResponse response;
-            try
-            {
-                response = await _mediator.Send(request);
-                if (!response.Status)
-                    return BadRequest(response);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogInformation($"REGISTRATION_CONTOLLER => Something went wrong\n {ex.StackTrace}: {ex.Message}");
-                return StatusCode(500, $"We encountered an issue while processing your registration request. You may try to register again, or for further assistance, please contact our Support Team at {_contactOptions.Value.EmailAddress}");
+                return StatusCode(500, $"We encountered an issue while processing your registration request. You may try to register again, or for further assistance, please contact our Support Team at {_configuration["ContactInformation:EmailAddress"]}");
             }
 
             return Ok(response);
         }
     }
-}
+} 

@@ -16,7 +16,6 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Implementations
         private readonly DataDBContext _dbContext;
         private readonly IEmailService _emailService;
         private readonly IHelperMethods _helperMethods;
-        //private readonly IOptions<ContactInformation> _contactInformation;
         private readonly IConfiguration _configuration;
 
 
@@ -25,7 +24,6 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Implementations
             DataDBContext dbContext,
             IEmailService emailService,
             IHelperMethods helperMethods,
-            //IOptions<ContactInformation> contactInformation
             IConfiguration configuration
             )
         {
@@ -33,19 +31,19 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Implementations
             _dbContext = dbContext;
             _emailService = emailService;
             _helperMethods = helperMethods;
-            //_contactInformation = contactInformation;
             _configuration = configuration;
         }
 
-        public async Task<BaseResponse<OtpRequestResult>> SendOTPAsync(SendOTPRequest request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<OtpRequestResult>> SendOTPAsync(SendOTPToUser request, CancellationToken cancellationToken)
         {
             var code = request.OtpCodeLength == OtpCodeLengthEnum.Four ? _helperMethods.GenerateRandomNumber(4) : _helperMethods.GenerateRandomNumber(6);
             _logger?.LogInformation($"EmailService > Sending OTP to {request.Recipient}");
 
-            /* Invalidate existing sent OTPs */
-            await _dbContext.OtpVerifications.Where(x => x.UserId.Equals(request.UserId) && x.Purpose == request.Purpose && x.Status == OtpCodeStatusEnum.Sent)
+
+            //Invalidate existing sent OTPs
+            await _dbContext.OtpVerifications.Where(x => x.UserId.Equals(request.UserId) && x.Purpose == request.Purpose && x.Status == OtpTokenStatusEnum.Sent)
                 .ExecuteUpdateAsync(setter => setter
-                .SetProperty(column => column.Status, OtpCodeStatusEnum.Invalidated)
+                .SetProperty(column => column.Status, OtpTokenStatusEnum.Invalidated)
                 .SetProperty(column => column.TimeUpdated, DateTimeOffset.UtcNow), cancellationToken);
 
             // Persist new OTP
@@ -57,15 +55,15 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Implementations
                 RecipientType = request.RecipientType,
                 TimeCreated = DateTimeOffset.UtcNow,
                 TimeUpdated = DateTimeOffset.UtcNow,
-                Status = OtpCodeStatusEnum.Sent,
+                Status = OtpTokenStatusEnum.Sent,
                 Purpose = request.Purpose
             };
-            await _dbContext.AddAsync(otpVerification, cancellationToken);
-            await _dbContext.SaveChangesAsync(cancellationToken);
+                await _dbContext.AddAsync(otpVerification, cancellationToken);
+                await _dbContext.SaveChangesAsync(cancellationToken);
 
             if (request.RecipientType == OtpRecipientTypeEnum.Email)
             {
-                // Generate email body
+                // Generate email body and send email to user
                 await SendEmailOtpAsync(request, code, "Dite" ?? "");
             }
 
@@ -73,10 +71,9 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Implementations
             return new BaseResponse<OtpRequestResult>(true, "OTP sent successfully", new OtpRequestResult
             {
                 Recipent = request.Recipient
-            }); 
+            });
         }
-
-        private async Task SendEmailOtpAsync(SendOTPRequest request, string code, string applicationName)
+        private async Task SendEmailOtpAsync(SendOTPToUser request, string code, string applicationName)
         {
             var emailBodyRequest = new EmailBodyRequest { Email = request.Recipient, FirstName = request.FirstName };
 
@@ -84,15 +81,15 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Implementations
 
             switch (request.Purpose)
             {
-                case OtpVerificationPurposeEnum.EmailConfirmation:
+                case VerificationPurposeEnum.EmailConfirmation:
                     emailBodyRequest.EmailTitle = EmailTitleEnum.EMAILVERIFICATION;
                     emailBodyResponse = await _emailService.GetEmailBody(emailBodyRequest);
-                break;
+                    break;
 
-                case OtpVerificationPurposeEnum.PasswordResetRequest:
+                case VerificationPurposeEnum.PasswordReset:
                     emailBodyRequest.EmailTitle = EmailTitleEnum.PASSWORDRESET;
                     emailBodyResponse = await _emailService.GetEmailBody(emailBodyRequest);
-                break;
+                    break;
 
                 default: break;
             }
@@ -124,11 +121,107 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Implementations
                 plainEmailBody = plainEmailBody?.Replace("[[CONTACT INFORMATION]]", _configuration["ContactInformation:EmailAddress"]);
                 Console.WriteLine(plainEmailBody);
 
+                // Send email to user
                 await _emailService.SendEmailAsync(new SingleEmailRequest
                 {
                     RecipientEmailAddress = request.Recipient,
                     RecipientName = request.FirstName,
                     EmailSubject = $"[{applicationName}] {request.Purpose.GetDescription()}",
+                    HtmlEmailBody = htmlEmailBody,
+                    PlainEmailBody = plainEmailBody
+                });
+            }
+        }
+
+        public async Task<BaseResponse<VerificationLinkRequestResult>> SendVerificationLinkAsync(SendVerificationLinkToUser request, CancellationToken cancellationToken)
+        {
+            var token = _helperMethods.GenerateVerificationToken(32);
+            _logger?.LogInformation($"ACCOUNT_SERVICE > Sending token to {request.Recipient}");
+
+            /* Invalidate existing sent tokens */
+            await _dbContext.VerificationTokens.Where(x => x.UserId.Equals(request.UserId) && x.Purpose == request.VerificationPurpose && x.Status == OtpTokenStatusEnum.Sent)
+                .ExecuteUpdateAsync(setter => setter
+                .SetProperty(column => column.Status, OtpTokenStatusEnum.Invalidated)
+                .SetProperty(column => column.TimeUpdated, DateTimeOffset.UtcNow), cancellationToken);
+
+            // Persist new Verification link
+            var verificationLink = new VerificationTokens
+            {
+                UserId = request.UserId,
+                Token = token,
+                Recipient = request.Recipient,
+                TimeCreated = DateTimeOffset.UtcNow,
+                TimeUpdated = DateTimeOffset.UtcNow,
+                Status = OtpTokenStatusEnum.Sent,
+                Purpose = request.VerificationPurpose
+            };
+            await _dbContext.AddAsync(verificationLink, cancellationToken);
+            await _dbContext.SaveChangesAsync(cancellationToken);
+
+            // Generate email body
+            await SendEmailVerificationTokenAsync(request, token, "Dite" ?? "");
+
+            _logger?.LogInformation($"ACCOUNT_SERVICE > OTP sent to {request.Recipient}");
+            return new BaseResponse<VerificationLinkRequestResult>(true, "Email verification token sent successfully", new VerificationLinkRequestResult
+            {
+                Recipent = request.Recipient
+            });
+
+        }
+
+        private async Task SendEmailVerificationTokenAsync(SendVerificationLinkToUser request, string token, string applicationName)
+        {
+            var emailBodyRequest = new EmailBodyRequest { Email = request.Recipient, FirstName = request.FirstName };
+
+            var emailBodyResponse = new BaseResponse<EmailBodyResponse>();
+
+            switch (request.VerificationPurpose)
+            {
+                case VerificationPurposeEnum.EmailConfirmation:
+                    emailBodyRequest.EmailTitle = EmailTitleEnum.EMAILVERIFICATION;
+                    emailBodyResponse = await _emailService.GetEmailBody(emailBodyRequest);
+                    break;
+
+                case VerificationPurposeEnum.PasswordReset:
+                    emailBodyRequest.EmailTitle = EmailTitleEnum.PASSWORDRESET;
+                    emailBodyResponse = await _emailService.GetEmailBody(emailBodyRequest);
+                    break;
+
+                default: break;
+            }
+
+            if (!emailBodyResponse.Status)
+            {
+                _logger.LogInformation($"ACCOUNT_SERVICE => Sending token to {request.Recipient} failed");
+            }
+            else
+            {
+                var emailBody = emailBodyResponse.Data;
+
+                string? htmlEmailBody = emailBody!.HtmlBody;
+                string? plainEmailBody = emailBody.PlainBody;
+
+                // Get link to be sent to the user
+                var getVerificationUrlTemplate = _configuration["Verification:VerificationLinkTemplate"];
+                var verificationUrl = getVerificationUrlTemplate!.Replace("{token}", token);
+
+                // Replace placeholders with values
+                htmlEmailBody = htmlEmailBody?.Replace("[[LINK]]", verificationUrl);
+                plainEmailBody = plainEmailBody?.Replace("[[LINK]]", verificationUrl);
+
+                htmlEmailBody = htmlEmailBody?.Replace("[[RECIPIENT NAME]]", request.FirstName);
+                plainEmailBody = plainEmailBody?.Replace("[[RECIPIENT NAME]]", request.FirstName);
+
+                htmlEmailBody = htmlEmailBody?.Replace("[[CONTACT INFORMATION]]", _configuration["ContactInformation:EmailAddress"]);
+                Console.WriteLine(htmlEmailBody);
+                plainEmailBody = plainEmailBody?.Replace("[[CONTACT INFORMATION]]", _configuration["ContactInformation:EmailAddress"]);
+                Console.WriteLine(plainEmailBody);
+
+                await _emailService.SendEmailAsync(new SingleEmailRequest
+                {
+                    RecipientEmailAddress = request.Recipient,
+                    RecipientName = request.FirstName,
+                    EmailSubject = $"[{applicationName}] {request.VerificationPurpose.GetDescription()}",
                     HtmlEmailBody = htmlEmailBody,
                     PlainEmailBody = plainEmailBody
                 });
@@ -148,9 +241,7 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Implementations
             string? plainEmailBody = emailBody!.PlainBody;
 
             htmlEmailBody = htmlEmailBody?.Replace("[[RECIPIENT NAME]]", request.FirstName);
-            Console.WriteLine(htmlEmailBody);
             plainEmailBody = plainEmailBody?.Replace("[[RECIPIENT NAME]]", request.FirstName);
-            Console.WriteLine(plainEmailBody);
 
             htmlEmailBody = htmlEmailBody?.Replace("[[CONTACT INFORMATION]]", _configuration["ContactInformation:EmailAddress"]);
             Console.WriteLine(htmlEmailBody);
@@ -167,37 +258,36 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Implementations
             return new BaseResponse(true, "Sent");
         }
 
-        public async Task<BaseResponse> ValidateOTPCodeAsync(ValidateOtpRequest otpRequest, CancellationToken cancellationToken)
+        public async Task<BaseResponse> ValidateCodeAsync(ValidateCodeRequest tokenRequest, CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"ACCOUNT_SERVICE Validating OTP Code => Process started");
+            _logger.LogInformation($"ACCOUNT_SERVICE Validating code => Process started");
 
-            var otpVerification = await _dbContext.OtpVerifications.FirstOrDefaultAsync(v => v.UserId == otpRequest.UserId && v.Status == OtpCodeStatusEnum.Sent && v.Purpose == otpRequest.Purpose && v.Code.Equals(otpRequest.Code), cancellationToken);
-            if (otpVerification == null)
+            var codeVerification = await _dbContext.OtpVerifications.FirstOrDefaultAsync(v => v.UserId == tokenRequest.UserId && v.Status == OtpTokenStatusEnum.Sent && v.Purpose == tokenRequest.Purpose && v.Code.Equals(tokenRequest.Code), cancellationToken);
+            if (codeVerification == null)
             {
-                _logger.LogInformation($"ACCOUNT_SERVICE Validating OTP Code => No pending OTP found for this user");
+                _logger.LogInformation($"ACCOUNT_SERVICE Validating code => No pending code found for this user");
                 return new BaseResponse(false, "The verification code entered is invalid.");
             }
 
             // Check expiry
-            if (DateTime.UtcNow > otpVerification.TimeCreated.AddMinutes(15))
+            if (DateTime.UtcNow > codeVerification.TimeCreated.AddMinutes(15))
             {
-                _logger.LogInformation($"ACCOUNT_SERVICE => Validating OTP failed. OTP Validation code has expired");
+                _logger.LogInformation($"ACCOUNT_SERVICE => Validating code failed. Validation code has expired");
 
-                otpVerification.Status = OtpCodeStatusEnum.Expired;
-                otpVerification.TimeUpdated = DateTime.UtcNow;
+                codeVerification.Status = OtpTokenStatusEnum.Expired;
+                codeVerification.TimeUpdated = DateTime.UtcNow;
                 await _dbContext.SaveChangesAsync(cancellationToken);
 
                 return new BaseResponse(false, "The provided code has expired.");
             }
 
-            otpVerification.ConfirmedOn = DateTime.UtcNow;
-            otpVerification.Status = OtpCodeStatusEnum.Verified;
-            otpVerification.TimeUpdated = DateTime.UtcNow;
+            codeVerification.ConfirmedOn = DateTime.UtcNow;
+            codeVerification.Status = OtpTokenStatusEnum.Verified;
+            codeVerification.TimeUpdated = DateTime.UtcNow;
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            _logger.LogInformation($"ACCOUNT_SERVICE Validating OTP Code => Code authenticated successfully");
-            return new BaseResponse(true, "Code verification was successful.");
+            _logger.LogInformation($"ACCOUNT_SERVICE Validating  code => code authenticated successfully");
+            return new BaseResponse(true, "Token verification was successful.");
         }
-
     }
 }

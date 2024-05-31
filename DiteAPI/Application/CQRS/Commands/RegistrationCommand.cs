@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DiteAPI.Api.Application.CQRS.Commands
 {
-    public class Registration : IRequest<BaseResponse<string>>
+    public class RegistrationCommand : IRequest<BaseResponse>
     {
 #nullable disable
         public string FirstName { get; set; } 
@@ -22,7 +22,7 @@ namespace DiteAPI.Api.Application.CQRS.Commands
         public string ConfirmPassword { get; set; } 
     }
 
-    public class RegistrationValidator : AbstractValidator<Registration>
+    public class RegistrationValidator : AbstractValidator<RegistrationCommand>
     {
         private readonly DataDBContext _dbContext;
         public RegistrationValidator(DataDBContext dbContext)
@@ -73,7 +73,7 @@ namespace DiteAPI.Api.Application.CQRS.Commands
             RuleFor(x => x.Password)
                 .NotNull()
                 .NotEmpty().WithMessage("Password is required.")
-                .Matches(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!#%*?&])[A-Za-z\d@$!#%*?&]{8,}$").WithMessage("Invalid password format. Your password must be at least 8 characters long and include at least one digit, one lowercase letter, one uppercase letter, one special character, and one unique character."); 
+                .Matches(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!#%*?&])[A-Za-z\d@$!#%*?&]{8,}$").WithMessage("Invalid password format. Your password must be at least 8 characters long and include at least one digit, one lowercase letter, one uppercase letter, and one special character."); 
 ;
             RuleFor(x => x.ConfirmPassword).Equal(x => x.Password).WithMessage("The confirmation password does not match the entered password.");
         }
