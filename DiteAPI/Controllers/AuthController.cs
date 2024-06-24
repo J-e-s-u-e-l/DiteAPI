@@ -3,11 +3,15 @@ using DiteAPI.Api.Application.CQRS.Commands;
 using DiteAPI.Api.Application.CQRS.Queries;
 using DiteAPI.infrastructure.Data.Entities;
 using DiteAPI.infrastructure.Data.Models;
+using DiteAPI.Infrastructure.Config;
+using DiteAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using log4net;
 using MediatR;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 
 namespace DiteAPI.Api.Controllers
 {
@@ -16,39 +20,53 @@ namespace DiteAPI.Api.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly ISessionService _sessionService;
         ILogger<AuthController> _logger;
-        IConfiguration _configuration;
-        public AuthController(IMediator mediator, ILogger<AuthController> logger, IConfiguration configuration)
+        private readonly AppSettings _appSettings;
+        public AuthController(IMediator mediator, ILogger<AuthController> logger, ISessionService sessionService, IOptions<AppSettings> options)
         {
             _mediator = mediator;
             _logger = logger;
-            _configuration = configuration;
+            _sessionService = sessionService;
+            _appSettings = options.Value;
         } 
 
         [HttpPost("sign-in")]
         public async Task<IActionResult> SignIn([FromBody] AuthRequest request)
         {
-            BaseResponse<LoginResponse> response;
             try
             {
-                response = await _mediator.Send(request);
-                if (!response.Status)
-                    return BadRequest(response);
+                var modelxfmed = new AuthRequest { Email = request.Email };
+                var req = JsonConvert.SerializeObject(modelxfmed);
+
+                _logger.LogInformation($"AUTH_CONTROLLER => User attempt to LOGIN {req}");
+                var response = await _mediator.Send(request);
+
+                return Ok(response);
             }
             catch (Exception ex)
             {
-                _logger.LogInformation($"REGISTRATION_CONTOLLER => Something went wrong\n {ex.StackTrace}: {ex.Message}");
-                return StatusCode(500, $"We encountered an issue while processing your registration request. You may try to register again, or for further assistance, please contact our Support Team at {_configuration["ContactInformation:EmailAddress"]}");
+                _logger.LogError($"REGISTRATION_CONTOLLER => Something went wrong\n {ex.StackTrace}: {ex.Message}");
+                return StatusCode(500, $"{_appSettings.ProcessingError}");
             }
-
-            return Ok(response);
         }
 
 
-        /*[HttpPost("reset-password")]
+        [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword([FromForm] ResetPasswordCommand request)
         {
+            try
+            {
+                _logger.LogInformation($"AUTH_CONTROLLER => User attempt to reset password \nUserId: {_sessionService.GetStringFromSession("UserId")}");
+                var response = await _mediator.Send(request);
 
-        }*/
+                return Ok(response);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError($"AUTH_CONTOLLER => Something went wrong\n {ex.StackTrace}: {ex.Message}");
+                return StatusCode(500, $"{_appSettings.ProcessingError}");
+            }
+        }
     }
 }

@@ -38,8 +38,8 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Implementations
                email.ReplyTo.Add(MailboxAddress.Parse("support@dite.com"));
 
                using var smtp = new SmtpClient();
-               await smtp.ConnectAsync(_configuration["MailKitSection:EmailHost"], _configuration.GetValue<int>("MailKitSection:Port"), SecureSocketOptions.SslOnConnect);
-               //await smtp.ConnectAsync(_configuration["MailKitSection:EmailHost"], _configuration.GetValue<int>("MailKitSection:Port"), SecureSocketOptions.StartTls);
+                //await smtp.ConnectAsync(_configuration["MailKitSection:EmailHost"], _configuration.GetValue<int>("MailKitSection:Port"), SecureSocketOptions.SslOnConnect);
+               await smtp.ConnectAsync(_configuration["MailKitSection:EmailHost"], _configuration.GetValue<int>("MailKitSection:Port"), _configuration.GetValue<SecureSocketOptions>("MailKitSection:SocketOption"));
                smtp.Authenticate(_configuration["MailKitSection:EmailUsername"], _configuration["MailKitSection:EmailPassword"]);
                await smtp.SendAsync(email).ConfigureAwait(false);
                await smtp.DisconnectAsync(true);

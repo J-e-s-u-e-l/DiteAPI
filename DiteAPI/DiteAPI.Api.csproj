@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DiteAPI.infrastructure\DiteAPI.infrastructure.csproj" />
+    <ProjectReference Include="..\DiteAPI.infrastructure\DiteAPI.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

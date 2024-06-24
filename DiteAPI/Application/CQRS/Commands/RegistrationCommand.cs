@@ -73,8 +73,8 @@ namespace DiteAPI.Api.Application.CQRS.Commands
             RuleFor(x => x.Password)
                 .NotNull()
                 .NotEmpty().WithMessage("Password is required.")
-                .Matches(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!#%*?&])[A-Za-z\d@$!#%*?&]{8,}$").WithMessage("Invalid password format. Your password must be at least 8 characters long and include at least one digit, one lowercase letter, one uppercase letter, and one special character."); 
-;
+                .Matches(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{}|;':"",<.>\/?])[A-Za-z\d!@#$%^&*()_+\-=\[\]{}|;':"",<.>\/?]{8,}$").WithMessage("Invalid password format. Your password must be at least 8 characters long and include at least one digit, one lowercase letter, one uppercase letter, and one special character.");
+
             RuleFor(x => x.ConfirmPassword).Equal(x => x.Password).WithMessage("The confirmation password does not match the entered password.");
         }
 

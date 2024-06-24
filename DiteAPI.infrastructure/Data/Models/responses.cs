@@ -22,8 +22,8 @@ namespace DiteAPI.infrastructure.Data.Models
         public string Lastname { get; set; }
         public string Middlename { get; set; }
         public string Token { get; set; }
-        public bool IsEmailVerified { get; set; }
-        public long Expires { get; set; }
+        public string Expires { get; set; }
+        //public bool IsEmailVerified { get; set; }
     }
 
     public class JwtRequest
@@ -33,9 +33,9 @@ namespace DiteAPI.infrastructure.Data.Models
         public string LastName { get; set; }
         public string MiddleName { get; set; }
         public string EmailAddress{ get; set; }
-        public long RoleId { get; set; }
-        public string RoleText { get; set; }
         public Guid UserId { get; set; }
-        public bool IsEmailVerified { get; set; }
+        //public long RoleId { get; set; }
+        //public string RoleText { get; set; }
+        //public bool IsEmailVerified { get; set; }
     }
 }

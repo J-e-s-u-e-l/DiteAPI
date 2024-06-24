@@ -23,8 +23,17 @@ namespace DiteAPI
             builder.Services.RegisterIdentity();
             builder.Services.RegisterJwt(builder.Configuration);
             builder.Services.RegisterContactInformation(builder.Configuration);
+            builder.Services.RegistrationError(builder.Configuration);
             builder.Services.RegisterMailKitSection(builder.Configuration);
             builder.Services.RegisterEmailVerification(builder.Configuration);
+
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession(options =>
+            {
+                options.Cookie.HttpOnly = true;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.IdleTimeout = TimeSpan.FromSeconds(1800);
+            });
 
             builder.Services.AddFluentValidationAutoValidation();
             builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
@@ -72,6 +81,7 @@ namespace DiteAPI
             }
 
             app.UseHttpsRedirection();
+            app.UseSession();
             //app.UseCors("MyCorsPolicy");
             app.UseAuthorization();
             app.MapControllers();

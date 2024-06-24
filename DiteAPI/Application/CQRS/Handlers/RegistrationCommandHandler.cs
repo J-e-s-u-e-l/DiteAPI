@@ -3,10 +3,11 @@ using DiteAPI.infrastructure.Data.Entities;
 using DiteAPI.infrastructure.Infrastructure.Persistence;
 using DiteAPI.infrastructure.Infrastructure.Services.Interfaces;
 using DiteAPI.infrastructure.Infrastructures.Utilities.Enums;
+using DiteAPI.Infrastructure.Config;
+using DiteAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using DiteAPI.Models;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
 namespace DiteAPI.Api.Application.CQRS.Handlers
@@ -19,6 +20,8 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
         private readonly IAccountService _accountService;
         private readonly IEmailService _emailService;
         private readonly IConfiguration _configuration;
+        private readonly ISessionService _sessionService;
+        private readonly AppSettings _appSettings;
 
         public RegistrationCommandHandler(
             DataDBContext dbContext,
@@ -26,7 +29,9 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
             ILogger<RegistrationCommand> logger,
             IAccountService accountService,
             IEmailService emailService,
-            IConfiguration configuration
+            IConfiguration configuration,
+            ISessionService sessionService,
+            IOptions<AppSettings> options
             )
         {
             _dbContext = dbContext;
@@ -35,6 +40,8 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
             _accountService = accountService;
             _emailService = emailService;
             _configuration = configuration;
+            _sessionService = sessionService;
+            _appSettings = options.Value;
         }
 
         public async Task<BaseResponse> Handle(RegistrationCommand request, CancellationToken cancellationToken)
@@ -62,7 +69,6 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                         PhoneNumber = request.PhoneNumber,
                         TimeCreated = DateTime.UtcNow,
                         TimeUpdated = DateTime.UtcNow,
-                        Signupsessionkey = Guid.NewGuid().ToString(),
                         EmailConfirmed = false
                     };
                     await _dbContext.AddAsync(user, cancellationToken);
@@ -73,8 +79,12 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                     if (!addPassword.Succeeded)
                     {
                         await transaction.RollbackAsync(cancellationToken);
-                        return new BaseResponse(false, $"We encountered an issue while processing your registration request. You may try to register again, or for further assistance, please contact our Support Team at {_configuration["ContactInformation:EmailAddress"]}");
+                        return new BaseResponse(false, _appSettings.ProcessingError);
                     }
+
+                    // Store user details in session
+                    _sessionService.SetStringInSession("UserId", user.Id.ToString());
+                    _sessionService.SetStringInSession("IsOtpVerified", "false");
 
                     // Send Verification Email to the New User email
                     var sendEmail = await _accountService.SendOTPAsync(new SendOTPToUser
@@ -97,19 +107,19 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                     await _dbContext.SaveChangesAsync(cancellationToken);
                     await transaction.CommitAsync(cancellationToken);
 
-                    return new BaseResponse(true, "Your registration has been completed successfully. An email verification has been sent to you, please verify your email address to activate your account.");
+                    return new BaseResponse(true, _appSettings.RegistrationSuccessfully);
                 }
                 catch(Exception ex)
                 {
                     _logger.LogError($"REGISTRATION_HANDLER => Something went wrong\n{ex.StackTrace}: {ex.Message}");
                     await transaction.RollbackAsync(cancellationToken).ConfigureAwait(false);
-                    return new BaseResponse(false, $"We encountered an issue while processing your registration request. You may try to register again, or for further assistance, please contact our Support Team at {_configuration["ContactInformation:EmailAddress"]}");
+                    return new BaseResponse(false, _appSettings.ProcessingError);
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError($"REGISTRATION_HANDLER => Something went wrong\n{ex.StackTrace}: {ex.Message}");
-                return new BaseResponse(false, $"We encountered an issue while processing your registration request. You may try to register again, or for further assistance, please contact our Support Team at {_configuration["ContactInformation:EmailAddress"]}");
+                return new BaseResponse(false, _appSettings.ProcessingError);
             }
         }
     }

@@ -20,6 +20,4 @@ namespace DiteAPI.Api.Application.CQRS.Queries
             RuleFor(x => x.Password).NotNull().NotEmpty().WithMessage("Password is required");
         }
     }
-
-
 }

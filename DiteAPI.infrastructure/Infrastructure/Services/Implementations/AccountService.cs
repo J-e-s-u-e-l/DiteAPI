@@ -3,6 +3,7 @@ using DiteAPI.infrastructure.Data.Models;
 using DiteAPI.infrastructure.Infrastructure.Persistence;
 using DiteAPI.infrastructure.Infrastructure.Services.Interfaces;
 using DiteAPI.infrastructure.Infrastructures.Utilities.Enums;
+using DiteAPI.Infrastructure.Config;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -17,13 +18,14 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Implementations
         private readonly IEmailService _emailService;
         private readonly IHelperMethods _helperMethods;
         private readonly IConfiguration _configuration;
-
+        private readonly ContactInformation _contactInformation;
 
         public AccountService(
             ILogger<AccountService> logger,
             DataDBContext dbContext,
             IEmailService emailService,
             IHelperMethods helperMethods,
+            IOptions<ContactInformation> contactInformation,
             IConfiguration configuration
             )
         {
@@ -31,6 +33,7 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Implementations
             _dbContext = dbContext;
             _emailService = emailService;
             _helperMethods = helperMethods;
+            _contactInformation = contactInformation.Value;
             _configuration = configuration;
         }
 
@@ -116,9 +119,9 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Implementations
                 plainEmailBody = plainEmailBody?.Replace("[[RECIPIENT NAME]]", request.FirstName);
                 Console.WriteLine(plainEmailBody);
 
-                htmlEmailBody = htmlEmailBody?.Replace("[[CONTACT INFORMATION]]", _configuration["ContactInformation:EmailAddress"]);
+                htmlEmailBody = htmlEmailBody?.Replace("[[CONTACT INFORMATION]]", _contactInformation.EmailAddress);
                 Console.WriteLine(htmlEmailBody);
-                plainEmailBody = plainEmailBody?.Replace("[[CONTACT INFORMATION]]", _configuration["ContactInformation:EmailAddress"]);
+                plainEmailBody = plainEmailBody?.Replace("[[CONTACT INFORMATION]]", _contactInformation.EmailAddress);
                 Console.WriteLine(plainEmailBody);
 
                 // Send email to user

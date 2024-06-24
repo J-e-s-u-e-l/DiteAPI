@@ -45,27 +45,27 @@ namespace DiteAPI.infrastructure.Infrastructure.Auth.JWT
 
         public LoginResponse Create(JwtRequest request)
         {
-            var issuer = _configuration["JwtSettings:Issuer"];
-            var audience = _configuration["JwtSettings:Audience"];
+            //var issuer = _configuration["JwtSettings:Issuer"];
+            //var audience = _configuration["JwtSettings:Audience"];
             var key = Encoding.ASCII.GetBytes(_configuration["JwtSettings:Secret"]!);
             var nowUtc = DateTime.UtcNow;
-            var expires = nowUtc.AddMinutes(525600);
+            var expires = nowUtc.AddDays(7);
             var claims = new List<Claim>
             {
                 new Claim("sub", request.UserId.ToString()),
                 new Claim(JwtRegisteredClaimNames.Iat, nowUtc.ToString(), ClaimValueTypes.Integer64),
-                new Claim("unique_name", request.EmailAddress),
-                new Claim(JwtRegisteredClaimNames.Iss, issuer!),
-                new Claim(JwtRegisteredClaimNames.Aud, issuer!),
+                new Claim("unique_name", request.EmailAddress)
+                //new Claim(JwtRegisteredClaimNames.Iss, issuer!),
+                //new Claim(JwtRegisteredClaimNames.Aud, issuer!),
             };
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
                 Expires = expires, 
-                Issuer = issuer,
-                Audience = audience,
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
+                //Issuer = issuer,
+                //Audience = audience,
             };
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
@@ -79,9 +79,9 @@ namespace DiteAPI.infrastructure.Infrastructure.Auth.JWT
                 Lastname = request.LastName,
                 Middlename = request.MiddleName,
                 Email = request.EmailAddress,
-                IsEmailVerified = request.IsEmailVerified,
                 Token = jwtToken,
-                Expires = (long)new TimeSpan(expires.Ticks).TotalSeconds
+                Expires = expires.ToString(),
+                //IsEmailVerified = request.IsEmailVerified,
             };
         }
     }

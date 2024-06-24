@@ -1,9 +1,13 @@
 ﻿using DiteAPI.Api.Application.CQRS.Commands;
+using DiteAPI.Api.Application.CQRS.Queries;
 using DiteAPI.infrastructure.Data.Entities;
 using DiteAPI.infrastructure.Infrastructure.Persistence;
+using DiteAPI.Infrastructure.Config;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 
 namespace DiteAPI.Api.Controllers
 {
@@ -14,50 +18,54 @@ namespace DiteAPI.Api.Controllers
         private readonly IMediator _mediator;
         private readonly ILogger<VerificationController> _logger;
         private readonly IConfiguration _configuration;
+        private readonly AppSettings _appSettings;
 
-        public VerificationController(IMediator mediator, ILogger<VerificationController> logger, IConfiguration configuration, DataDBContext dbContext)
+        public VerificationController(IMediator mediator, ILogger<VerificationController> logger, IConfiguration configuration, DataDBContext dbContext, IOptions<AppSettings> options)
         {
             _mediator = mediator;
             _logger = logger;
             _configuration = configuration;
+            _appSettings = options.Value;
         }
 
         [HttpPost("verify-otp")]
         public async Task<IActionResult> VerifyOtp([FromForm] VerifyOtpCommand request)
         {
-            BaseResponse response;
             try
             {
-                response = await _mediator.Send(request);
-                if (!response.Status)
-                    return BadRequest(response);
+                var modelxfmed = new VerifyOtpCommand { Code = request.Code, Purpose = request.Purpose };
+                var req = JsonConvert.SerializeObject(modelxfmed);
+
+                _logger.LogInformation($"VERIFICATION_CONTROLLER => User attempt to Verify Otp {req}");
+                var response = await _mediator.Send(request);
+
+                return Ok(response);
             }
             catch (Exception ex)
             {
-                _logger.LogInformation($"REGISTRATION_CONTOLLER => Something went wrong\n {ex.StackTrace}: {ex.Message}");
-                return StatusCode(500, $"We encountered an issue while processing your registration request. You may try to register again, or for further assistance, please contact our Support Team at {_configuration["ContactInformation:EmailAddress"]}");
+                _logger.LogError($"VERIFICATION_CONTOLLER => Something went wrong\n {ex.StackTrace}: {ex.Message}");
+                return StatusCode(500, $"{_appSettings.ProcessingError}");
             }
-
-            return Ok(response);
         }
 
         [HttpPost("send-otp")]
         public async Task<IActionResult> SendOtpCode([FromBody] SendOtpCommand request)
         {
-            BaseResponse response;
             try
             {
-                response = await _mediator.Send(request);
-                if (!response.Status)
-                    return BadRequest(response);
+                var modelxfmed = new SendOtpCommand { Recipient = request.Recipient, RecipientType = request.RecipientType, Purpose = request.Purpose };
+                var req = JsonConvert.SerializeObject(modelxfmed);
+
+                _logger.LogInformation($"VERIFICATION_CONTOLLER => User attempt to SendOtpCode {req}");
+                var response = await _mediator.Send(request);
+
+                return Ok(response);
             }
             catch (Exception ex)
             {
-                _logger.LogInformation($"REGISTRATION_CONTOLLER => Something went wrong\n {ex.StackTrace}: {ex.Message}");
-                return StatusCode(500, $"We encountered an issue while processing your registration request. You may try to register again, or for further assistance, please contact our Support Team at {_configuration["ContactInformation:EmailAddress"]}");
+                _logger.LogError($"VERIFICATION_CONTOLLER  => Something went wrong\n {ex.StackTrace}: {ex.Message}");
+                return StatusCode(500, $"{_appSettings.ProcessingError}");
             }
-
-            return Ok(response);
         }
     }
 }

@@ -1,7 +1,11 @@
 ﻿using DiteAPI.infrastructure.Data.Entities;
 using DiteAPI.infrastructure.Infrastructure.Services.Implementations;
 using DiteAPI.infrastructure.Infrastructure.Services.Interfaces;
+using DiteAPI.Infrastructure.Config;
+using DiteAPI.Infrastructure.Infrastructure.Services.Implementations;
+using DiteAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using DiteAPI.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -18,6 +22,7 @@ namespace DiteAPI.infrastructure.Infrastructure.Persistence
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IMailkitService, MailkitService>();
             services.AddScoped<IHelperMethods, HelperMethods>();
+            services.AddScoped<ISessionService, SessionService>();
 
             return services;
         }
@@ -53,14 +58,26 @@ namespace DiteAPI.infrastructure.Infrastructure.Persistence
 
         public static IServiceCollection RegisterContactInformation(this IServiceCollection services, IConfiguration configuration)
         {
-            var contactInfo = new ContactInformation();
+            /*var contactInfo = new ContactInformation();
             configuration.Bind("ContactInformation", contactInfo);
             services.AddSingleton(contactInfo);
+*/
 
-            //services.Configure<ContactInformation>(configuration.GetSection("ContactInformation"));
+            services.AddOptions<ContactInformation>();
+            services.Configure<ContactInformation>(configuration.GetSection("ContactInformation"));
             return services;
         }
-        
+
+        public static IServiceCollection RegistrationError(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddOptions<AppSettings>();
+            services.Configure<AppSettings>(configuration.GetSection("AppSettings"));
+
+            return services;
+        }
+
+
+
         public static IServiceCollection RegisterMailKitSection(this IServiceCollection services, IConfiguration configuration)
         {
             var mailKitSection = new MailKitSection();

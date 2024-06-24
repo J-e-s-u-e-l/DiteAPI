@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiteAPI.Api", "DiteAPI.Api.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B75EAEE5-8614-4FB3-AB61-B0BD484694DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiteAPI.infrastructure", "..\DiteAPI.infrastructure\DiteAPI.infrastructure.csproj", "{3AC62BB8-8D5D-4658-8C37-38989446B0B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiteAPI.Infrastructure", "..\DiteAPI.infrastructure\DiteAPI.Infrastructure.csproj", "{3AC62BB8-8D5D-4658-8C37-38989446B0B5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

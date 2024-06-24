@@ -2,6 +2,8 @@ Dear [[RECIPIENT NAME]],
 
 Thank you for registering with us. Your confirmation code is [[CODE]].
 
+This code is valid for 30 minutes and should not be shared with anyone.
+
 If you did not create an account with us, please ignore this email.
 
 For any inquiries, please contact us at [[CONTACT INFORMATION]].
