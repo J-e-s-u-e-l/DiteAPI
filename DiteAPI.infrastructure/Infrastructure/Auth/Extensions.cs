@@ -38,11 +38,8 @@ namespace DiteAPI.infrastructure.Infrastructure.Auth
 
         public static IServiceCollection RegisterJwt(this  IServiceCollection services, IConfiguration configuration)
         {
-            var jwtSettings = new JwtSettings();
-            configuration.Bind(nameof(JwtSettings), jwtSettings);
-            services.AddSingleton(jwtSettings);
-
-            //services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
+            services.AddOptions<JwtSettings>();
+            services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
 
             services.AddSingleton<IJwtHandler, JwtHandler>();
 

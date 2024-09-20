@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace DiteAPI.infrastructure.Data.Entities
 {
     // Linking Entity between GenericUser and Acadmey to resolve M:M relationship
-    public class AcademyMembers : BaseEntity
+    public class AcademyMembers : BaseEntity 
     {
 #nullable disable
         [Required]

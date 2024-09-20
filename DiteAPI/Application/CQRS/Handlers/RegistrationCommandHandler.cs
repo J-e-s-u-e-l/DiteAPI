@@ -67,8 +67,6 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                         UserName = request.UserName,
                         NormalizedUserName = request.UserName!.ToUpperInvariant(),
                         PhoneNumber = request.PhoneNumber,
-                        TimeCreated = DateTime.UtcNow,
-                        TimeUpdated = DateTime.UtcNow,
                         EmailConfirmed = false
                     };
                     await _dbContext.AddAsync(user, cancellationToken);

@@ -56,10 +56,9 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Implementations
                 Code = code,
                 Recipient = request.Recipient,
                 RecipientType = request.RecipientType,
-                TimeCreated = DateTimeOffset.UtcNow,
-                TimeUpdated = DateTimeOffset.UtcNow,
                 Status = OtpTokenStatusEnum.Sent,
-                Purpose = request.Purpose
+                Purpose = request.Purpose,
+                ConfirmedOn = DateTimeOffset.UtcNow
             };
                 await _dbContext.AddAsync(otpVerification, cancellationToken);
                 await _dbContext.SaveChangesAsync(cancellationToken);
@@ -153,8 +152,8 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Implementations
                 UserId = request.UserId,
                 Token = token,
                 Recipient = request.Recipient,
-                TimeCreated = DateTimeOffset.UtcNow,
-                TimeUpdated = DateTimeOffset.UtcNow,
+                TimeCreated = DateTime.UtcNow,
+                TimeUpdated = DateTime.UtcNow,
                 Status = OtpTokenStatusEnum.Sent,
                 Purpose = request.VerificationPurpose
             };

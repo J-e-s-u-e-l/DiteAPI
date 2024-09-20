@@ -43,16 +43,16 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                     if (request.RecipientType == OtpRecipientTypeEnum.Email)
                     {
                         var user = await _dbContext.GenericUser.FirstOrDefaultAsync(x => x.Email == request.Recipient);
-
+/*
                         if (user == null)
-                            return new BaseResponse(false, $"OTP has been sent to {request.Recipient}.");
-
+                            return new BaseResponse(false, _appSettings.UserWithEmailNotFound);
+*/
                         // Store user details in session
                         _sessionService.SetStringInSession("UserId", user.Id.ToString());
                         _sessionService.SetStringInSession("IsOtpVerified", "false");
 
                         var sendEmail = await _accountService.SendOTPAsync(new SendOTPToUser
-                        {
+                        { 
                             FirstName = user.FirstName,
                             OtpCodeLength = OtpCodeLengthEnum.Six,
                             Purpose = request.Purpose,

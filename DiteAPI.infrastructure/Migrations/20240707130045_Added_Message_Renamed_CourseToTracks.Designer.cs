@@ -4,6 +4,7 @@ using DiteAPI.infrastructure.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DiteAPI.infrastructure.Migrations
 {
     [DbContext(typeof(DataDBContext))]
-    partial class DataDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240707130045_Added_Message_Renamed_CourseToTracks")]
+    partial class Added_Message_Renamed_CourseToTracks
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -65,11 +68,11 @@ namespace DiteAPI.infrastructure.Migrations
                     b.Property<DateTime>("SentAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTimeOffset>("TimeCreated")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<DateTime>("TimeCreated")
+                        .HasColumnType("datetime2");
 
-                    b.Property<DateTimeOffset>("TimeUpdated")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<DateTime>("TimeUpdated")
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid?>("TrackId")
                         .HasColumnType("uniqueidentifier");
@@ -195,11 +198,11 @@ namespace DiteAPI.infrastructure.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTimeOffset>("TimeCreated")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<DateTime>("TimeCreated")
+                        .HasColumnType("datetime2");
 
-                    b.Property<DateTimeOffset>("TimeUpdated")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<DateTime>("TimeUpdated")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -224,11 +227,11 @@ namespace DiteAPI.infrastructure.Migrations
                     b.Property<Guid>("RoleId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("TimeCreated")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<DateTime>("TimeCreated")
+                        .HasColumnType("datetime2");
 
-                    b.Property<DateTimeOffset>("TimeUpdated")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<DateTime>("TimeUpdated")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -280,33 +283,33 @@ namespace DiteAPI.infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000000001"),
-                            ConcurrencyStamp = "C106703227DD33478DC88D3C5EA7E182",
+                            Id = new Guid("1ae989e1-c1f1-43fc-8c64-1b5ed33c0cca"),
+                            ConcurrencyStamp = "C7CCDC3E4EFB6542A250E3336F96A8B5",
                             Description = "",
                             Name = "Admin",
                             NormalizedName = "ADMIN",
-                            TimeCreated = new DateTimeOffset(new DateTime(2024, 7, 7, 20, 28, 3, 167, DateTimeKind.Unspecified).AddTicks(2265), new TimeSpan(0, 0, 0, 0, 0)),
-                            TimeUpdated = new DateTimeOffset(new DateTime(2024, 7, 7, 20, 28, 3, 167, DateTimeKind.Unspecified).AddTicks(2291), new TimeSpan(0, 0, 0, 0, 0))
+                            TimeCreated = new DateTimeOffset(new DateTime(2024, 7, 7, 13, 0, 43, 390, DateTimeKind.Unspecified).AddTicks(2878), new TimeSpan(0, 0, 0, 0, 0)),
+                            TimeUpdated = new DateTimeOffset(new DateTime(2024, 7, 7, 13, 0, 43, 390, DateTimeKind.Unspecified).AddTicks(2889), new TimeSpan(0, 0, 0, 0, 0))
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000000002"),
-                            ConcurrencyStamp = "E247F32B3A2AE648A433285789F3B2FC",
+                            Id = new Guid("fb5fbbeb-77ae-4ca1-8bb5-7805ecab0de3"),
+                            ConcurrencyStamp = "88021A5DDAC2F847B622BB378BE659DF",
                             Description = "",
                             Name = "Facilitator",
                             NormalizedName = "FACILITATOR",
-                            TimeCreated = new DateTimeOffset(new DateTime(2024, 7, 7, 20, 28, 3, 167, DateTimeKind.Unspecified).AddTicks(2342), new TimeSpan(0, 0, 0, 0, 0)),
-                            TimeUpdated = new DateTimeOffset(new DateTime(2024, 7, 7, 20, 28, 3, 167, DateTimeKind.Unspecified).AddTicks(2345), new TimeSpan(0, 0, 0, 0, 0))
+                            TimeCreated = new DateTimeOffset(new DateTime(2024, 7, 7, 13, 0, 43, 390, DateTimeKind.Unspecified).AddTicks(2906), new TimeSpan(0, 0, 0, 0, 0)),
+                            TimeUpdated = new DateTimeOffset(new DateTime(2024, 7, 7, 13, 0, 43, 390, DateTimeKind.Unspecified).AddTicks(2908), new TimeSpan(0, 0, 0, 0, 0))
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000000003"),
-                            ConcurrencyStamp = "F38B94CDBB23DA4B9B51D8D9AE11099D",
+                            Id = new Guid("f861559e-30e9-4947-8b9a-a70237677b07"),
+                            ConcurrencyStamp = "A386B15A5CDC4D47927BBB52A42816FF",
                             Description = "",
                             Name = "Member",
                             NormalizedName = "MEMBER",
-                            TimeCreated = new DateTimeOffset(new DateTime(2024, 7, 7, 20, 28, 3, 167, DateTimeKind.Unspecified).AddTicks(2397), new TimeSpan(0, 0, 0, 0, 0)),
-                            TimeUpdated = new DateTimeOffset(new DateTime(2024, 7, 7, 20, 28, 3, 167, DateTimeKind.Unspecified).AddTicks(2400), new TimeSpan(0, 0, 0, 0, 0))
+                            TimeCreated = new DateTimeOffset(new DateTime(2024, 7, 7, 13, 0, 43, 390, DateTimeKind.Unspecified).AddTicks(2974), new TimeSpan(0, 0, 0, 0, 0)),
+                            TimeUpdated = new DateTimeOffset(new DateTime(2024, 7, 7, 13, 0, 43, 390, DateTimeKind.Unspecified).AddTicks(2975), new TimeSpan(0, 0, 0, 0, 0))
                         });
                 });
 
@@ -336,11 +339,11 @@ namespace DiteAPI.infrastructure.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<DateTimeOffset>("TimeCreated")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<DateTime>("TimeCreated")
+                        .HasColumnType("datetime2");
 
-                    b.Property<DateTimeOffset>("TimeUpdated")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<DateTime>("TimeUpdated")
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -361,11 +364,11 @@ namespace DiteAPI.infrastructure.Migrations
                     b.Property<Guid>("AcademyId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("TimeCreated")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<DateTime>("TimeCreated")
+                        .HasColumnType("datetime2");
 
-                    b.Property<DateTimeOffset>("TimeUpdated")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<DateTime>("TimeUpdated")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("TrackName")
                         .IsRequired()
@@ -397,11 +400,11 @@ namespace DiteAPI.infrastructure.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<DateTimeOffset>("TimeCreated")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<DateTime>("TimeCreated")
+                        .HasColumnType("datetime2");
 
-                    b.Property<DateTimeOffset>("TimeUpdated")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<DateTime>("TimeUpdated")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Token")
                         .IsRequired()

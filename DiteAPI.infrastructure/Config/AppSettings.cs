@@ -10,6 +10,7 @@ namespace DiteAPI.Infrastructure.Config
     {
         public string ProcessingError { get; set; }
         public string UserWithEmailNotFound { get; set; }
+        public string AcademyNotFound { get; set; }
         public string AccountLocked { get; set; }
         public string EmailNotVerified { get; set; }
         public string SingInSuccessful { get; set; }
@@ -21,5 +22,11 @@ namespace DiteAPI.Infrastructure.Config
         public string PasswordResetSuccessful { get; set; }
         public string RegistrationSuccessfully { get; set; }
         public string OtpNotVerified { get; set; }
+        public string AcademyCreatedSuccessfully { get; set; }
+        public string AdminRoleId { get; set; }
+        public string FacilitatorRoleId { get; set; }
+        public string MemberRoleId { get; set; }
+        public string AcademyEnrollmentSuccessful { get; set; }
+        public string Unauthorized { get; set; }
     }
 }

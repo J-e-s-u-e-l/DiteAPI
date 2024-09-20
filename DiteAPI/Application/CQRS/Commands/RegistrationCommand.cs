@@ -4,6 +4,7 @@ using DiteAPI.infrastructure.Infrastructures.Utilities.Enums;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace DiteAPI.Api.Application.CQRS.Commands
 {
@@ -43,10 +44,11 @@ namespace DiteAPI.Api.Application.CQRS.Commands
                 .NotNull()
                 .NotEmpty().WithMessage("Middlename is required.")
                 .MaximumLength(100).WithMessage("Username must not be greater than 100 characters.");
-              
+
             RuleFor(x => x.DateOfBirth)
                 .NotNull()
                 .NotEmpty().WithMessage("Date of birth is required.");
+                //.Must(BeAValidDate).WithMessage("Invalid date format!");
 
             RuleFor(x => x.UserGender)
                 .IsInEnum();
@@ -91,10 +93,25 @@ namespace DiteAPI.Api.Application.CQRS.Commands
 
         }
         
-        // checks if the Phone number is being used by another user
+
         private bool BeUniquePhoneNumber(string phoneNumber)
         {
             return ! _dbContext.GenericUser.Any(u => u.PhoneNumber == phoneNumber);
         }
+
+       /* private bool BeValidDateOnly(DateOnly value)
+        {
+            return DateOnly.TryParseExact(value.ToString("yyyy-MM-dd"), "yyyy-MM-dd", null, DateOnlyStyles.None, out _);
+        }*/
+
+        /*private bool BeAValidDate(string dateonly)
+        {
+            return DateTime.TryParseExact(
+                dateonly,
+                "yyyy, MM, dd", // Adjust the date format as needed
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out _);
+        }*/
     }
 }

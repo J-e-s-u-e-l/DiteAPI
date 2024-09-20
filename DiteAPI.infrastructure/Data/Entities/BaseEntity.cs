@@ -9,8 +9,8 @@ namespace DiteAPI.infrastructure.Data.Entities
     {
         [Key]
         public Guid Id { get; set; }
-        public DateTimeOffset TimeCreated { get; set; }
-        public DateTimeOffset TimeUpdated { get; set; }
+        public DateTimeOffset TimeCreated { get; set; } = DateTimeOffset.UtcNow;
+        public DateTimeOffset TimeUpdated { get; set; } = DateTimeOffset.UtcNow;
     }
 
     public class BaseResponse

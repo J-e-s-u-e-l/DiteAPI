@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using System.Net;
 
 namespace DiteAPI.Api.Controllers
 {
@@ -29,8 +30,17 @@ namespace DiteAPI.Api.Controllers
             _logger = logger;
             _sessionService = sessionService;
             _appSettings = options.Value;
-        } 
+        }
 
+        /// <summary>
+        /// Handles Sign-in of users
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>A BaseResponse of object</returns>
+        /// <response code="200"> Operation successful</response>
+        /// <response code="400">If validation fails due to validation errors"</response>
+        [ProducesResponseType(typeof(BaseResponse), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
         [HttpPost("sign-in")]
         public async Task<IActionResult> SignIn([FromBody] AuthRequest request)
         {
@@ -54,7 +64,7 @@ namespace DiteAPI.Api.Controllers
 
         [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword([FromForm] ResetPasswordCommand request)
-        {
+        { 
             try
             {
                 _logger.LogInformation($"AUTH_CONTROLLER => User attempt to reset password \nUserId: {_sessionService.GetStringFromSession("UserId")}");

@@ -53,7 +53,6 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                         return new BaseResponse(false, validateOtp.Message ?? $"{_appSettings.InvalidOtp}");
 
                     user.EmailConfirmed = true;
-                    user.TimeUpdated = DateTimeOffset.UtcNow;
                     await _dbContext.SaveChangesAsync(cancellationToken);
                 break;
 

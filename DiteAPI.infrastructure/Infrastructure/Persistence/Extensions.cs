@@ -1,12 +1,14 @@
 ﻿using DiteAPI.infrastructure.Data.Entities;
 using DiteAPI.infrastructure.Infrastructure.Services.Implementations;
 using DiteAPI.infrastructure.Infrastructure.Services.Interfaces;
+using DiteAPI.infrastructure.Infrastructures.Utilities.Enums;
 using DiteAPI.Infrastructure.Config;
 using DiteAPI.Infrastructure.Infrastructure.Services.Implementations;
 using DiteAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using DiteAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,15 +25,16 @@ namespace DiteAPI.infrastructure.Infrastructure.Persistence
             services.AddScoped<IMailkitService, MailkitService>();
             services.AddScoped<IHelperMethods, HelperMethods>();
             services.AddScoped<ISessionService, SessionService>();
+            services.AddScoped<IDiscussionHubServices, DiscussionHubServices>();
 
             return services;
         }
 
-        /*public static IServiceCollection RegisterCors(this IServiceCollection services)
+        public static IServiceCollection RegisterCors(this IServiceCollection services)
         {
             services.AddCors(options =>
             {
-                var origin = "https://j-e-s-u-e-l.github.io/DiteFrontend/";
+                var origin = "http://127.0.0.1:5500";
 
                 options.AddPolicy("MyCorsPolicy", builder =>
                 {
@@ -44,7 +47,7 @@ namespace DiteAPI.infrastructure.Infrastructure.Persistence
             });
 
             return services;
-        }*/
+        }
 
         public static IServiceCollection RegisterPersistence(this IServiceCollection services, IConfiguration configuration)
         {
@@ -58,17 +61,12 @@ namespace DiteAPI.infrastructure.Infrastructure.Persistence
 
         public static IServiceCollection RegisterContactInformation(this IServiceCollection services, IConfiguration configuration)
         {
-            /*var contactInfo = new ContactInformation();
-            configuration.Bind("ContactInformation", contactInfo);
-            services.AddSingleton(contactInfo);
-*/
-
             services.AddOptions<ContactInformation>();
             services.Configure<ContactInformation>(configuration.GetSection("ContactInformation"));
             return services;
         }
 
-        public static IServiceCollection RegistrationError(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection RegisterAppSettings(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddOptions<AppSettings>();
             services.Configure<AppSettings>(configuration.GetSection("AppSettings"));
@@ -97,13 +95,13 @@ namespace DiteAPI.infrastructure.Infrastructure.Persistence
             return services;
         }
 
-        public static void Seed(this ModelBuilder modelBuilder)
+        public static void SetUp(this ModelBuilder modelBuilder)
         {
-            #region User Roles
+            #region Seed User Roles
             modelBuilder.Entity<ApplicationRole>().HasData(
                 new ApplicationRole
                 {
-                    Id = Guid.NewGuid(),
+                    Id = new Guid("00000000-0000-0000-0000-000000000001"),
                     Name = "Admin",
                     NormalizedName = "ADMIN",
                     ConcurrencyStamp = GenerateCode(),
@@ -113,7 +111,7 @@ namespace DiteAPI.infrastructure.Infrastructure.Persistence
                 },
                 new ApplicationRole
                 {
-                    Id = Guid.NewGuid(),
+                    Id = new Guid("00000000-0000-0000-0000-000000000002"),
                     Name = "Facilitator",
                     NormalizedName = "FACILITATOR",
                     ConcurrencyStamp = GenerateCode(),
@@ -123,7 +121,7 @@ namespace DiteAPI.infrastructure.Infrastructure.Persistence
                 },
                 new ApplicationRole
                 {
-                    Id = Guid.NewGuid(),
+                    Id = new Guid("00000000-0000-0000-0000-000000000003"), 
                     Name = "Member",
                     NormalizedName = "MEMBER",
                     ConcurrencyStamp = GenerateCode(),
@@ -131,10 +129,14 @@ namespace DiteAPI.infrastructure.Infrastructure.Persistence
                     TimeCreated = DateTime.UtcNow,
                     TimeUpdated = DateTime.UtcNow
                 }
-                );
+            );
             #endregion
 
-            #region Unique UserName
+            #region 
+
+            #endregion
+
+            /*#region Unique UserName
             modelBuilder.Entity<GenericUser>()
                 .HasIndex(u => u.UserName)
                 .IsUnique();
@@ -144,7 +146,7 @@ namespace DiteAPI.infrastructure.Infrastructure.Persistence
             modelBuilder.Entity<GenericUser>()
                 .HasIndex(u => u.Email)
                 .IsUnique();
-            #endregion
+            #endregion*/
         }
 
         private static readonly Func<string> GenerateCode = () =>

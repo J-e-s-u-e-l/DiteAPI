@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace DiteAPI.infrastructure.Data.Entities
 {
-    public class Course : BaseEntity
+    public class Track : BaseEntity
     {
-        public string CourseName { get; set; }
+        public string TrackName { get; set; }
 
         //FKs
         [Required]
