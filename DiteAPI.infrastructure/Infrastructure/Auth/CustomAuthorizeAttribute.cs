@@ -15,7 +15,6 @@ namespace DiteAPI.Infrastructure.Infrastructure.Auth
         public void OnAuthorization(AuthorizationFilterContext context)
         {
             var userId = context.HttpContext.Items["UserId"];
-            Console.WriteLine($"User id = {userId}");
             if (userId == null)
                 context.Result = new JsonResult(new { message = "Authentication required. Please log in to access this resource." }) { StatusCode = StatusCodes.Status401Unauthorized };    
         }

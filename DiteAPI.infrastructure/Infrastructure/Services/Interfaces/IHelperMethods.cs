@@ -9,7 +9,7 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Interfaces
     public interface IHelperMethods
     {
         string GenerateVerificationToken(int tokenSize);
-        abstract string Generate8CharString();
+        abstract string Generate6CharString();
         string GenerateRandomNumber(int length);
 
     }

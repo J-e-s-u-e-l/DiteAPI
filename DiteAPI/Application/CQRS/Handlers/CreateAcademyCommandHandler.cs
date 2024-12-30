@@ -39,12 +39,12 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                 using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
                 try
                 {
-                    var newAcademyCode = _helperMethods.Generate8CharString();
+                    var newAcademyCode = _helperMethods.Generate6CharString();
                     var codeExists = await _dbContext.Academy.AnyAsync(x => x.AcademyCode == newAcademyCode);
 
                     while(codeExists)
                     {
-                        newAcademyCode = _helperMethods.Generate8CharString();
+                        newAcademyCode = _helperMethods.Generate6CharString();
                         codeExists = await _dbContext.Academy.AnyAsync(x => x.AcademyCode == newAcademyCode);
                     }
                     var userId = (Guid)_httpContextAccessor.HttpContext!.Items["UserId"]!;

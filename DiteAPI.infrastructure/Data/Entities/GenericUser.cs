@@ -11,12 +11,12 @@ namespace DiteAPI.Models
         public string FirstName { get; set; }
         [Required]
         public string LastName { get; set; }
-        [Required]
+        /*[Required]
         public string MiddleName { get; set; }
         [Required]
         public DateOnly DateOfBirth { get; set; }
         [Required]
-        public Gender UserGender { get; set; }
+        public Gender UserGender { get; set; }*/
         public bool IsActive { get; set; }
         public DateTimeOffset LastLogin { get; set; } 
         public DateTimeOffset TimeCreated { get; set; } = DateTimeOffset.UtcNow;

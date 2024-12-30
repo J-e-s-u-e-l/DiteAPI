@@ -33,7 +33,7 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Implementations
             // Convert token bytes to base64 string (URL-safe)
             return Convert.ToBase64String(takenByte).Trim('=');
         }
-        public string Generate8CharString()
+        public string Generate6CharString()
         {
             _logger.LogInformation($"HELPER_METHODS => Generate_Unique_String => Process started");
             string uniqueString = Guid.NewGuid().ToString("N");

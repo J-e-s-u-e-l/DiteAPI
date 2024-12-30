@@ -14,9 +14,8 @@ namespace DiteAPI.Api.Application.CQRS.Commands
         public JoinAcademyValidator()
         {
             RuleFor(x => x.AcademyCode)
-                .NotNull()
-                .NotEmpty().WithMessage("Academy Code is required")
-                .MaximumLength(6).WithMessage("Academy Code cannot be greater than 6 characters.");
+                .NotEmpty()
+                .MaximumLength(8).WithMessage("Academy Code cannot be greater than 6 characters.");
         }
     }
 }

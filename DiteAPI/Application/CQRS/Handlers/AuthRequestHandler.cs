@@ -130,7 +130,7 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                          UserId = user.Id,
                          FirstName = user.FirstName,
                          LastName = user.LastName,
-                         MiddleName = user.MiddleName,
+                         //MiddleName = user.MiddleName,
                          EmailAddress = user.Email
                          //IsEmailVerified = user.EmailConfirmed,
                      });

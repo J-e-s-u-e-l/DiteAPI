@@ -30,12 +30,17 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                 using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
                 try
                 {
+                    // Check if Academy exists
                     var academyId = await _dbContext.Academy.Where(x => x.AcademyCode == request.AcademyCode).Select(x => x.Id).FirstOrDefaultAsync();
 
                     if (academyId == null)
                         return new BaseResponse(false, _appSettings.AcademyNotFound);
 
                     var userId = (Guid)_httpContextAccessor.HttpContext!.Items["UserId"]!;
+
+                    // Check if the user has already joined the Academy
+                    if(await _dbContext.AcademyMembers.AnyAsync(x => x.GenericUserId == userId && x.AcademyId == academyId)) 
+                        return new BaseResponse(false, _appSettings.UserAlreadyExistInAcademy);
 
                     // Add user to the Academy
                     var newAcademyMember = new AcademyMembers

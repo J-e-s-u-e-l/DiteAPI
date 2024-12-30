@@ -59,14 +59,14 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                     {
                         FirstName = request.FirstName,
                         LastName = request.LastName,
-                        MiddleName = request.MiddleName,
+                        //MiddleName = request.MiddleName,
                         Email = request.Email,
                         NormalizedEmail = request.Email!.ToUpperInvariant(),
-                        DateOfBirth = request.DateOfBirth,
-                        UserGender = request.UserGender,
+                        //DateOfBirth = request.DateOfBirth,
+                        //UserGender = request.UserGender,
                         UserName = request.UserName,
                         NormalizedUserName = request.UserName!.ToUpperInvariant(),
-                        PhoneNumber = request.PhoneNumber,
+                        //PhoneNumber = request.PhoneNumber,
                         EmailConfirmed = false
                     };
                     await _dbContext.AddAsync(user, cancellationToken);

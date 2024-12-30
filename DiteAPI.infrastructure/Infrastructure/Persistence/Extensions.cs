@@ -34,7 +34,7 @@ namespace DiteAPI.infrastructure.Infrastructure.Persistence
         {
             services.AddCors(options =>
             {
-                var origin = "http://127.0.0.1:5500";
+                string[] origins = { "http://127.0.0.1:5500", "http://localhost:3000" };
 
                 options.AddPolicy("MyCorsPolicy", builder =>
                 {
@@ -42,7 +42,7 @@ namespace DiteAPI.infrastructure.Infrastructure.Persistence
                     builder.AllowAnyMethod();
                     builder.AllowAnyHeader();
                     builder.AllowCredentials();
-                    builder.WithOrigins(origin);
+                    builder.WithOrigins(origins);
                 });
             });
 

@@ -14,7 +14,6 @@ namespace DiteAPI.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
     [CustomAuthorize]
     public class AcademyController : ControllerBase
     {
@@ -44,7 +43,27 @@ namespace DiteAPI.Api.Controllers
                 var modelxfmed = new CreateAcademyCommand { AcademyName = request.AcademyName, Tracks = request.Tracks};
                 var req = JsonConvert.SerializeObject(modelxfmed);
 
-                _logger.LogInformation($"ACADEMY_CONTROLLER => User attempt to Create new Academy {req}");
+                _logger.LogInformation($"ACADEMY_CONTROLLER => User attempt to CREATE new ACADEMY {req}");
+                var response = await _mediator.Send(request);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"ACADEMY_CONTOLLER => Something went wrong\n {ex.StackTrace}: {ex.Message}");
+                return StatusCode(500, $"{_appSettings.ProcessingError}");
+            }
+        }
+
+        [HttpPost("join-academy")]
+        public async Task<IActionResult> JoinAcademy([FromForm] JoinAcademyCommand request)
+        {
+            try
+            {
+                var modelxfmed = new JoinAcademyCommand { AcademyCode = request.AcademyCode };
+                var req = JsonConvert.SerializeObject(modelxfmed);
+
+                _logger.LogInformation($"ACADEMY_CONTROLLER => User attempt to JOIN an ACADEMY {req}");
                 var response = await _mediator.Send(request);
 
                 return Ok(response);

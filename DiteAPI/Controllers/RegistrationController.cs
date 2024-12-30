@@ -41,11 +41,13 @@ namespace DiteAPI.Api.Controllers
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]*/
 
         [HttpPost("user")]
-        public async Task<IActionResult> RegisterNewUser([FromForm] RegistrationCommand request)
+        //public async Task<IActionResult> RegisterNewUser([FromForm] RegistrationCommand request)
+        public async Task<IActionResult> RegisterNewUser(RegistrationCommand request)
         {
             try
             {
-                var modelxfmed = new RegistrationCommand { FirstName = request.FirstName, LastName = request.LastName, MiddleName = request.MiddleName, DateOfBirth = request.DateOfBirth, UserGender = request.UserGender, Email = request.Email, UserName = request.UserName, PhoneNumber = request.PhoneNumber };
+                var modelxfmed = new RegistrationCommand { FirstName = request.FirstName, LastName = request.LastName, Email = request.Email, UserName = request.UserName, };
+                //var modelxfmed = new RegistrationCommand { FirstName = request.FirstName, LastName = request.LastName, MiddleName = request.MiddleName, DateOfBirth = request.DateOfBirth, UserGender = request.UserGender, Email = request.Email, UserName = request.UserName, PhoneNumber = request.PhoneNumber };
                 var req = JsonConvert.SerializeObject(modelxfmed);
 
                 _logger.LogInformation($"REGISTRATION_CONTROLLER => User attempt to REGISTER {req}");
@@ -54,6 +56,46 @@ namespace DiteAPI.Api.Controllers
                 return Ok(response);
             }
             catch(Exception ex)
+            {
+                _logger.LogError($"REGISTRATION_CONTOLLER => Something went wrong\n {ex.StackTrace}: {ex.Message}");
+                return StatusCode(500, $"{_appSettings.ProcessingError}");
+            }
+        }
+
+        [HttpPost("uniqueEmail")]
+        public async Task<IActionResult> IsEmailUnique(UniqueEmailCheckRequest request)
+        {
+            try
+            {
+                var modelxfmed = new UniqueEmailCheckRequest { Email = request.Email };
+                var req = JsonConvert.SerializeObject(modelxfmed);
+
+                _logger.LogInformation($"REGISTRATION_CONTROLLER => Checking EMAIL uniqueness as User attempt to REGISTER {req}");
+                var response = await _mediator.Send(request);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REGISTRATION_CONTOLLER => Something went wrong\n {ex.StackTrace}: {ex.Message}");
+                return StatusCode(500, $"{_appSettings.ProcessingError}");
+            }
+        }
+
+        [HttpPost("uniqueUsername")]
+        public async Task<IActionResult> IsUsernameUnique(UniqueUsernameCheckRequest request)
+        {
+            try
+            {
+                var modelxfmed = new UniqueUsernameCheckRequest { Username = request.Username };
+                var req = JsonConvert.SerializeObject(modelxfmed);
+
+                _logger.LogInformation($"REGISTRATION_CONTROLLER => Checking USERNAME uniqueness as User attempt to REGISTER {req}");
+                var response = await _mediator.Send(request);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
             {
                 _logger.LogError($"REGISTRATION_CONTOLLER => Something went wrong\n {ex.StackTrace}: {ex.Message}");
                 return StatusCode(500, $"{_appSettings.ProcessingError}");

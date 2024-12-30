@@ -13,12 +13,12 @@ namespace DiteAPI.Api.Application.CQRS.Commands
 #nullable disable
         public string FirstName { get; set; } 
         public string LastName { get; set; } 
-        public string MiddleName { get; set; }
-        public DateOnly DateOfBirth { get; set; }
-        public Gender UserGender { get; set; }
+        //public string MiddleName { get; set; }
+        //public DateOnly DateOfBirth { get; set; }
+        //public Gender UserGender { get; set; }
         public string Email { get; set; }
         public string UserName { get; set; }
-        public string PhoneNumber { get; set; }  
+        //public string PhoneNumber { get; set; }  
         public string Password { get; set; }
         public string ConfirmPassword { get; set; } 
     }
@@ -30,28 +30,28 @@ namespace DiteAPI.Api.Application.CQRS.Commands
         {
             _dbContext = dbContext;
 
-            RuleFor(x => x.FirstName)
-                .NotNull()
-                .NotEmpty().WithMessage("Firstname is required.")
-                .MaximumLength(100).WithMessage("Username must not be greater than 100 characters.");
+            //RuleFor(x => x.FirstName)
+            //    .NotNull()
+            //    .NotEmpty().WithMessage("Firstname is required.")
+            //    .MaximumLength(100).WithMessage("Username must not be greater than 100 characters.");
 
-            RuleFor(x => x.LastName)
-                .NotNull()
-                .NotEmpty().WithMessage("Lastname is required.")
-                .MaximumLength(100).WithMessage("Username must not be greater than 100 characters.");
+            //RuleFor(x => x.LastName)
+            //    .NotNull()
+            //    .NotEmpty().WithMessage("Lastname is required.")
+            //    .MaximumLength(100).WithMessage("Username must not be greater than 100 characters.");
 
-            RuleFor(x => x.MiddleName)
+            /*RuleFor(x => x.MiddleName)
                 .NotNull()
                 .NotEmpty().WithMessage("Middlename is required.")
-                .MaximumLength(100).WithMessage("Username must not be greater than 100 characters.");
+                .MaximumLength(100).WithMessage("Username must not be greater than 100 characters.");*/
 
-            RuleFor(x => x.DateOfBirth)
+/*            RuleFor(x => x.DateOfBirth)
                 .NotNull()
                 .NotEmpty().WithMessage("Date of birth is required.");
-                //.Must(BeAValidDate).WithMessage("Invalid date format!");
+                //.Must(BeAValidDate).WithMessage("Invalid date format!");*/
 
-            RuleFor(x => x.UserGender)
-                .IsInEnum();
+           /* RuleFor(x => x.UserGender)
+                .IsInEnum();*/
 
             RuleFor(x => x.Email)
                 .NotNull()
@@ -61,16 +61,16 @@ namespace DiteAPI.Api.Application.CQRS.Commands
 
             RuleFor(x => x.UserName)
                 .NotNull()
-                .NotEmpty().WithMessage("Firstname is required.")
+                .NotEmpty().WithMessage("Username is required.")
                 .Length(3, 20).WithMessage("Username must be between 3 and 20 characters.")
                 .Must(UserName => UserName.ToLowerInvariant() != "admin").WithMessage("This Username is unavailable for use")
                 .Must(UserName => UserName.ToLowerInvariant() != "facilitator").WithMessage("This name is unavailable for use")
                 .Must(BeUniqueUsername).WithMessage("Username is already taken.");
 
-            RuleFor(x => x.PhoneNumber)
+            /*RuleFor(x => x.PhoneNumber)
                 .NotNull()
                 .NotEmpty().WithMessage("Phone number is required.")
-                .Must(BeUniquePhoneNumber).WithMessage("Phone number is already taken.");
+                .Must(BeUniquePhoneNumber).WithMessage("Phone number is already taken.");*/
 
             RuleFor(x => x.Password)
                 .NotNull()
@@ -94,10 +94,10 @@ namespace DiteAPI.Api.Application.CQRS.Commands
         }
         
 
-        private bool BeUniquePhoneNumber(string phoneNumber)
+        /*private bool BeUniquePhoneNumber(string phoneNumber)
         {
             return ! _dbContext.GenericUser.Any(u => u.PhoneNumber == phoneNumber);
-        }
+        }*/
 
        /* private bool BeValidDateOnly(DateOnly value)
         {
