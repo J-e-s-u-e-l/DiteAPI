@@ -57,8 +57,8 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
 */
                     var user = new GenericUser()
                     {
-                        FirstName = request.FirstName,
-                        LastName = request.LastName,
+                        //FirstName = request.FirstName,
+                        //LastName = request.LastName,
                         //MiddleName = request.MiddleName,
                         Email = request.Email,
                         NormalizedEmail = request.Email!.ToUpperInvariant(),
@@ -88,7 +88,7 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                     var sendEmail = await _accountService.SendOTPAsync(new SendOTPToUser
                     {
                         UserId = user.Id,
-                        FirstName = request.FirstName,
+                        FirstName = request.UserName,
                         Recipient = request.Email,
                         Purpose = VerificationPurposeEnum.EmailConfirmation,
                         OtpCodeLength = OtpCodeLengthEnum.Six,

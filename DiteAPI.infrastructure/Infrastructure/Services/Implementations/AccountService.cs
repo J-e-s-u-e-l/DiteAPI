@@ -66,8 +66,18 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Implementations
             if (request.RecipientType == OtpRecipientTypeEnum.Email)
             {
                 // Generate email body and send email to user
-                await SendEmailOtpAsync(request, code, "Dite" ?? "");
+                var response = await SendEmailOtpAsync(request, code, "Dite" ?? "");
+
+                if (response.Status == false)
+                {
+                    _logger?.LogError($"AccountService > Sending OTP to {request.Recipient} FAILED!");
+                    return new BaseResponse<OtpRequestResult>(false, "Application Error! Failed to send OTP.", new OtpRequestResult
+                    {
+                        Recipent = request.Recipient
+                    });
+                }
             }
+
 
             _logger?.LogInformation($"AccountService > OTP sent to {request.Recipient}");
             return new BaseResponse<OtpRequestResult>(true, "OTP sent successfully", new OtpRequestResult
@@ -75,11 +85,12 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Implementations
                 Recipent = request.Recipient
             });
         }
-        private async Task SendEmailOtpAsync(SendOTPToUser request, string code, string applicationName)
+        private async Task<BaseResponse> SendEmailOtpAsync(SendOTPToUser request, string code, string applicationName)
         {
             var emailBodyRequest = new EmailBodyRequest { Email = request.Recipient, FirstName = request.FirstName };
 
             var emailBodyResponse = new BaseResponse<EmailBodyResponse>();
+            BaseResponse response = new BaseResponse(false, "");
 
             switch (request.Purpose)
             {
@@ -124,7 +135,7 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Implementations
                 Console.WriteLine(plainEmailBody);
 
                 // Send email to user
-                await _emailService.SendEmailAsync(new SingleEmailRequest
+                response = await _emailService.SendEmailAsync(new SingleEmailRequest
                 {
                     RecipientEmailAddress = request.Recipient,
                     RecipientName = request.FirstName,
@@ -133,6 +144,8 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Implementations
                     PlainEmailBody = plainEmailBody
                 });
             }
+
+            return response;
         }
 
         public async Task<BaseResponse<VerificationLinkRequestResult>> SendVerificationLinkAsync(SendVerificationLinkToUser request, CancellationToken cancellationToken)

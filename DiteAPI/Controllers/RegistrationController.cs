@@ -46,7 +46,7 @@ namespace DiteAPI.Api.Controllers
         {
             try
             {
-                var modelxfmed = new RegistrationCommand { FirstName = request.FirstName, LastName = request.LastName, Email = request.Email, UserName = request.UserName, };
+                var modelxfmed = new RegistrationCommand { Email = request.Email, UserName = request.UserName, };
                 //var modelxfmed = new RegistrationCommand { FirstName = request.FirstName, LastName = request.LastName, MiddleName = request.MiddleName, DateOfBirth = request.DateOfBirth, UserGender = request.UserGender, Email = request.Email, UserName = request.UserName, PhoneNumber = request.PhoneNumber };
                 var req = JsonConvert.SerializeObject(modelxfmed);
 
@@ -57,7 +57,7 @@ namespace DiteAPI.Api.Controllers
             }
             catch(Exception ex)
             {
-                _logger.LogError($"REGISTRATION_CONTOLLER => Something went wrong\n {ex.StackTrace}: {ex.Message}");
+                _logger.LogError($"REGISTRATION_CONTROLLER => Something went wrong\n {ex.StackTrace}: {ex.Message}");
                 return StatusCode(500, $"{_appSettings.ProcessingError}");
             }
         }

@@ -4,6 +4,7 @@ using DiteAPI.infrastructure.Infrastructure.Auth;
 using DiteAPI.infrastructure.Infrastructure.Persistence;
 using DiteAPI.Infrastructure.Infrastructure.Auth;
 using DiteAPI.Infrastructure.Infrastructure.Auth.JWT;
+using DiteAPI.Infrastructure.Infrastructure.Utilities.Middleware;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
@@ -52,7 +53,8 @@ namespace DiteAPI
                     var errors = context.ModelState
                         .Where(e => e.Value!.Errors.Count > 0)
                         .SelectMany(x => x.Value!.Errors)
-                        .Select(x => x.ErrorMessage)
+                        //.Select(x => x.ErrorMessage)
+                        .Select(x => MapErrorMessage(x.ErrorMessage))
                         .ToList();
 
                     var result = new ValidationResultModel
@@ -64,6 +66,19 @@ namespace DiteAPI
 
                     return new BadRequestObjectResult(result);
                 };
+
+                // Method to map detailed error messages to user-friendly messages
+                string MapErrorMessage(string errorMessage)
+                {
+                    if (errorMessage.Contains("The JSON value could not be converted"))
+                        return "Invalid data format. Please check your input.";
+
+                    else if (errorMessage.Contains("The request field is required"))
+                        return "Some required fields are missing.";
+
+                    return "An error occurred. Please check your input.";
+                }
+
             });
 
             builder.Services.AddLogging(options =>
@@ -125,6 +140,7 @@ namespace DiteAPI
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseMiddleware<JwtMiddleware>();
+            app.UseMiddleware<JsonExceptionMiddleware>();
             app.MapHub<DiscussionHub>("/api/discussion-hub");
             /*app.UseEndpoints(endpoints =>
             {

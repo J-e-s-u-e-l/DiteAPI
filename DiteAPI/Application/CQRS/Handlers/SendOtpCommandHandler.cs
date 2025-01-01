@@ -53,7 +53,7 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
 
                         var sendEmail = await _accountService.SendOTPAsync(new SendOTPToUser
                         { 
-                            FirstName = user.FirstName,
+                            FirstName = user.UserName,
                             OtpCodeLength = OtpCodeLengthEnum.Six,
                             Purpose = request.Purpose,
                             Recipient = user.Email!,

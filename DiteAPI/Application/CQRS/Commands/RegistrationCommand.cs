@@ -11,8 +11,8 @@ namespace DiteAPI.Api.Application.CQRS.Commands
     public class RegistrationCommand : IRequest<BaseResponse>
     {
 #nullable disable
-        public string FirstName { get; set; } 
-        public string LastName { get; set; } 
+        /*public string FirstName { get; set; } 
+        public string LastName { get; set; } */
         //public string MiddleName { get; set; }
         //public DateOnly DateOfBirth { get; set; }
         //public Gender UserGender { get; set; }
@@ -20,7 +20,7 @@ namespace DiteAPI.Api.Application.CQRS.Commands
         public string UserName { get; set; }
         //public string PhoneNumber { get; set; }  
         public string Password { get; set; }
-        public string ConfirmPassword { get; set; } 
+        //public string ConfirmPassword { get; set; } 
     }
 
     public class RegistrationValidator : AbstractValidator<RegistrationCommand>
@@ -77,7 +77,7 @@ namespace DiteAPI.Api.Application.CQRS.Commands
                 .NotEmpty().WithMessage("Password is required.")
                 .Matches(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{}|;':"",<.>\/?])[A-Za-z\d!@#$%^&*()_+\-=\[\]{}|;':"",<.>\/?]{8,}$").WithMessage("Invalid password format. Your password must be at least 8 characters long and include at least one digit, one lowercase letter, one uppercase letter, and one special character.");
 
-            RuleFor(x => x.ConfirmPassword).Equal(x => x.Password).WithMessage("The confirmation password does not match the entered password.");
+            //RuleFor(x => x.ConfirmPassword).Equal(x => x.Password).WithMessage("The confirmation password does not match the entered password.");
         }
 
         // checks if the username is being used by another user
