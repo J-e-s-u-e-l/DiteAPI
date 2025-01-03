@@ -39,7 +39,8 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Implementations
 
                using var smtp = new SmtpClient();
                //For Production:
-               await smtp.ConnectAsync(_configuration["MailKitSection:EmailHost"], _configuration.GetValue<int>("MailKitSection:Port"), SecureSocketOptions.SslOnConnect);
+               await smtp.ConnectAsync(_configuration["MailKitSection:EmailHost"], _configuration.GetValue<int>("MailKitSection:Port"), SecureSocketOptions.Auto);
+               //await smtp.ConnectAsync(_configuration["MailKitSection:EmailHost"], _configuration.GetValue<int>("MailKitSection:Port"), SecureSocketOptions.SslOnConnect);
 
                //For Development:
                /* //await smtp.ConnectAsync(_configuration["MailKitSection:EmailHost"], _configuration.GetValue<int>("MailKitSection:Port"), SecureSocketOptions.StartTls);

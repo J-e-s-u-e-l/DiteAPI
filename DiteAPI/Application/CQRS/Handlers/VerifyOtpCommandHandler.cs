@@ -17,65 +17,76 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
         private readonly DataDBContext _dbContext;
         private readonly IAccountService _accountService;
         private readonly ISessionService _sessionService;
+        private readonly ILogger<VerifyOtpCommandHandler> _logger;
         private readonly AppSettings _appSettings;
 
-        public VerifyOtpCommandHandler(DataDBContext dbContext, UserManager<GenericUser> userManager, ILogger<RegistrationCommand> logger, IAccountService accountService, IEmailService emailService, ISessionService sessionService, IOptions<AppSettings> options)
+        public VerifyOtpCommandHandler(DataDBContext dbContext, UserManager<GenericUser> userManager, ILogger<VerifyOtpCommandHandler> logger, IAccountService accountService, IEmailService emailService, ISessionService sessionService, IOptions<AppSettings> options)
         {
             _dbContext = dbContext;
             _accountService = accountService;
             _sessionService = sessionService;
             _appSettings = options.Value;
+            _logger = logger;
         }
 
         public async Task<BaseResponse> Handle(VerifyOtpCommand request, CancellationToken cancellationToken)
         {
-            var userIdFromSession = _sessionService.GetStringFromSession("UserId");
-            if (userIdFromSession == null)
-                return new BaseResponse(false, $"{_appSettings.NoActiveSession}");
-
-            var user = _dbContext.Users.FirstOrDefault(x => x.Id == Guid.Parse(userIdFromSession));
-            if (user is null)
-                return new BaseResponse(false, _appSettings.NoActiveSession);
-
-            var validateOtp = new BaseResponse(false, "");
-
-            switch (request.Purpose)
+            try
             {
-                case VerificationPurposeEnum.EmailConfirmation:
-                    validateOtp = await _accountService.ValidateCodeAsync(new ValidateCodeRequest
-                    {
-                        Code = request.Code,
-                        Purpose = VerificationPurposeEnum.EmailConfirmation,
-                        UserId = user.Id
-                    }, cancellationToken);
+                var userIdFromSession = _sessionService.GetStringFromSession("UserId");
+                if (userIdFromSession == null)
+                    return new BaseResponse(false, $"{_appSettings.NoActiveSession}");
 
-                    if (!validateOtp.Status)
-                        return new BaseResponse(false, validateOtp.Message ?? $"{_appSettings.InvalidOtp}");
+                var user = _dbContext.Users.FirstOrDefault(x => x.Id == Guid.Parse(userIdFromSession));
+                if (user is null)
+                    return new BaseResponse(false, _appSettings.NoActiveSession);
 
-                    user.EmailConfirmed = true;
-                    await _dbContext.SaveChangesAsync(cancellationToken);
-                break;
+                var validateOtp = new BaseResponse(false, "");
 
-                case VerificationPurposeEnum.PasswordReset:
-                    validateOtp = await _accountService.ValidateCodeAsync(new ValidateCodeRequest
-                    {
-                        Code = request.Code,
-                        Purpose = VerificationPurposeEnum.PasswordReset,
-                        UserId = user.Id
-                    }, cancellationToken);
+                switch (request.Purpose)
+                {
+                    case VerificationPurposeEnum.EmailConfirmation:
+                        validateOtp = await _accountService.ValidateCodeAsync(new ValidateCodeRequest
+                        {
+                            Code = request.Code,
+                            Purpose = VerificationPurposeEnum.EmailConfirmation,
+                            UserId = user.Id
+                        }, cancellationToken);
 
-                    if (!validateOtp.Status)
-                        return new BaseResponse(false, validateOtp.Message ?? $"{_appSettings.InvalidOtp}");
+                        if (!validateOtp.Status)
+                            return new BaseResponse(false, validateOtp.Message ?? $"{_appSettings.InvalidOtp}");
 
-                    _sessionService.SetStringInSession("IsOtpVerified", "true");
-                break;
+                        user.EmailConfirmed = true;
+                        await _dbContext.SaveChangesAsync(cancellationToken);
+                    break;
+
+                    case VerificationPurposeEnum.PasswordReset:
+                        validateOtp = await _accountService.ValidateCodeAsync(new ValidateCodeRequest
+                        {
+                            Code = request.Code,
+                            Purpose = VerificationPurposeEnum.PasswordReset,
+                            UserId = user.Id
+                        }, cancellationToken);
+
+                        if (!validateOtp.Status)
+                            return new BaseResponse(false, validateOtp.Message ?? $"{_appSettings.InvalidOtp}");
+
+                        _sessionService.SetStringInSession("IsOtpVerified", "true");
+                    break;
+                }
+
+                if (request.Purpose == VerificationPurposeEnum.EmailConfirmation)
+                    return new BaseResponse(true, $"{_appSettings.EmailVerified}");
+
+                else
+                    return new BaseResponse(true, $"{_appSettings.OtpVerified}");
             }
-
-            if (request.Purpose == VerificationPurposeEnum.EmailConfirmation)
-                return new BaseResponse(true, $"{_appSettings.EmailVerified}");
-
-            else
-                return new BaseResponse(true, $"{_appSettings.OtpVerified}");
+            catch (Exception ex)
+            {
+                _logger.LogError($"VERIFY_OTP_HANDLER => Something went wrong\n{ex.StackTrace}: {ex.Message}");
+                return new BaseResponse(false, $"{_appSettings.ProcessingError}");
+            }
+            
         }
     }
 }

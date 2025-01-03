@@ -40,9 +40,22 @@ namespace DiteAPI
             builder.Services.AddSession(options =>
             {
                 options.Cookie.HttpOnly = true;
+                //options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+
+                //options.Cookie.SecurePolicy.HasFlag(CookieSecurePolicy.Always);
                 options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                 options.IdleTimeout = TimeSpan.FromSeconds(1800);
+                options.Cookie.SameSite = SameSiteMode.None;
             });
+            /*builder.Services.AddSession(options =>
+            {
+                options.Cookie.HttpOnly = true;
+                options.Cookie.SecurePolicy = builder.Environment.IsDevelopment()
+                                              ? CookieSecurePolicy.None
+                                              : CookieSecurePolicy.Always;
+                options.Cookie.SameSite = SameSiteMode.None;
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+            });*/
 
             builder.Services.AddFluentValidationAutoValidation();
             builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());

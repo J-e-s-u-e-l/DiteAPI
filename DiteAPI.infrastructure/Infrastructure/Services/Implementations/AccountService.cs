@@ -278,6 +278,7 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Implementations
             _logger.LogInformation($"ACCOUNT_SERVICE Validating code => Process started");
 
             var codeVerification = await _dbContext.OtpVerifications.FirstOrDefaultAsync(v => v.UserId == tokenRequest.UserId && v.Status == OtpTokenStatusEnum.Sent && v.Purpose == tokenRequest.Purpose && v.Code.Equals(tokenRequest.Code), cancellationToken);
+            //var codeVerification = await _dbContext.OtpVerifications.FirstOrDefaultAsync(v => v.UserId == tokenRequest.UserId && v.Status == OtpTokenStatusEnum.Invalidated && v.Purpose == tokenRequest.Purpose && v.Code.Equals(tokenRequest.Code), cancellationToken);
             if (codeVerification == null)
             {
                 _logger.LogInformation($"ACCOUNT_SERVICE Validating code => No pending code found for this user");
@@ -285,7 +286,7 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Implementations
             }
 
             // Check expiry
-            if (DateTime.UtcNow > codeVerification.TimeCreated.AddMinutes(15))
+            if (DateTime.UtcNow > codeVerification.TimeCreated.AddMinutes(30))
             {
                 _logger.LogInformation($"ACCOUNT_SERVICE => Validating code failed. Validation code has expired");
 

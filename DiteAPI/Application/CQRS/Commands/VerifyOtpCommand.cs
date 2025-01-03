@@ -16,7 +16,8 @@ namespace DiteAPI.Api.Application.CQRS.Commands
         public VerifyEmailRequestValidator()
         {
             RuleFor(x => x.Code).NotNull().NotEmpty().WithMessage("Verification code is required");
-            RuleFor(x => x.Purpose).NotNull().NotEmpty().IsInEnum();
+            //RuleFor(x => x.Purpose).NotNull().NotEmpty().IsInEnum();
+            RuleFor(x => x.Purpose).NotNull().NotEmpty().WithMessage("Purpose value is required");
         }
     }
 }
