@@ -7,10 +7,11 @@ using MediatR;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
+using DiteAPI.infrastructure.Data.Models;
 
 namespace DiteAPI.Api.Application.CQRS.Handlers
 {
-    public class CreateAcademyCommandHandler : IRequestHandler<CreateAcademyCommand, BaseResponse>
+    public class CreateAcademyCommandHandler : IRequestHandler<CreateAcademyCommand, BaseResponse<CreateAcademyResponse>>
     {
         private readonly DataDBContext _dbContext;
         private readonly ILogger<RegistrationCommand> _logger;
@@ -32,7 +33,7 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<BaseResponse> Handle(CreateAcademyCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<CreateAcademyResponse>> Handle(CreateAcademyCommand request, CancellationToken cancellationToken)
         {
             try
             {
@@ -70,6 +71,7 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                     await _dbContext.SaveChangesAsync(cancellationToken);
 
                     var academyId = await _dbContext.Academy.Where(x => x.AcademyCode == newAcademyCode).Select(x => x.Id).FirstOrDefaultAsync();
+                    
                     // Add Creator to the Academy
                     var newAcademyMember = new AcademyMembers
                     {
@@ -82,19 +84,29 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                     await _dbContext.SaveChangesAsync(cancellationToken);
                     await transaction.CommitAsync(cancellationToken);
 
-                    return new BaseResponse(true, _appSettings.AcademyCreatedSuccessfully);
+                    var academyDetails = await _dbContext.Academy.FirstOrDefaultAsync();
+
+                    CreateAcademyResponse createAcademyResponse = new CreateAcademyResponse()
+                    {
+                        AcademyId = academyId,
+                        AcademyName = request.AcademyName,
+                        TrackNames = request.Tracks,
+                        AcademyDescription = request.Description
+                    };
+
+                    return new BaseResponse<CreateAcademyResponse>(true, _appSettings.AcademyCreatedSuccessfully, createAcademyResponse);
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError($"CREATE_ACADEMY_HANDLER => Something went wrong\n{ex.StackTrace}: {ex.Message}");
                     await transaction.RollbackAsync(cancellationToken).ConfigureAwait(false);
-                    return new BaseResponse(false, _appSettings.ProcessingError);
+                    return new BaseResponse<CreateAcademyResponse>(false, _appSettings.ProcessingError);
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError($"CREATE_ACADEMY_HANDLER => Something went wrong\n{ex.StackTrace}: {ex.Message}");
-                return new BaseResponse(false, _appSettings.ProcessingError);
+                return new BaseResponse<CreateAcademyResponse>(false, _appSettings.ProcessingError);
             }
         }
 

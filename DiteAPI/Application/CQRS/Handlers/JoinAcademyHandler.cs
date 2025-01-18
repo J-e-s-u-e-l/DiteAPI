@@ -5,10 +5,11 @@ using DiteAPI.infrastructure.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using DiteAPI.Infrastructure.Config;
+using DiteAPI.infrastructure.Data.Models;
 
 namespace DiteAPI.Api.Application.CQRS.Handlers
 {
-    public class JoinAcademyHandler : IRequestHandler<JoinAcademyCommand, BaseResponse>
+    public class JoinAcademyHandler : IRequestHandler<JoinAcademyCommand, BaseResponse<JoinAcademyResponse>>
     {
         private readonly DataDBContext _dbContext;
         private readonly ILogger<RegistrationCommand> _logger;
@@ -23,7 +24,7 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<BaseResponse> Handle(JoinAcademyCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<JoinAcademyResponse>> Handle(JoinAcademyCommand request, CancellationToken cancellationToken)
         {
             try
             {
@@ -33,14 +34,14 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                     // Check if Academy exists
                     var academyId = await _dbContext.Academy.Where(x => x.AcademyCode == request.AcademyCode).Select(x => x.Id).FirstOrDefaultAsync();
 
-                    if (academyId == null)
-                        return new BaseResponse(false, _appSettings.AcademyNotFound);
+                    if (academyId == Guid.Empty)
+                        return new BaseResponse<JoinAcademyResponse>(false, _appSettings.AcademyNotFound);
 
                     var userId = (Guid)_httpContextAccessor.HttpContext!.Items["UserId"]!;
 
                     // Check if the user has already joined the Academy
                     if(await _dbContext.AcademyMembers.AnyAsync(x => x.GenericUserId == userId && x.AcademyId == academyId)) 
-                        return new BaseResponse(false, _appSettings.UserAlreadyExistInAcademy);
+                        return new BaseResponse<JoinAcademyResponse>(false, _appSettings.UserAlreadyExistInAcademy);
 
                     // Add user to the Academy
                     var newAcademyMember = new AcademyMembers
@@ -54,19 +55,24 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                     await _dbContext.SaveChangesAsync();
                     await transaction.CommitAsync(cancellationToken);
 
-                    return new BaseResponse(true, _appSettings.AcademyEnrollmentSuccessful);
+                    JoinAcademyResponse joinAcademyResponse = new JoinAcademyResponse
+                    {
+                        AcademyId = academyId
+                    };
+
+                    return new BaseResponse<JoinAcademyResponse>(true, _appSettings.AcademyEnrollmentSuccessful, joinAcademyResponse);
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError($"JOIN_ACADEMY_HANDLER => Something went wrong\n{ex.StackTrace}: {ex.Message}");
                     await transaction.RollbackAsync(cancellationToken).ConfigureAwait(false);
-                    return new BaseResponse(false, _appSettings.ProcessingError);
+                    return new BaseResponse<JoinAcademyResponse>(false, _appSettings.ProcessingError);
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError($"CREATE_ACADEMY_HANDLER => Something went wrong\n{ex.StackTrace}: {ex.Message}");
-                return new BaseResponse(false, _appSettings.ProcessingError);
+                return new BaseResponse<JoinAcademyResponse>(false, _appSettings.ProcessingError);
             }
         }
     }

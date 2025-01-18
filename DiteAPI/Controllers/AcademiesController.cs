@@ -1,4 +1,6 @@
 ﻿using DiteAPI.Api.Application.CQRS.Commands;
+using DiteAPI.Api.Application.CQRS.Queries;
+using DiteAPI.infrastructure.Data.Entities;
 using DiteAPI.Infrastructure.Config;
 using DiteAPI.Infrastructure.Infrastructure.Auth;
 using DiteAPI.Infrastructure.Infrastructure.Services.Implementations;
@@ -15,13 +17,13 @@ namespace DiteAPI.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [CustomAuthorize]
-    public class AcademyController : ControllerBase
+    public class AcademiesController : ControllerBase
     {
         private readonly IMediator _mediator;
         ILogger<AuthController> _logger;
         private readonly AppSettings _appSettings;
 
-        public AcademyController(IMediator mediator, ILogger<AuthController> logger, IOptions<AppSettings> options)
+        public AcademiesController(IMediator mediator, ILogger<AuthController> logger, IOptions<AppSettings> options)
         {
             _mediator = mediator;
             _logger = logger;
@@ -36,7 +38,7 @@ namespace DiteAPI.Api.Controllers
         /// <response code="400">If validation fails due to validation errors"</response>
         /// <response code="500">If application encountered an exception"</response>
         [HttpPost("create-academy")]
-        public async Task<IActionResult> CreateAcademy([FromForm] CreateAcademyCommand request)
+        public async Task<IActionResult> CreateAcademy(CreateAcademyCommand request)
         {
             try
             {
@@ -56,7 +58,7 @@ namespace DiteAPI.Api.Controllers
         }
 
         [HttpPost("join-academy")]
-        public async Task<IActionResult> JoinAcademy([FromForm] JoinAcademyCommand request)
+        public async Task<IActionResult> JoinAcademy(JoinAcademyCommand request)
         {
             try
             {
@@ -65,6 +67,40 @@ namespace DiteAPI.Api.Controllers
 
                 _logger.LogInformation($"ACADEMY_CONTROLLER => User attempt to JOIN an ACADEMY {req}");
                 var response = await _mediator.Send(request);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"ACADEMY_CONTOLLER => Something went wrong\n {ex.StackTrace}: {ex.Message}");
+                return StatusCode(500, $"{_appSettings.ProcessingError}");
+            }
+        }
+
+        [HttpGet("user-academies")]
+        public async Task<IActionResult> GetUserAcademies()
+        {
+            try
+            {
+                _logger.LogInformation($"ACADEMY_CONTROLLER => User attempt to GET all joined ACADEMY");
+                var response = await _mediator.Send(new GetUserAcademiesQuery());
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"ACADEMY_CONTOLLER => Something went wrong\n {ex.StackTrace}: {ex.Message}");
+                return StatusCode(500, $"{_appSettings.ProcessingError}");
+            }
+        }
+        
+        [HttpGet("{academyId}")]
+        public async Task<IActionResult> GetAcademyDetails([FromRoute] Guid academyId)
+        {
+            try
+            {
+                _logger.LogInformation($"ACADEMY_CONTROLLER => User attempt to GET ACADEMY Details");
+                var response = await _mediator.Send(new GetAcademyDetailsQuery(academyId));
 
                 return Ok(response);
             }

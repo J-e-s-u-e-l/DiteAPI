@@ -25,6 +25,34 @@ namespace DiteAPI.infrastructure.Data.Models
         public string Expires { get; set; }
     }
 
+    public class CreateAcademyResponse
+    {
+        public Guid AcademyId { get; set; }
+        public string AcademyName { get; set; }
+        public List<string> TrackNames { get; set; }
+        public string AcademyDescription { get; set; }
+    }
+
+    public class JoinAcademyResponse
+    {
+        public Guid AcademyId { get; set; }
+    }
+
+    public class GetUserAcademiesResponse
+    {
+        public Guid AcademyId { get; set; }
+        public string AcademyName { get; set; }
+        public string AcademyDescription { get; set; }
+        public string AcademyMembersCount { get; set; }
+        public string AcademyTracksCount { get; set; }
+        public bool AcademyCreatedByUser { get; set; }
+    }
+
+    public class GetAcademyDetailsResponse
+    {
+        public string AcademyName { get; set; }
+    }
+
     public class JwtRequest
     {
     #nullable disable
@@ -33,10 +61,5 @@ namespace DiteAPI.infrastructure.Data.Models
         public string MiddleName { get; set; }
         public string EmailAddress{ get; set; }
         public Guid UserId { get; set; }
-    }
-
-    public class CreateAcademyResponse
-    {
-
     }
 }

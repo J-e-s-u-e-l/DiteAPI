@@ -1,10 +1,11 @@
 ﻿using DiteAPI.infrastructure.Data.Entities;
+using DiteAPI.infrastructure.Data.Models;
 using FluentValidation;
 using MediatR;
 
 namespace DiteAPI.Api.Application.CQRS.Commands
 {
-    public class CreateAcademyCommand : IRequest<BaseResponse>
+    public class CreateAcademyCommand : IRequest<BaseResponse<CreateAcademyResponse>>
     {
         public string AcademyName { get; set; }
         public List<string> Tracks { get; set; }
