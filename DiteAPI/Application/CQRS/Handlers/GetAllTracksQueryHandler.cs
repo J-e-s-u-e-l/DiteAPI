@@ -5,10 +5,11 @@ using DiteAPI.Api.Application.CQRS.Queries;
 using DiteAPI.infrastructure.Data.Entities;
 using DiteAPI.infrastructure.Data.Models;
 using Microsoft.EntityFrameworkCore;
+using MediatR;
 
 namespace DiteAPI.Api.Application.CQRS.Handlers
 {
-    public class GetAllTracksQueryHandler
+    public class GetAllTracksQueryHandler : IRequestHandler<GetAllTracksQuery, BaseResponse<IEnumerable<GetAllTracksResponse>>>
     {
         private readonly DataDBContext _dbContext;
         private readonly ILogger<GetAllTracksQueryHandler> _logger;

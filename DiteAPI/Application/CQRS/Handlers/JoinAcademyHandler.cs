@@ -13,11 +13,11 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
     public class JoinAcademyHandler : IRequestHandler<JoinAcademyCommand, BaseResponse<JoinAcademyResponse>>
     {
         private readonly DataDBContext _dbContext;
-        private readonly ILogger<RegistrationCommand> _logger;
+        private readonly ILogger<JoinAcademyHandler> _logger;
         private readonly AppSettings _appSettings;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public JoinAcademyHandler(DataDBContext dbContext, ILogger<RegistrationCommand> logger, IOptions<AppSettings> appSettings, IHttpContextAccessor httpContextAccessor)
+        public JoinAcademyHandler(DataDBContext dbContext, ILogger<JoinAcademyHandler> logger, IOptions<AppSettings> appSettings, IHttpContextAccessor httpContextAccessor)
         {
             _dbContext = dbContext;
             _logger = logger;

@@ -99,7 +99,10 @@ namespace DiteAPI.Api.Controllers
         {
             try
             {
-                _logger.LogInformation($"ACADEMY_CONTROLLER => User attempt to GET ACADEMY Details");
+                var modelxfmed = academyId;
+                var req = JsonConvert.SerializeObject(modelxfmed);
+
+                _logger.LogInformation($"ACADEMY_CONTROLLER => User attempt to GET ACADEMY Details \n{req}");
                 var response = await _mediator.Send(new GetAcademyDetailsQuery(academyId));
 
                 return Ok(response);
@@ -116,7 +119,10 @@ namespace DiteAPI.Api.Controllers
         {
             try
             {
-                _logger.LogInformation($"ACADEMY_CONTROLLER => User attempt to LEAVE ACADEMY");
+                var modelxfmed = academyId;
+                var req = JsonConvert.SerializeObject(modelxfmed);
+
+                _logger.LogInformation($"ACADEMY_CONTROLLER => User attempt to LEAVE ACADEMY \n{req}");
                 var response = await _mediator.Send(new LeaveAcademyCommand(academyId));
 
                 return Ok(response);
@@ -133,7 +139,10 @@ namespace DiteAPI.Api.Controllers
         {
             try
             {
-                _logger.LogInformation($"ACADEMY_CONTROLLER => User attempt to GET all MEMBERS in the ACADEMY");
+                var modelxfmed = academyId;
+                var req = JsonConvert.SerializeObject(modelxfmed);
+
+                _logger.LogInformation($"ACADEMY_CONTROLLER => User attempt to GET all MEMBERS in the ACADEMY \n{req}");
                 var response = await _mediator.Send(new GetAllMembersQuery(academyId));
 
                 return Ok(response);
@@ -150,8 +159,31 @@ namespace DiteAPI.Api.Controllers
         {
             try
             {
-                _logger.LogInformation($"ACADEMY_CONTROLLER => User attempt to GET all TRACKS in the ACADEMY");
+                var modelxfmed = academyId;
+                var req = JsonConvert.SerializeObject(modelxfmed);
+
+                _logger.LogInformation($"ACADEMY_CONTROLLER => User attempt to GET all TRACKS in the ACADEMY \n{req}");
                 var response = await _mediator.Send(new GetAllTracksQuery(academyId));
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"ACADEMY_CONTOLLER => Something went wrong\n {ex.StackTrace}: {ex.Message}");
+                return StatusCode(500, $"{_appSettings.ProcessingError}");
+            }
+        }
+
+        [HttpPut("members/change-role")]
+        public async Task<IActionResult> ChangeAcademyMemberRole(ChangeAcademyMemberRoleCommand request)
+        { 
+            try
+            {
+                var modelxfmed = new ChangeAcademyMemberRoleCommand { MemberId = request.MemberId, NewRoleName = request.NewRoleName, AssignedTracksIds = request.AssignedTracksIds, AcademyId = request.AcademyId };
+                var req = JsonConvert.SerializeObject(modelxfmed);
+
+                _logger.LogInformation($"ACADEMY_CONTROLLER => User attempt to CHANGE ACADEMY MEMBER ROLE \n{req}");
+                var response = await _mediator.Send(request);
 
                 return Ok(response);
             }
