@@ -110,5 +110,56 @@ namespace DiteAPI.Api.Controllers
                 return StatusCode(500, $"{_appSettings.ProcessingError}");
             }
         }
+        
+        [HttpDelete("{academyId}/leave")]
+        public async Task<IActionResult> LeaveAcademy([FromRoute] Guid academyId)
+        {
+            try
+            {
+                _logger.LogInformation($"ACADEMY_CONTROLLER => User attempt to LEAVE ACADEMY");
+                var response = await _mediator.Send(new LeaveAcademyCommand(academyId));
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"ACADEMY_CONTOLLER => Something went wrong\n {ex.StackTrace}: {ex.Message}");
+                return StatusCode(500, $"{_appSettings.ProcessingError}");
+            }
+        }
+
+        [HttpGet("{academyId}/members")]
+        public async Task<IActionResult> GetAllMembers([FromRoute] Guid academyId)
+        {
+            try
+            {
+                _logger.LogInformation($"ACADEMY_CONTROLLER => User attempt to GET all MEMBERS in the ACADEMY");
+                var response = await _mediator.Send(new GetAllMembersQuery(academyId));
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"ACADEMY_CONTOLLER => Something went wrong\n {ex.StackTrace}: {ex.Message}");
+                return StatusCode(500, $"{_appSettings.ProcessingError}");
+            }
+        }
+
+        [HttpGet("{academyId}/tracks")]
+        public async Task<IActionResult> GetAllTracks([FromRoute] Guid academyId)
+        {
+            try
+            {
+                _logger.LogInformation($"ACADEMY_CONTROLLER => User attempt to GET all TRACKS in the ACADEMY");
+                var response = await _mediator.Send(new GetAllTracksQuery(academyId));
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"ACADEMY_CONTOLLER => Something went wrong\n {ex.StackTrace}: {ex.Message}");
+                return StatusCode(500, $"{_appSettings.ProcessingError}");
+            }
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using DiteAPI.infrastructure.Infrastructures.Utilities.Enums;
+using DiteAPI.Infrastructure.Data.Entities;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -13,5 +14,9 @@ namespace DiteAPI.infrastructure.Data.Entities
         public string? Description { get; set; }
         public DateTimeOffset TimeCreated { get; set; }
         public DateTimeOffset TimeUpdated { get; set; }
+
+        // Navigation Properties
+        public virtual List<AcademyMembersRoles> AcademyMembersRoles { get; set; }               // 1 academy TO MANY AcademyMembersRoles
+
     }
 }

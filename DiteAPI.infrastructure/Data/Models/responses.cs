@@ -15,7 +15,6 @@ namespace DiteAPI.infrastructure.Data.Models
 
     public class LoginResponse
     {
-    #nullable disable
         public Guid UserId { get; set; }
         public string Email { get; set; }
         public string Firstname { get; set; }
@@ -51,6 +50,18 @@ namespace DiteAPI.infrastructure.Data.Models
     public class GetAcademyDetailsResponse
     {
         public string AcademyName { get; set; }
+    }
+
+    public class GetAllMembersResponse
+    {
+        public bool IsAnAdminInTheAcademy { get; set; }
+        public List<AcademyMemberDetails> Members { get; set; }
+    }
+    
+    public class GetAllTracksResponse
+    {
+        public Guid TrackId { get; set; }
+        public string TrackName { get; set; }
     }
 
     public class JwtRequest

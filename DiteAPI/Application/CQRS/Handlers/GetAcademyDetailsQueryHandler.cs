@@ -12,10 +12,10 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
     public class GetAcademyDetailsQueryHandler : IRequestHandler<GetAcademyDetailsQuery, BaseResponse<GetAcademyDetailsResponse>>
     {
         private readonly DataDBContext _dbContext;
-        private readonly ILogger<SendOtpCommandHandler> _logger;
+        private readonly ILogger<GetAcademyDetailsQueryHandler> _logger;
         private readonly AppSettings _appSettings;
 
-        public GetAcademyDetailsQueryHandler(DataDBContext dbContext, ILogger<SendOtpCommandHandler> logger, IOptions<AppSettings> options)
+        public GetAcademyDetailsQueryHandler(DataDBContext dbContext, ILogger<GetAcademyDetailsQueryHandler> logger, IOptions<AppSettings> options)
         {
             _dbContext = dbContext;
             _logger = logger;
@@ -46,13 +46,13 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError($"SEND_OTP_HANDLER => Something went wrong\n{ex.StackTrace}: {ex.Message}");
+                    _logger.LogError($"GET_ACADEMY_DETAILS_HANDLER => Something went wrong\n{ex.StackTrace}: {ex.Message}");
                     return new BaseResponse<GetAcademyDetailsResponse>(false, $"{_appSettings.ProcessingError}");
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError($"SEND_OTP_HANDLER => Something went wrong\n{ex.StackTrace}: {ex.Message}");
+                _logger.LogError($"GET_ACADEMY_DETAILS_HANDLER => Something went wrong\n{ex.StackTrace}: {ex.Message}");
                 return new BaseResponse<GetAcademyDetailsResponse>(false, $"{_appSettings.ProcessingError}");
             }
 

@@ -1,5 +1,6 @@
 ﻿using DiteAPI.infrastructure.Infrastructure.Services.Implementations;
 using DiteAPI.infrastructure.Infrastructure.Services.Interfaces;
+using DiteAPI.Infrastructure.Data.Entities;
 using DiteAPI.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -18,6 +19,7 @@ namespace DiteAPI.infrastructure.Data.Entities
 
         // Navigation properties
         public virtual List<Track> Tracks { get; set; }               // 1 academy TO MANY tracks
+        public virtual List<AcademyMembersRoles> AcademyMembersRoles { get; set; }               // 1 academy TO MANY AcademyMembersRoles
         public virtual List<GenericUser> GenericUser { get; set; }      // 1 academy TO MANY users
     }
 }

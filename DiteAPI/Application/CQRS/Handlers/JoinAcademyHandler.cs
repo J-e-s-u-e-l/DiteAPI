@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using DiteAPI.Infrastructure.Config;
 using DiteAPI.infrastructure.Data.Models;
+using DiteAPI.Infrastructure.Data.Entities;
 
 namespace DiteAPI.Api.Application.CQRS.Handlers
 {
@@ -48,8 +49,17 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                     {
                         GenericUserId = userId,
                         AcademyId = academyId,
+                        //RoleId = new Guid(_appSettings.MemberRoleId)
+                    };
+
+                    var newAcademyMemberRole = new AcademyMembersRoles
+                    {
+                        GenericUserId = userId,
+                        AcademyId = academyId,
                         RoleId = new Guid(_appSettings.MemberRoleId)
                     };
+
+                    await _dbContext.AcademyMembersRoles.AddAsync(newAcademyMemberRole, cancellationToken);
                     await _dbContext.AcademyMembers.AddAsync(newAcademyMember);
 
                     await _dbContext.SaveChangesAsync();

@@ -68,4 +68,12 @@ namespace DiteAPI.infrastructure.Data.Models
         public string ResponderRoleInAcademy { get; set; }
         public DateTime SentAt { get; set; }
     }
+
+    public class AcademyMemberDetails
+    {
+        public Guid UserId { get; set; }
+        public string Username { get; set; }
+        public string RoleName { get; set; }
+        public List<Guid> assignedTracks { get; set; }
+    }
 }

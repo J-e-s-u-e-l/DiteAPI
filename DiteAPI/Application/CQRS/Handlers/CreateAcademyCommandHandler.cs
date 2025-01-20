@@ -8,6 +8,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using DiteAPI.infrastructure.Data.Models;
+using DiteAPI.Infrastructure.Data.Entities;
 
 namespace DiteAPI.Api.Application.CQRS.Handlers
 {
@@ -77,9 +78,18 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                     {
                         GenericUserId = userId,
                         AcademyId = academyId,
+                        //RoleId = new Guid(_appSettings.AdminRoleId)
+                    };
+
+                    var newAcademyMemberRole = new AcademyMembersRoles
+                    {
+                        GenericUserId = userId,
+                        AcademyId = academyId,
                         RoleId = new Guid(_appSettings.AdminRoleId)
                     };
+
                     await _dbContext.AcademyMembers.AddAsync(newAcademyMember, cancellationToken);
+                    await _dbContext.AcademyMembersRoles.AddAsync(newAcademyMemberRole, cancellationToken);
 
                     await _dbContext.SaveChangesAsync(cancellationToken);
                     await transaction.CommitAsync(cancellationToken);

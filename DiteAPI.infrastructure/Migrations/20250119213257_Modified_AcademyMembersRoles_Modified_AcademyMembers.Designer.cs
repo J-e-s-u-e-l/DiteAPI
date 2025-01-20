@@ -4,6 +4,7 @@ using DiteAPI.infrastructure.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DiteAPI.infrastructure.Migrations
 {
     [DbContext(typeof(DataDBContext))]
-    partial class DataDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250119213257_Modified_AcademyMembersRoles_Modified_AcademyMembers")]
+    partial class Modified_AcademyMembersRoles_Modified_AcademyMembers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,9 +46,6 @@ namespace DiteAPI.infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("AcademyId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("GenericUserId")
                         .HasColumnType("uniqueidentifier");
 
@@ -58,12 +58,10 @@ namespace DiteAPI.infrastructure.Migrations
                     b.Property<DateTimeOffset>("TimeUpdated")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<Guid?>("TrackId")
+                    b.Property<Guid>("TrackId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AcademyId");
 
                     b.HasIndex("GenericUserId");
 
@@ -295,32 +293,32 @@ namespace DiteAPI.infrastructure.Migrations
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000001"),
-                            ConcurrencyStamp = "7FBDFC9F0BE1474992664EC36681B1C6",
+                            ConcurrencyStamp = "0E033819C11565489237EAF10245F2CA",
                             Description = "",
                             Name = "Admin",
                             NormalizedName = "ADMIN",
-                            TimeCreated = new DateTimeOffset(new DateTime(2025, 1, 20, 0, 39, 26, 282, DateTimeKind.Unspecified).AddTicks(8615), new TimeSpan(0, 0, 0, 0, 0)),
-                            TimeUpdated = new DateTimeOffset(new DateTime(2025, 1, 20, 0, 39, 26, 282, DateTimeKind.Unspecified).AddTicks(8631), new TimeSpan(0, 0, 0, 0, 0))
+                            TimeCreated = new DateTimeOffset(new DateTime(2025, 1, 19, 21, 32, 57, 160, DateTimeKind.Unspecified).AddTicks(7622), new TimeSpan(0, 0, 0, 0, 0)),
+                            TimeUpdated = new DateTimeOffset(new DateTime(2025, 1, 19, 21, 32, 57, 160, DateTimeKind.Unspecified).AddTicks(7638), new TimeSpan(0, 0, 0, 0, 0))
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000002"),
-                            ConcurrencyStamp = "16CC6C2409D4774EA4C37C63326AA57C",
+                            ConcurrencyStamp = "D6676B4AC036754AAF2544D10B989228",
                             Description = "",
                             Name = "Facilitator",
                             NormalizedName = "FACILITATOR",
-                            TimeCreated = new DateTimeOffset(new DateTime(2025, 1, 20, 0, 39, 26, 282, DateTimeKind.Unspecified).AddTicks(8650), new TimeSpan(0, 0, 0, 0, 0)),
-                            TimeUpdated = new DateTimeOffset(new DateTime(2025, 1, 20, 0, 39, 26, 282, DateTimeKind.Unspecified).AddTicks(8651), new TimeSpan(0, 0, 0, 0, 0))
+                            TimeCreated = new DateTimeOffset(new DateTime(2025, 1, 19, 21, 32, 57, 160, DateTimeKind.Unspecified).AddTicks(7658), new TimeSpan(0, 0, 0, 0, 0)),
+                            TimeUpdated = new DateTimeOffset(new DateTime(2025, 1, 19, 21, 32, 57, 160, DateTimeKind.Unspecified).AddTicks(7659), new TimeSpan(0, 0, 0, 0, 0))
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000003"),
-                            ConcurrencyStamp = "042720565EC7CD48902B77F0D6EEDEEC",
+                            ConcurrencyStamp = "4D2DCF61C9EA194DB9AC31A0F7E04742",
                             Description = "",
                             Name = "Member",
                             NormalizedName = "MEMBER",
-                            TimeCreated = new DateTimeOffset(new DateTime(2025, 1, 20, 0, 39, 26, 282, DateTimeKind.Unspecified).AddTicks(8666), new TimeSpan(0, 0, 0, 0, 0)),
-                            TimeUpdated = new DateTimeOffset(new DateTime(2025, 1, 20, 0, 39, 26, 282, DateTimeKind.Unspecified).AddTicks(8667), new TimeSpan(0, 0, 0, 0, 0))
+                            TimeCreated = new DateTimeOffset(new DateTime(2025, 1, 19, 21, 32, 57, 160, DateTimeKind.Unspecified).AddTicks(7678), new TimeSpan(0, 0, 0, 0, 0)),
+                            TimeUpdated = new DateTimeOffset(new DateTime(2025, 1, 19, 21, 32, 57, 160, DateTimeKind.Unspecified).AddTicks(7679), new TimeSpan(0, 0, 0, 0, 0))
                         });
                 });
 
@@ -551,30 +549,23 @@ namespace DiteAPI.infrastructure.Migrations
 
             modelBuilder.Entity("DiteAPI.Infrastructure.Data.Entities.AcademyMembersRoles", b =>
                 {
-                    b.HasOne("DiteAPI.infrastructure.Data.Entities.Academy", "Academy")
-                        .WithMany("AcademyMembersRoles")
-                        .HasForeignKey("AcademyId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("DiteAPI.Models.GenericUser", "GenericUser")
-                        .WithMany("AcademyMembersRoles")
+                        .WithMany()
                         .HasForeignKey("GenericUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("DiteAPI.infrastructure.Data.Entities.ApplicationRole", "IdentityRole")
-                        .WithMany("AcademyMembersRoles")
+                        .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("DiteAPI.infrastructure.Data.Entities.Track", "Track")
-                        .WithMany("AcademyMembersRoles")
+                        .WithMany()
                         .HasForeignKey("TrackId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Academy");
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("GenericUser");
 
@@ -686,26 +677,9 @@ namespace DiteAPI.infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("DiteAPI.Models.GenericUser", b =>
-                {
-                    b.Navigation("AcademyMembersRoles");
-                });
-
             modelBuilder.Entity("DiteAPI.infrastructure.Data.Entities.Academy", b =>
                 {
-                    b.Navigation("AcademyMembersRoles");
-
                     b.Navigation("Tracks");
-                });
-
-            modelBuilder.Entity("DiteAPI.infrastructure.Data.Entities.ApplicationRole", b =>
-                {
-                    b.Navigation("AcademyMembersRoles");
-                });
-
-            modelBuilder.Entity("DiteAPI.infrastructure.Data.Entities.Track", b =>
-                {
-                    b.Navigation("AcademyMembersRoles");
                 });
 #pragma warning restore 612, 618
         }

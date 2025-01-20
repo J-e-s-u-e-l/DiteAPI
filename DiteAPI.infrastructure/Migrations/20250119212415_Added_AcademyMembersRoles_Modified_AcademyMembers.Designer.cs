@@ -4,6 +4,7 @@ using DiteAPI.infrastructure.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DiteAPI.infrastructure.Migrations
 {
     [DbContext(typeof(DataDBContext))]
-    partial class DataDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250119212415_Added_AcademyMembersRoles_Modified_AcademyMembers")]
+    partial class Added_AcademyMembersRoles_Modified_AcademyMembers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,9 +46,6 @@ namespace DiteAPI.infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("AcademyId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("GenericUserId")
                         .HasColumnType("uniqueidentifier");
 
@@ -58,18 +58,10 @@ namespace DiteAPI.infrastructure.Migrations
                     b.Property<DateTimeOffset>("TimeUpdated")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<Guid?>("TrackId")
+                    b.Property<Guid>("TrackId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AcademyId");
-
-                    b.HasIndex("GenericUserId");
-
-                    b.HasIndex("RoleId");
-
-                    b.HasIndex("TrackId");
 
                     b.ToTable("AcademyMembersRoles");
                 });
@@ -237,6 +229,9 @@ namespace DiteAPI.infrastructure.Migrations
                     b.Property<Guid>("GenericUserId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("IdentityRoleId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("JoinedDate")
                         .HasColumnType("datetime2");
 
@@ -251,6 +246,8 @@ namespace DiteAPI.infrastructure.Migrations
                     b.HasIndex("AcademyId");
 
                     b.HasIndex("GenericUserId");
+
+                    b.HasIndex("IdentityRoleId");
 
                     b.ToTable("AcademyMembers");
                 });
@@ -295,32 +292,32 @@ namespace DiteAPI.infrastructure.Migrations
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000001"),
-                            ConcurrencyStamp = "7FBDFC9F0BE1474992664EC36681B1C6",
+                            ConcurrencyStamp = "57A7ACB45C739C45BAA9322CED2F07D2",
                             Description = "",
                             Name = "Admin",
                             NormalizedName = "ADMIN",
-                            TimeCreated = new DateTimeOffset(new DateTime(2025, 1, 20, 0, 39, 26, 282, DateTimeKind.Unspecified).AddTicks(8615), new TimeSpan(0, 0, 0, 0, 0)),
-                            TimeUpdated = new DateTimeOffset(new DateTime(2025, 1, 20, 0, 39, 26, 282, DateTimeKind.Unspecified).AddTicks(8631), new TimeSpan(0, 0, 0, 0, 0))
+                            TimeCreated = new DateTimeOffset(new DateTime(2025, 1, 19, 21, 24, 13, 661, DateTimeKind.Unspecified).AddTicks(7038), new TimeSpan(0, 0, 0, 0, 0)),
+                            TimeUpdated = new DateTimeOffset(new DateTime(2025, 1, 19, 21, 24, 13, 661, DateTimeKind.Unspecified).AddTicks(7053), new TimeSpan(0, 0, 0, 0, 0))
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000002"),
-                            ConcurrencyStamp = "16CC6C2409D4774EA4C37C63326AA57C",
+                            ConcurrencyStamp = "81C648A4AE998947A35CC0420B710562",
                             Description = "",
                             Name = "Facilitator",
                             NormalizedName = "FACILITATOR",
-                            TimeCreated = new DateTimeOffset(new DateTime(2025, 1, 20, 0, 39, 26, 282, DateTimeKind.Unspecified).AddTicks(8650), new TimeSpan(0, 0, 0, 0, 0)),
-                            TimeUpdated = new DateTimeOffset(new DateTime(2025, 1, 20, 0, 39, 26, 282, DateTimeKind.Unspecified).AddTicks(8651), new TimeSpan(0, 0, 0, 0, 0))
+                            TimeCreated = new DateTimeOffset(new DateTime(2025, 1, 19, 21, 24, 13, 661, DateTimeKind.Unspecified).AddTicks(7084), new TimeSpan(0, 0, 0, 0, 0)),
+                            TimeUpdated = new DateTimeOffset(new DateTime(2025, 1, 19, 21, 24, 13, 661, DateTimeKind.Unspecified).AddTicks(7085), new TimeSpan(0, 0, 0, 0, 0))
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000003"),
-                            ConcurrencyStamp = "042720565EC7CD48902B77F0D6EEDEEC",
+                            ConcurrencyStamp = "A976E9D709F75D438826A66FA4F5FC1C",
                             Description = "",
                             Name = "Member",
                             NormalizedName = "MEMBER",
-                            TimeCreated = new DateTimeOffset(new DateTime(2025, 1, 20, 0, 39, 26, 282, DateTimeKind.Unspecified).AddTicks(8666), new TimeSpan(0, 0, 0, 0, 0)),
-                            TimeUpdated = new DateTimeOffset(new DateTime(2025, 1, 20, 0, 39, 26, 282, DateTimeKind.Unspecified).AddTicks(8667), new TimeSpan(0, 0, 0, 0, 0))
+                            TimeCreated = new DateTimeOffset(new DateTime(2025, 1, 19, 21, 24, 13, 661, DateTimeKind.Unspecified).AddTicks(7112), new TimeSpan(0, 0, 0, 0, 0)),
+                            TimeUpdated = new DateTimeOffset(new DateTime(2025, 1, 19, 21, 24, 13, 661, DateTimeKind.Unspecified).AddTicks(7113), new TimeSpan(0, 0, 0, 0, 0))
                         });
                 });
 
@@ -549,40 +546,6 @@ namespace DiteAPI.infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("DiteAPI.Infrastructure.Data.Entities.AcademyMembersRoles", b =>
-                {
-                    b.HasOne("DiteAPI.infrastructure.Data.Entities.Academy", "Academy")
-                        .WithMany("AcademyMembersRoles")
-                        .HasForeignKey("AcademyId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("DiteAPI.Models.GenericUser", "GenericUser")
-                        .WithMany("AcademyMembersRoles")
-                        .HasForeignKey("GenericUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("DiteAPI.infrastructure.Data.Entities.ApplicationRole", "IdentityRole")
-                        .WithMany("AcademyMembersRoles")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("DiteAPI.infrastructure.Data.Entities.Track", "Track")
-                        .WithMany("AcademyMembersRoles")
-                        .HasForeignKey("TrackId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Academy");
-
-                    b.Navigation("GenericUser");
-
-                    b.Navigation("IdentityRole");
-
-                    b.Navigation("Track");
-                });
-
             modelBuilder.Entity("DiteAPI.infrastructure.Data.Entities.AcademyMembers", b =>
                 {
                     b.HasOne("DiteAPI.infrastructure.Data.Entities.Academy", "Academy")
@@ -597,9 +560,15 @@ namespace DiteAPI.infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("DiteAPI.infrastructure.Data.Entities.ApplicationRole", "IdentityRole")
+                        .WithMany()
+                        .HasForeignKey("IdentityRoleId");
+
                     b.Navigation("Academy");
 
                     b.Navigation("GenericUser");
+
+                    b.Navigation("IdentityRole");
                 });
 
             modelBuilder.Entity("DiteAPI.infrastructure.Data.Entities.OtpVerification", b =>
@@ -686,26 +655,9 @@ namespace DiteAPI.infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("DiteAPI.Models.GenericUser", b =>
-                {
-                    b.Navigation("AcademyMembersRoles");
-                });
-
             modelBuilder.Entity("DiteAPI.infrastructure.Data.Entities.Academy", b =>
                 {
-                    b.Navigation("AcademyMembersRoles");
-
                     b.Navigation("Tracks");
-                });
-
-            modelBuilder.Entity("DiteAPI.infrastructure.Data.Entities.ApplicationRole", b =>
-                {
-                    b.Navigation("AcademyMembersRoles");
-                });
-
-            modelBuilder.Entity("DiteAPI.infrastructure.Data.Entities.Track", b =>
-                {
-                    b.Navigation("AcademyMembersRoles");
                 });
 #pragma warning restore 612, 618
         }

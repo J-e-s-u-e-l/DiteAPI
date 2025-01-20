@@ -1,5 +1,6 @@
 ﻿using DiteAPI.infrastructure.Data.Entities;
 using DiteAPI.infrastructure.Infrastructures.Utilities.Enums;
+using DiteAPI.Infrastructure.Data.Entities;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
@@ -24,6 +25,7 @@ namespace DiteAPI.Models
 
         // Navigation properties
         public virtual List<Academy>? Academy{ get; set; }      // 1 user TO MANY academies
+        public virtual List<AcademyMembersRoles> AcademyMembersRoles { get; set; }               // 1 GenericUser TO MANY AcademyMembersRoles
     }
 }
 

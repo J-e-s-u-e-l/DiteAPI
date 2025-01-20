@@ -86,7 +86,7 @@ namespace DiteAPI.Api.Hubs
                 }
 
                 var senderUserName = _dbContext.GenericUser.Where(x => x.Id == senderId).Select(x => x.UserName).FirstOrDefault();
-                var senderRoleInAcademy = _dbContext.AcademyMembers.Where(x => x.GenericUserId == senderId).Select(x => x.IdentityRole.NormalizedName).FirstOrDefault();
+                //var senderRoleInAcademy = _dbContext.AcademyMembers.Where(x => x.GenericUserId == senderId).Select(x => x.IdentityRole.NormalizedName).FirstOrDefault();
                 var responsesToMessage = new List<ResponseToMessage>();
 
                 //Persist message into DB
@@ -105,7 +105,8 @@ namespace DiteAPI.Api.Hubs
 
                 Console.WriteLine(newMessage);
 
-                await Clients.Group($"Academy-{academyIdInGuid}").SendAsync("ReceiveMessage", messageTitle, messageBody, senderUserName, senderRoleInAcademy, trackName, sentAt, responsesToMessage);
+                //await Clients.Group($"Academy-{academyIdInGuid}").SendAsync("ReceiveMessage", messageTitle, messageBody, senderUserName, senderRoleInAcademy, trackName, sentAt, responsesToMessage);
+                await Clients.Group($"Academy-{academyIdInGuid}").SendAsync("ReceiveMessage", messageTitle, messageBody, senderUserName, trackName, sentAt, responsesToMessage);
             }
             catch (Exception ex)
             {

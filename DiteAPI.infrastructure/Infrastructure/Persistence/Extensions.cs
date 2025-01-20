@@ -3,6 +3,7 @@ using DiteAPI.infrastructure.Infrastructure.Services.Implementations;
 using DiteAPI.infrastructure.Infrastructure.Services.Interfaces;
 using DiteAPI.infrastructure.Infrastructures.Utilities.Enums;
 using DiteAPI.Infrastructure.Config;
+using DiteAPI.Infrastructure.Data.Entities;
 using DiteAPI.Infrastructure.Infrastructure.Services.Implementations;
 using DiteAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using DiteAPI.Models;
@@ -132,8 +133,33 @@ namespace DiteAPI.infrastructure.Infrastructure.Persistence
             );
             #endregion
 
-            #region 
+            #region Entity Delete Behaviour
+            modelBuilder.Entity<AcademyMembersRoles>(entity =>
+            {
+                // Prevent cascading delete for Academy
+                entity.HasOne(amr => amr.Academy)
+                .WithMany(a => a.AcademyMembersRoles)
+                .HasForeignKey(amr => amr.AcademyId)
+                .OnDelete(DeleteBehavior.Restrict);
 
+                // Prevent cascading delete for GenericUser
+                entity.HasOne(amr => amr.GenericUser)
+                .WithMany(gu => gu.AcademyMembersRoles)
+                .HasForeignKey(amr => amr.GenericUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+                // Prevent cascading delete for Track
+                entity.HasOne(amr => amr.Track)
+                .WithMany(ir => ir.AcademyMembersRoles)
+                .HasForeignKey(amr => amr.TrackId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+                // Prevent cascading delete for IdentityRole
+                entity.HasOne(amr => amr.IdentityRole)
+                .WithMany(ir => ir.AcademyMembersRoles)
+                .HasForeignKey(amr => amr.RoleId)
+                .OnDelete(DeleteBehavior.Restrict);
+            });
             #endregion
 
             /*#region Unique UserName

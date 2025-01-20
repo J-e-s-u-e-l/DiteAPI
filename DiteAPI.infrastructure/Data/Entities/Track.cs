@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DiteAPI.Infrastructure.Data.Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -19,5 +20,7 @@ namespace DiteAPI.infrastructure.Data.Entities
 
         // Navigation properties
         public virtual Academy Academy { get; set; }        // MANY courses TO 1 Academy
+        public virtual List<AcademyMembersRoles> AcademyMembersRoles { get; set; }               // 1 Track TO MANY AcademyMembersRoles
+
     }
 }

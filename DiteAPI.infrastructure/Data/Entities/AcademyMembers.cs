@@ -16,15 +16,10 @@ namespace DiteAPI.infrastructure.Data.Entities
         [ForeignKey(nameof(Academy))]
         public Guid AcademyId { get; set; }
 
-        [Required]
-        [ForeignKey(nameof(IdentityRole))]
-        public Guid RoleId { get; set; }
         public DateTime JoinedDate { get; set; } = DateTime.UtcNow;
 
         // Navigation properties
         public virtual GenericUser GenericUser { get; set; }
         public virtual Academy Academy { get; set; }
-        public virtual ApplicationRole IdentityRole { get; set; }
-
     }
 }
