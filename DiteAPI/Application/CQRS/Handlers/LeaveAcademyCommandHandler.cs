@@ -38,17 +38,20 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                     if (academyExists)
                     {
                         var memberToRemove = await _dbContext.AcademyMembers.FirstOrDefaultAsync(x => x.GenericUserId == userId && x.AcademyId == request.AcademyId);
-                        //var memberToRemove = await _dbContext.GenericUser.FirstOrDefaultAsync(x => x.Id == userId);
-
                         if (memberToRemove != null)
                         {
-                            //_dbContext.AcademyMembers.Remove(memberToRemove);
+                            var revokeExistingRolesOfMember = await _dbContext.AcademyMembersRoles.FirstOrDefaultAsync(x => x.GenericUserId == userId && x.AcademyId == request.AcademyId);
+                            
+                            _dbContext.AcademyMembersRoles.Remove(revokeExistingRolesOfMember);
                             _dbContext.AcademyMembers.Remove(memberToRemove);
+
                             await _dbContext.SaveChangesAsync();
                             await transaction.CommitAsync(cancellationToken);
+
+                            return new BaseResponse(true, "You have successfully left the academy.");
                         }
 
-                        return new BaseResponse(true, "You have successfully left the academy.");
+                        return new BaseResponse(false, "This member is not enrolled in the academy.");
                     }
 
                     return new BaseResponse(false, "Academy does not exist!");
@@ -57,6 +60,7 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                 catch (Exception ex)
                 {
                     _logger.LogError($"LEAVE_ACADEMY_HANDLER => Something went wrong\n{ex.StackTrace}: {ex.Message}");
+                    await transaction.RollbackAsync(cancellationToken).ConfigureAwait(false);
                     return new BaseResponse(false, $"{_appSettings.ProcessingError}");
                 }
             }

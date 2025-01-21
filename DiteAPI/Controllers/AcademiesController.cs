@@ -194,15 +194,15 @@ namespace DiteAPI.Api.Controllers
             }
         }
 
-        /*[HttpDelete("members/remove-member")]
+        [HttpPut("members/remove-member")]
         public async Task<IActionResult> RemoveMemberFromAcademy(RemoveMemberFromAcademyCommand request)
         { 
             try
             {
-                var modelxfmed = new ChangeAcademyMemberRoleCommand { MemberId = request.MemberId, NewRole = request.NewRole, AssignedTracksIds = request.AssignedTracksIds, AcademyId = request.AcademyId };
+                var modelxfmed = new RemoveMemberFromAcademyCommand { MemberId = request.MemberId, AcademyId = request.AcademyId };
                 var req = JsonConvert.SerializeObject(modelxfmed);
 
-                _logger.LogInformation($"ACADEMY_CONTROLLER => User attempt to CHANGE ACADEMY MEMBER ROLE \n{req}");
+                _logger.LogInformation($"ACADEMY_CONTROLLER => User attempt to REMOVE MEMBER from ACADEMY\n{req}");
                 var response = await _mediator.Send(request);
 
                 return Ok(response);
@@ -212,6 +212,6 @@ namespace DiteAPI.Api.Controllers
                 _logger.LogError($"ACADEMY_CONTOLLER => Something went wrong\n {ex.StackTrace}: {ex.Message}");
                 return StatusCode(500, $"{_appSettings.ProcessingError}");
             }
-        }*/
+        }
     }
 }

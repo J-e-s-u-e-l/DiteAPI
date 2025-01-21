@@ -5,7 +5,6 @@ using MediatR;
 
 namespace DiteAPI.Api.Application.CQRS.Commands
 {
-    //public class LeaveAcademyCommand : IRequest<BaseResponse<LeaveAcademyResponse>>
     public class LeaveAcademyCommand : IRequest<BaseResponse>
     {
         public Guid AcademyId { get; set; }
