@@ -35,6 +35,7 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                     // Check if Academy exists
                     var academyId = await _dbContext.Academy.Where(x => x.AcademyCode == request.AcademyCode).Select(x => x.Id).FirstOrDefaultAsync();
 
+
                     if (academyId == Guid.Empty)
                         return new BaseResponse<JoinAcademyResponse>(false, _appSettings.AcademyNotFound);
 

@@ -28,27 +28,30 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
             try
             {
                 using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
+            try
+            {
 
                 var memberCurrentRole = await _dbContext.AcademyMembersRoles
                     .Where(am => am.GenericUserId == request.MemberId && am.AcademyId == request.AcademyId)
                     .Select(x => x.IdentityRole.NormalizedName).FirstOrDefaultAsync();
 
                 // Update member role based on current role and new role
-                switch ((memberCurrentRole, request.NewRoleName))
+                switch ((memberCurrentRole, request.NewRole.ToUpper()))
                 {
-                    case ("Member", "Admin"):
+                    case ("MEMBER", "ADMIN"):
                         await _dbContext.AcademyMembersRoles
                             .Where(am => am.GenericUserId == request.MemberId && am.AcademyId == request.AcademyId)
                             .ExecuteUpdateAsync(setter => setter
                             .SetProperty(column => column.RoleId, new Guid(_appSettings.AdminRoleId)));
                     break;
 
-                    case ("Member", "Facilitator"):
+                    case ("MEMBER", "FACILITATOR"):
                         // Remove existing role records of the member in this academy
                         await _dbContext.AcademyMembersRoles
                                 .Where(am => am.GenericUserId == request.MemberId && am.AcademyId == request.AcademyId)
                                 .ExecuteDeleteAsync(cancellationToken);
 
+                        //var tracksFacilitatedByMember_Member = request.AssignedTracksIds.Select(assignedTrack => new AcademyMembersRoles
                         var tracksFacilitatedByMember_Member = request.AssignedTracksIds.Select(assignedTrack => new AcademyMembersRoles
                         {
                             GenericUserId = request.MemberId,
@@ -61,7 +64,7 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                         await _dbContext.AddRangeAsync(tracksFacilitatedByMember_Member, cancellationToken);
                     break;
 
-                    case ("Admin", "Facilitator"):
+                    case ("ADMIN", "FACILITATOR"):
                         // Remove existing role records of the member in this academy
                         await _dbContext.AcademyMembersRoles
                                 .Where(am => am.GenericUserId == request.MemberId && am.AcademyId == request.AcademyId)
@@ -79,14 +82,14 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                         await _dbContext.AddRangeAsync(tracksFacilitatedByMember_Admin, cancellationToken);
                     break;
 
-                    case ("Admin", "Member"):
+                    case ("ADMIN", "MEMBER"):
                         await _dbContext.AcademyMembersRoles
                             .Where(am => am.GenericUserId == request.MemberId && am.AcademyId == request.AcademyId)
                             .ExecuteUpdateAsync(setter => setter
                             .SetProperty(column => column.RoleId, new Guid(_appSettings.MemberRoleId)));
                     break;
 
-                    case ("Facilitator", "Admin"):
+                    case ("FACILITATOR", "ADMIN"):
                         // Remove existing role records of the member in this academy
                         await _dbContext.AcademyMembersRoles
                                 .Where(am => am.GenericUserId == request.MemberId && am.AcademyId == request.AcademyId)
@@ -103,7 +106,7 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                         await _dbContext.AddAsync(addUpdatedMemberRole_Admin, cancellationToken);
                     break;
 
-                    case ("Facilitator", "Member"):
+                    case ("FACILITATOR", "MEMBER"):
                         // Remove existing role records of the member in this academy
                         await _dbContext.AcademyMembersRoles
                                 .Where(am => am.GenericUserId == request.MemberId && am.AcademyId == request.AcademyId)
@@ -120,19 +123,44 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                         await _dbContext.AddAsync(addUpdatedMemberRole_Member, cancellationToken);
                     break;
 
-                    default:
+                    case ("FACILITATOR", "FACILITATOR"):
+                        // Remove existing role records of the member in this academy
+                        await _dbContext.AcademyMembersRoles
+                                .Where(am => am.GenericUserId == request.MemberId && am.AcademyId == request.AcademyId)
+                                .ExecuteDeleteAsync(cancellationToken);
+
+                        var tracksFacilitatedByMember_Facilitator= request.AssignedTracksIds.Select(assignedTrack => new AcademyMembersRoles
+                        {
+                            GenericUserId = request.MemberId,
+                            AcademyId = request.AcademyId,
+                            RoleId = new Guid(_appSettings.FacilitatorRoleId),
+                            TrackId = assignedTrack
+                        }).ToList();
+
+                        // Persist DB with new records of tracks to be facilitated by this member
+                        await _dbContext.AddRangeAsync(tracksFacilitatedByMember_Facilitator, cancellationToken);
+                    break;
+
+                        default:
                         // No action has been implemented yet for unhandled cases
                     break;
                 }
 
                 await _dbContext.SaveChangesAsync(cancellationToken);
+                await transaction.CommitAsync(cancellationToken);
 
                 return new BaseResponse(true, "The member's role has been successfully updated.");
             }
-
             catch (Exception ex)
             {
                 _logger.LogError($"CHANGE_ACADEMY_MEMBER_ROLE_COMMAND_HANDLER => Something went wrong\n{ex.StackTrace}: {ex.Message}");
+                await transaction.RollbackAsync(cancellationToken).ConfigureAwait(false);
+                return new BaseResponse(false, _appSettings.ProcessingError);
+            }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"CREATE_ACADEMY_HANDLER => Something went wrong\n{ex.StackTrace}: {ex.Message}");
                 return new BaseResponse(false, _appSettings.ProcessingError);
             }
         }
