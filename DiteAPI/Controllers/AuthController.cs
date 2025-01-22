@@ -49,7 +49,7 @@ namespace DiteAPI.Api.Controllers
                 var modelxfmed = new AuthRequest { Email = request.Email };
                 var req = JsonConvert.SerializeObject(modelxfmed);
 
-                _logger.LogInformation($"AUTH_CONTROLLER => User attempt to LOGIN {req}");
+                _logger.LogInformation($"AUTH_CONTROLLER => User attempt to LOGIN \n{req}");
                 var response = await _mediator.Send(request);
 
                 return Ok(response);

@@ -50,7 +50,7 @@ namespace DiteAPI.Api.Controllers
                 //var modelxfmed = new RegistrationCommand { FirstName = request.FirstName, LastName = request.LastName, MiddleName = request.MiddleName, DateOfBirth = request.DateOfBirth, UserGender = request.UserGender, Email = request.Email, UserName = request.UserName, PhoneNumber = request.PhoneNumber };
                 var req = JsonConvert.SerializeObject(modelxfmed);
 
-                _logger.LogInformation($"REGISTRATION_CONTROLLER => User attempt to REGISTER {req}");
+                _logger.LogInformation($"REGISTRATION_CONTROLLER => User attempt to REGISTER \n{req}");
                 var response = await _mediator.Send(request);
 
                 return Ok(response);
@@ -70,7 +70,7 @@ namespace DiteAPI.Api.Controllers
                 var modelxfmed = new UniqueEmailCheckRequest { Email = request.Email };
                 var req = JsonConvert.SerializeObject(modelxfmed);
 
-                _logger.LogInformation($"REGISTRATION_CONTROLLER => Checking EMAIL uniqueness as User attempt to REGISTER {req}");
+                _logger.LogInformation($"REGISTRATION_CONTROLLER => Checking EMAIL uniqueness as User attempt to REGISTER \n{req}");
                 var response = await _mediator.Send(request);
 
                 return Ok(response);
@@ -90,7 +90,7 @@ namespace DiteAPI.Api.Controllers
                 var modelxfmed = new UniqueUsernameCheckRequest { Username = request.Username };
                 var req = JsonConvert.SerializeObject(modelxfmed);
 
-                _logger.LogInformation($"REGISTRATION_CONTROLLER => Checking USERNAME uniqueness as User attempt to REGISTER {req}");
+                _logger.LogInformation($"REGISTRATION_CONTROLLER => Checking USERNAME uniqueness as User attempt to REGISTER \n{req}");
                 var response = await _mediator.Send(request);
 
                 return Ok(response);

@@ -3,17 +3,15 @@ using DiteAPI.infrastructure.Infrastructure.Persistence;
 using DiteAPI.Infrastructure.Config;
 using DiteAPI.Infrastructure.Data.Entities;
 using DiteAPI.Infrastructure.Infrastructure.Auth;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System.Security.Claims;
 
-namespace DiteAPI.Api.Hubs
+namespace DiteAPI.Infrastructure.Infrastructure.Hubs
 {
-    [CustomAuthorize]
+    /*[CustomAuthorize]
     public class DiscussionHub : Hub
     {
         private readonly DataDBContext _dbContext;
@@ -37,7 +35,7 @@ namespace DiteAPI.Api.Hubs
 
                 // Get the list of AcademyIds the user belongs to
                 var userAcademies = await _dbContext.AcademyMembers.Where(x => x.GenericUserId == userId).Select(x => x.AcademyId).ToListAsync();
-                
+
                 // Add the user to corresponding SignalR groups
                 foreach (var userAcademy in userAcademies)
                     await Groups.AddToGroupAsync(Context.ConnectionId, $"Academy-{userAcademy}");
@@ -65,7 +63,7 @@ namespace DiteAPI.Api.Hubs
                 var sentAt = DateTime.UtcNow;
 
                 var senderId = (Guid)_httpContextAccessor.HttpContext!.Items["UserId"]!;
-               
+
                 Guid academyIdInGuid;
                 var academyIdToGuid = Guid.TryParse(academyIdInString, out academyIdInGuid);
                 if (!academyIdToGuid)
@@ -115,8 +113,8 @@ namespace DiteAPI.Api.Hubs
                 return;
             }
         }
-        
-        /*public async Task SendMessageResponse(string academyIdInString, string responseBody)
+
+        public async Task SendMessageResponse(string academyIdInString, string responseBody)
         {
             if (string.IsNullOrWhiteSpace(responseBody))
             {
@@ -152,6 +150,13 @@ namespace DiteAPI.Api.Hubs
             await _dbContext.Messages.AddAsync(newResponseToMessage);
 
             await Clients.Group($"Academy-{academyIdInGuid}").SendAsync("ReceiveResponseToMessage", responseBody, responderUserName, responderRoleInAcademy, sentAt); 
-        }*/
+        }
+    }*/
+
+    [CustomAuthorize]
+    public class MessageHub : Hub
+    {
+
     }
+
 }

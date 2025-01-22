@@ -11,15 +11,19 @@ namespace DiteAPI.Infrastructure.Data.Entities
 {
     public class Message : BaseEntity
     {
+        /* On creating a record in the on the Message table:
+            TrackId & AcademyId can be left null IF AND ONLY IF the message is a response to another message within the same academy
+            ParentId can be left null IF AND ONLY IF the message is not a response to another message within the same academy
+        */
         public string? MessageTitle { get; set; }
         public string MessageBody{ get; set; }
         [ForeignKey(nameof(Academy))]
         public Guid? AcademyId { get; set; }
         [ForeignKey(nameof(Track))]
-        public Guid? TrackId { get; set; }
+        public Guid? TrackId { get; set; }     
         [ForeignKey(nameof(GenericUser))]
         public Guid SenderId { get; set; }
-        public DateTime SentAt { get; set; }
+        public DateTimeOffset SentAt { get; set; }
         public bool IsResponse { get; set; }
         [ForeignKey(nameof(Message))]
         public Guid? ParentId { get; set; }

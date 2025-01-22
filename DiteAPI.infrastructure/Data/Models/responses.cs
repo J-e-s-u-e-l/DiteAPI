@@ -63,11 +63,11 @@ namespace DiteAPI.infrastructure.Data.Models
         public Guid TrackId { get; set; }
         public string TrackName { get; set; }
     }
-/*
-    public class ChangeAcademyMemberRole
+
+    public class PostMessageResponse
     {
-        public int MyProperty { get; set; }
-    }*/
+        public Guid MessageId { get; set; }
+    }
 
     public class JwtRequest
     {

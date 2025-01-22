@@ -1,11 +1,11 @@
-﻿using DiteAPI.infrastructure.Data.Entities;
+﻿
 using DiteAPI.Infrastructure.Infrastructure.Services.Interfaces;
 
 namespace DiteAPI.Infrastructure.Infrastructure.Services.Implementations
 {
-    public class DiscussionHubServices : IDiscussionHubServices
+    public class NotificationBroadcaster : INotificationBroadcaster
     {
-        public Task<BaseResponse> JoinAcademy(string academyCode)
+        public async Task BroadcastNotificationAsync(Guid userId, string message, DateTimeOffset timestamp)
         {
             throw new NotImplementedException();
         }

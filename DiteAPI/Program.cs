@@ -154,10 +154,10 @@ namespace DiteAPI
             app.UseAuthorization();
             app.UseMiddleware<JwtMiddleware>();
             app.UseMiddleware<JsonExceptionMiddleware>();
-            app.MapHub<DiscussionHub>("/api/discussion-hub");
+            //app.MapHub<MessageHub>("/api/discussion-hub");
             /*app.UseEndpoints(endpoints =>
             {
-                endpoints.MapHub<DiscussionHub>("/api/discussion-hub");
+                endpoints.MapHub<MessageHub>("/api/discussion-hub");
             });*/
             app.MapControllers();
 

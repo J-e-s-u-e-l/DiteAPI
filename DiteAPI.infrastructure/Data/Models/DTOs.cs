@@ -52,13 +52,13 @@ namespace DiteAPI.infrastructure.Data.Models
 
     public class MessageDto
     {
-        public string MessageBody { get; set; }
         public string MessageTitle { get; set; }
+        public string MessageBody { get; set; }
         public string SenderUserName { get; set; }
         public string SenderRoleInAcademy { get; set; }
-        public string Track { get; set; }
-        public DateTime SentAt { get; set; }
-        public List<ResponseToMessage> ResponsesToMessage { get; set; }
+        public string TrackName { get; set; }
+        public DateTimeOffset SentAt { get; set; }
+        //public List<ResponseToMessage> ResponsesToMessage { get; set; }
     }
 
     public class ResponseToMessage

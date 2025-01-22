@@ -37,7 +37,7 @@ namespace DiteAPI.Api.Controllers
                 var modelxfmed = new VerifyOtpCommand { Code = request.Code, Purpose = request.Purpose };
                 var req = JsonConvert.SerializeObject(modelxfmed);
 
-                _logger.LogInformation($"VERIFICATION_CONTROLLER => User attempt to Verify Otp {req}");
+                _logger.LogInformation($"VERIFICATION_CONTROLLER => User attempt to Verify Otp \n{req}");
                 var response = await _mediator.Send(request);
 
                 return Ok(response);
@@ -58,7 +58,7 @@ namespace DiteAPI.Api.Controllers
                 var modelxfmed = new SendOtpCommand { Recipient = request.Recipient, RecipientType = request.RecipientType, Purpose = request.Purpose };
                 var req = JsonConvert.SerializeObject(modelxfmed);
 
-                _logger.LogInformation($"VERIFICATION_CONTOLLER => User attempt to SendOtpCode {req}");
+                _logger.LogInformation($"VERIFICATION_CONTOLLER => User attempt to SendOtpCode \n{req}");
                 var response = await _mediator.Send(request);
 
                 return Ok(response);

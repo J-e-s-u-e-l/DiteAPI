@@ -1,4 +1,5 @@
-﻿using DiteAPI.infrastructure.Data.Entities;
+﻿using DiteAPI.Api.Hubs.Implementations;
+using DiteAPI.infrastructure.Data.Entities;
 using DiteAPI.infrastructure.Infrastructure.Services.Implementations;
 using DiteAPI.infrastructure.Infrastructure.Services.Interfaces;
 using DiteAPI.infrastructure.Infrastructures.Utilities.Enums;
@@ -26,7 +27,9 @@ namespace DiteAPI.infrastructure.Infrastructure.Persistence
             services.AddScoped<IMailkitService, MailkitService>();
             services.AddScoped<IHelperMethods, HelperMethods>();
             services.AddScoped<ISessionService, SessionService>();
-            services.AddScoped<IDiscussionHubServices, DiscussionHubServices>();
+            services.AddSignalR();
+            services.AddScoped<IMessageBroadcaster, MessageBroadcaster>();
+            services.AddScoped<INotificationBroadcaster, NotificationBroadcaster>();
 
             return services;
         }
@@ -134,7 +137,7 @@ namespace DiteAPI.infrastructure.Infrastructure.Persistence
             #endregion
 
             #region Entity Delete Behaviour
-            modelBuilder.Entity<AcademyMembersRoles>(entity =>
+            /*modelBuilder.Entity<AcademyMembersRoles>(entity =>
             {
                 // Prevent cascading delete for Academy
                 entity.HasOne(amr => amr.Academy)
@@ -148,8 +151,8 @@ namespace DiteAPI.infrastructure.Infrastructure.Persistence
                 .HasForeignKey(amr => amr.GenericUserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-                // Prevent cascading delete for Track
-                entity.HasOne(amr => amr.Track)
+                // Prevent cascading delete for TrackName
+                entity.HasOne(amr => amr.TrackName)
                 .WithMany(ir => ir.AcademyMembersRoles)
                 .HasForeignKey(amr => amr.TrackId)
                 .OnDelete(DeleteBehavior.Restrict);
@@ -159,7 +162,7 @@ namespace DiteAPI.infrastructure.Infrastructure.Persistence
                 .WithMany(ir => ir.AcademyMembersRoles)
                 .HasForeignKey(amr => amr.RoleId)
                 .OnDelete(DeleteBehavior.Restrict);
-            });
+            });*/
             #endregion
 
             /*#region Unique UserName

@@ -45,7 +45,7 @@ namespace DiteAPI.Api.Controllers
                 var modelxfmed = new CreateAcademyCommand { AcademyName = request.AcademyName, Tracks = request.Tracks};
                 var req = JsonConvert.SerializeObject(modelxfmed);
 
-                _logger.LogInformation($"ACADEMY_CONTROLLER => User attempt to CREATE new ACADEMY {req}");
+                _logger.LogInformation($"ACADEMY_CONTROLLER => User attempt to CREATE new ACADEMY \n{req}");
                 var response = await _mediator.Send(request);
 
                 return Ok(response);
@@ -65,7 +65,7 @@ namespace DiteAPI.Api.Controllers
                 var modelxfmed = new JoinAcademyCommand { AcademyCode = request.AcademyCode };
                 var req = JsonConvert.SerializeObject(modelxfmed);
 
-                _logger.LogInformation($"ACADEMY_CONTROLLER => User attempt to JOIN an ACADEMY {req}");
+                _logger.LogInformation($"ACADEMY_CONTROLLER => User attempt to JOIN an ACADEMY \n{req}");
                 var response = await _mediator.Send(request);
 
                 return Ok(response);

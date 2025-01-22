@@ -4,6 +4,7 @@ using DiteAPI.infrastructure.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DiteAPI.infrastructure.Migrations
 {
     [DbContext(typeof(DataDBContext))]
-    partial class DataDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250122082923_Modified_EntityDeleteBeahviour")]
+    partial class Modified_EntityDeleteBeahviour
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -114,36 +117,6 @@ namespace DiteAPI.infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Messages");
-                });
-
-            modelBuilder.Entity("DiteAPI.Infrastructure.Data.Entities.Notification", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsRead")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("MessageId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTimeOffset>("TimeCreated")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<DateTimeOffset>("TimeUpdated")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Notification");
                 });
 
             modelBuilder.Entity("DiteAPI.Models.GenericUser", b =>
@@ -325,32 +298,32 @@ namespace DiteAPI.infrastructure.Migrations
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000001"),
-                            ConcurrencyStamp = "2A5F404BDDB3794B99DBAE5BC4A878E6",
+                            ConcurrencyStamp = "2DEB98074FB58147B2888A690C9E29DB",
                             Description = "",
                             Name = "Admin",
                             NormalizedName = "ADMIN",
-                            TimeCreated = new DateTimeOffset(new DateTime(2025, 1, 22, 9, 39, 43, 791, DateTimeKind.Unspecified).AddTicks(116), new TimeSpan(0, 0, 0, 0, 0)),
-                            TimeUpdated = new DateTimeOffset(new DateTime(2025, 1, 22, 9, 39, 43, 791, DateTimeKind.Unspecified).AddTicks(173), new TimeSpan(0, 0, 0, 0, 0))
+                            TimeCreated = new DateTimeOffset(new DateTime(2025, 1, 22, 8, 29, 23, 52, DateTimeKind.Unspecified).AddTicks(8145), new TimeSpan(0, 0, 0, 0, 0)),
+                            TimeUpdated = new DateTimeOffset(new DateTime(2025, 1, 22, 8, 29, 23, 52, DateTimeKind.Unspecified).AddTicks(8159), new TimeSpan(0, 0, 0, 0, 0))
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000002"),
-                            ConcurrencyStamp = "2CDDF0E1D13D7042B7E76D53FDACF3ED",
+                            ConcurrencyStamp = "60481A907B623E449BD03B0E7DDBF42C",
                             Description = "",
                             Name = "Facilitator",
                             NormalizedName = "FACILITATOR",
-                            TimeCreated = new DateTimeOffset(new DateTime(2025, 1, 22, 9, 39, 43, 791, DateTimeKind.Unspecified).AddTicks(249), new TimeSpan(0, 0, 0, 0, 0)),
-                            TimeUpdated = new DateTimeOffset(new DateTime(2025, 1, 22, 9, 39, 43, 791, DateTimeKind.Unspecified).AddTicks(250), new TimeSpan(0, 0, 0, 0, 0))
+                            TimeCreated = new DateTimeOffset(new DateTime(2025, 1, 22, 8, 29, 23, 52, DateTimeKind.Unspecified).AddTicks(8177), new TimeSpan(0, 0, 0, 0, 0)),
+                            TimeUpdated = new DateTimeOffset(new DateTime(2025, 1, 22, 8, 29, 23, 52, DateTimeKind.Unspecified).AddTicks(8178), new TimeSpan(0, 0, 0, 0, 0))
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000003"),
-                            ConcurrencyStamp = "22697B4B5CB85741B1535029E0BA8F7E",
+                            ConcurrencyStamp = "DFF2FCA5F92D3B4295174EDCBD2BF5DB",
                             Description = "",
                             Name = "Member",
                             NormalizedName = "MEMBER",
-                            TimeCreated = new DateTimeOffset(new DateTime(2025, 1, 22, 9, 39, 43, 791, DateTimeKind.Unspecified).AddTicks(286), new TimeSpan(0, 0, 0, 0, 0)),
-                            TimeUpdated = new DateTimeOffset(new DateTime(2025, 1, 22, 9, 39, 43, 791, DateTimeKind.Unspecified).AddTicks(288), new TimeSpan(0, 0, 0, 0, 0))
+                            TimeCreated = new DateTimeOffset(new DateTime(2025, 1, 22, 8, 29, 23, 52, DateTimeKind.Unspecified).AddTicks(8194), new TimeSpan(0, 0, 0, 0, 0)),
+                            TimeUpdated = new DateTimeOffset(new DateTime(2025, 1, 22, 8, 29, 23, 52, DateTimeKind.Unspecified).AddTicks(8195), new TimeSpan(0, 0, 0, 0, 0))
                         });
                 });
 

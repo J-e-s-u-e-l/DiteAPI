@@ -15,14 +15,14 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
     public class CreateAcademyCommandHandler : IRequestHandler<CreateAcademyCommand, BaseResponse<CreateAcademyResponse>>
     {
         private readonly DataDBContext _dbContext;
-        private readonly ILogger<RegistrationCommand> _logger;
+        private readonly ILogger<RegistrationCommandHandler> _logger;
         private readonly AppSettings _appSettings;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IHelperMethods _helperMethods;
 
         public CreateAcademyCommandHandler(
             DataDBContext dbContext,
-            ILogger<RegistrationCommand> logger,
+            ILogger<RegistrationCommandHandler> logger,
             IOptions<AppSettings> options,
             IHttpContextAccessor httpContextAccessor,
             IHelperMethods helperMethods)
