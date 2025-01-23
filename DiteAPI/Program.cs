@@ -1,9 +1,9 @@
-using DiteAPI.Api.Hubs;
 using DiteAPI.infrastructure.Data.Models;
 using DiteAPI.infrastructure.Infrastructure.Auth;
 using DiteAPI.infrastructure.Infrastructure.Persistence;
 using DiteAPI.Infrastructure.Infrastructure.Auth;
 using DiteAPI.Infrastructure.Infrastructure.Auth.JWT;
+using DiteAPI.Infrastructure.Infrastructure.Hubs;
 using DiteAPI.Infrastructure.Infrastructure.Utilities.Middleware;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -149,15 +149,21 @@ namespace DiteAPI
             app.UseHttpsRedirection();
             app.UseCors("MyCorsPolicy");
             app.UseSession();
+            app.UseSession();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseMiddleware<JwtMiddleware>();
             app.UseMiddleware<JsonExceptionMiddleware>();
-            //app.MapHub<MessageHub>("/api/discussion-hub");
+            app.MapHub<MessageHub>("/api/message-hub");
+            app.MapHub<NotificationHub>("/api/notification-hub");
             /*app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHub<MessageHub>("/api/discussion-hub");
+            });*/
+            /*app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHub<MessageHub>("/api/message-hub");
             });*/
             app.MapControllers();
 

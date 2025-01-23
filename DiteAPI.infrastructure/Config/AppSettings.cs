@@ -29,5 +29,7 @@ namespace DiteAPI.Infrastructure.Config
         public string AcademyEnrollmentSuccessful { get; set; }
         public string Unauthorized { get; set; }
         public string UserAlreadyExistInAcademy { get; set; }
+        public string MessagePostedSuccessfully { get; set; }
+        public string ResponsePostedSuccessfully { get; set; }
     }
 }

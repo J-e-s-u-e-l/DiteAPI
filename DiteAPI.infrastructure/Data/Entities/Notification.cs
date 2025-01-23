@@ -10,8 +10,7 @@ namespace DiteAPI.Infrastructure.Data.Entities
     public class Notification : BaseEntity
     {
         public Guid UserId { get; set; }
-        public Guid MessageId { get; set; }
-        public string Content { get; set; }
+        public string NotificationContent { get; set; }
         public bool IsRead { get; set; }
     }
 }

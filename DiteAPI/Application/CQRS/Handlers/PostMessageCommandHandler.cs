@@ -40,7 +40,7 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                 {
                     var userId = (Guid)_httpContextAccessor.HttpContext!.Items["UserId"]!;
 
-                    // Persist the message in the database
+                    // Persist message
                     var message = new Message
                     {
                         MessageTitle = request.MessageTitle,
@@ -55,8 +55,7 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                     await _dbContext.Messages.AddAsync(message);
                     await _dbContext.SaveChangesAsync(cancellationToken);
 
-                    // Broadcast the message in real-time
-                    //var senderDetails = await _dbContext.GenericUser.FirstOrDefaultAsync(x => x.Id == userId);
+                    // Broadcast message in real-time
                     var senderDetails = await _dbContext.GenericUser
                         .Where(x => x.Id == userId)
                         .Select(sd => new
@@ -76,10 +75,52 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                         TrackName = await _dbContext.Tracks.Where(t => t.Id == request.TrackId).Select(t => t.TrackName).FirstOrDefaultAsync(),
                         SentAt = message.SentAt                    
                     };
-                    await _messageBroadcaster.BroadcastMessageAsync(message.Id, message.MessageTitle, message.MessageBody, message.TrackId, message.SenderId, message.TimeCreated);
-                    //await _messageBroadcaster.BroadcastMessageAsync(message);
+                    //await _messageBroadcaster.BroadcastMessageAsync(message.Id, message.MessageTitle, message.MessageBody, message.TrackId, message.SenderId, message.TimeCreated);
+                    await _messageBroadcaster.BroadcastMessageAsync(messageDto);
+
+                    // Send  Notifications
+                    if (message.TrackId.HasValue)
+                    {
+                        var facilitatorsInTheSelectedTrack = await _dbContext.AcademyMembersRoles
+                            .Where(am => am.AcademyId == request.AcademyId && am.TrackId == request.TrackId)
+                            .Select(x => x.GenericUserId).ToListAsync();
+                    
+                        if (facilitatorsInTheSelectedTrack.Any())
+                        {
+                            foreach(var facilitator in facilitatorsInTheSelectedTrack)
+                            {
+                                // Persist notification
+                                var notification = new Notification
+                                {
+                                    UserId = facilitator,
+                                    NotificationContent = $"New message in track: {message.MessageTitle}"
+                                };
+
+                                await _dbContext.Notification.AddAsync(notification);
+
+                                // Send real-time notification
+                                var notificationDto = new NotificationDto
+                                {
+                                    RecipientId = facilitator,
+                                    NotificationContent = notification.NotificationContent,
+                                    TimeStamp = notification.TimeCreated,
+                                };
+
+                                await _notificationBroadcaster.BroadcastNotificationAsync(notificationDto);
+                            }
+
+                            await _dbContext.SaveChangesAsync();
+                        }
+                    };
+
 
                     await transaction.CommitAsync(cancellationToken);
+
+                    var postMessageResponse = new PostMessageResponse
+                    {
+                        MessageId = message.Id
+                    };
+                    return new BaseResponse<PostMessageResponse>(true, _appSettings.MessagePostedSuccessfully, postMessageResponse);
                 }
                 catch (Exception ex)
                 {

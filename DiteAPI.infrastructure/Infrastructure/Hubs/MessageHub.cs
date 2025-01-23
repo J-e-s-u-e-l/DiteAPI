@@ -1,13 +1,5 @@
-﻿using DiteAPI.infrastructure.Data.Models;
-using DiteAPI.infrastructure.Infrastructure.Persistence;
-using DiteAPI.Infrastructure.Config;
-using DiteAPI.Infrastructure.Data.Entities;
-using DiteAPI.Infrastructure.Infrastructure.Auth;
-using Microsoft.AspNetCore.Http;
+﻿using DiteAPI.Infrastructure.Infrastructure.Auth;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace DiteAPI.Infrastructure.Infrastructure.Hubs
 {

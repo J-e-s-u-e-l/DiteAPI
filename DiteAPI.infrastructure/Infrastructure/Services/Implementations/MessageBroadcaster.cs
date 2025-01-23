@@ -1,7 +1,10 @@
-﻿using DiteAPI.Infrastructure.Data.Entities;
+﻿using DiteAPI.infrastructure.Data.Entities;
+using DiteAPI.infrastructure.Data.Models;
+using DiteAPI.Infrastructure.Data.Entities;
 using DiteAPI.Infrastructure.Infrastructure.Hubs;
 using DiteAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.SignalR;
+using MimeKit;
 
 namespace DiteAPI.Infrastructure.Infrastructure.Services.Implementations
 {
@@ -19,9 +22,14 @@ namespace DiteAPI.Infrastructure.Infrastructure.Services.Implementations
             await _hubContext.Clients.All.SendAsync("ReceiveMessage", message);
         }*/
 
-        public async Task BroadcastMessageAsync(Guid id, string messageTitle, string messageBody, Guid? trackId, Guid senderId, DateTimeOffset timeCreated)
+        /*public async Task BroadcastMessageAsync(Guid id, string messageTitle, string messageBody, Guid? trackId, Guid senderId, DateTimeOffset timeCreated)
         {
             await _hubContext.Clients.All.SendAsync("ReceiveMessage", id, messageTitle, messageBody, trackId, senderId, timeCreated);
+        }*/
+
+        public async Task BroadcastMessageAsync(MessageDto messageDto)
+        {
+            await _hubContext.Clients.All.SendAsync("ReceiveMessage", messageDto);
         }
     }
 }

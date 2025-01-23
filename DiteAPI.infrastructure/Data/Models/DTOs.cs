@@ -61,6 +61,13 @@ namespace DiteAPI.infrastructure.Data.Models
         //public List<ResponseToMessage> ResponsesToMessage { get; set; }
     }
 
+    public class NotificationDto
+    {
+        public Guid RecipientId { get; set; }
+        public string NotificationContent { get; set; }
+        public DateTimeOffset TimeStamp { get; set; }
+    }
+
     public class ResponseToMessage
     {
         public string ResponseBody { get; set; }
