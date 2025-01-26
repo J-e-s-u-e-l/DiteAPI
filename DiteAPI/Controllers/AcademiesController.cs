@@ -213,5 +213,25 @@ namespace DiteAPI.Api.Controllers
                 return StatusCode(500, $"{_appSettings.ProcessingError}");
             }
         }
+
+        [HttpGet("messages")]
+        public async Task<IActionResult> GetAllMessagesInAcademy(GetAllMessagesQuery request)
+        { 
+            try
+            {
+                var modelxfmed = new GetAllMessagesQuery { AcademyId = request.AcademyId, PageNumber = request.PageNumber, PageSize = request.PageSize };
+                var req = JsonConvert.SerializeObject(modelxfmed);
+
+                _logger.LogInformation($"ACADEMY_CONTROLLER => User attempt to GET all MESSAGES from ACADEMY\n{req}");
+                var response = await _mediator.Send(request);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"ACADEMY_CONTOLLER => Something went wrong\n {ex.StackTrace}: {ex.Message}");
+                return StatusCode(500, $"{_appSettings.ProcessingError}");
+            }
+        }
     }
 }

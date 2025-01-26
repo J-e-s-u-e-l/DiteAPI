@@ -21,11 +21,15 @@ namespace DiteAPI.Infrastructure.Data.Entities
         public Guid? AcademyId { get; set; }
         [ForeignKey(nameof(Track))]
         public Guid? TrackId { get; set; }     
-        [ForeignKey(nameof(GenericUser))]
+        [ForeignKey(nameof(Sender))]
         public Guid SenderId { get; set; }
         public DateTimeOffset SentAt { get; set; }
         public bool IsResponse { get; set; }
         [ForeignKey(nameof(Message))]
         public Guid? ParentId { get; set; }
+
+        // Navigation properties
+        public virtual GenericUser Sender { get; set; }     // I MESSAGE to 1 USER
+        public virtual Track Track { get; set; }     // I MESSAGE to 1 TRACK
     }
 }

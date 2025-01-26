@@ -87,13 +87,15 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                     
                         if (facilitatorsInTheSelectedTrack.Any())
                         {
+                            string academyName = await _dbContext.Academy.Where(a => a.Id == request.AcademyId).Select(a => a.AcademyName).FirstOrDefaultAsync();
                             foreach(var facilitator in facilitatorsInTheSelectedTrack)
                             {
                                 // Persist notification
                                 var notification = new Notification
                                 {
                                     UserId = facilitator,
-                                    NotificationContent = $"New message in track: {message.MessageTitle}"
+                                    NotificationTitle = academyName,
+                                    NotificationBody = $"New message in track: {message.MessageTitle}"
                                 };
 
                                 await _dbContext.Notification.AddAsync(notification);
@@ -102,7 +104,8 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                                 var notificationDto = new NotificationDto
                                 {
                                     RecipientId = facilitator,
-                                    NotificationContent = notification.NotificationContent,
+                                    NotificationTitle = notification.NotificationTitle,
+                                    NotificationBody = notification.NotificationBody,
                                     TimeStamp = notification.TimeCreated,
                                 };
 

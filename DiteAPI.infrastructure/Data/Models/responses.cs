@@ -68,6 +68,17 @@ namespace DiteAPI.infrastructure.Data.Models
     {
         public Guid MessageId { get; set; }
     }
+    
+    public class GetAllMessagesResponse
+    {
+        public Guid MessageId { get; set; }
+        public string MessageTitle{ get; set; }
+        public string MessageBody { get; set; }
+        public string SenderUsername { get; set; }
+        public string SenderRoleInAcademy { get; set; }
+        public string TrackName { get; set; }
+        public DateTimeOffset SentAt { get; set; }
+    }
 
     public class JwtRequest
     {
