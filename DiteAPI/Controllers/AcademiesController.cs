@@ -215,14 +215,14 @@ namespace DiteAPI.Api.Controllers
         }
 
         [HttpGet("messages")]
-        public async Task<IActionResult> GetAllMessagesInAcademy(GetAllMessagesQuery request)
+        public async Task<IActionResult> GetAllMessagesInAcademy([FromQuery] GetAllMessagesQuery request)
         { 
             try
             {
                 var modelxfmed = new GetAllMessagesQuery { AcademyId = request.AcademyId, PageNumber = request.PageNumber, PageSize = request.PageSize };
                 var req = JsonConvert.SerializeObject(modelxfmed);
 
-                _logger.LogInformation($"ACADEMY_CONTROLLER => User attempt to GET all MESSAGES from ACADEMY\n{req}");
+                _logger.LogInformation($"ACADEMY_CONTROLLER => User attempt to GET all MESSAGES in ACADEMY\n{req}");
                 var response = await _mediator.Send(request);
 
                 return Ok(response);

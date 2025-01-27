@@ -80,6 +80,20 @@ namespace DiteAPI.infrastructure.Data.Models
         public DateTimeOffset SentAt { get; set; }
     }
 
+    public class GetAllNotificationsResponse
+    {
+        public Guid NotificationId { get; set; }
+        public string NotificationTitle { get; set; }
+        public string NotificationBody{ get; set; }
+        public bool IsRead { get; set; }
+        public DateTimeOffset TimeStamp { get; set; }
+    }
+
+    public class GetUnreadNotificationsCountResponse
+    {
+        public int UnreadNotificationsCount { get; set; }
+    }
+
     public class JwtRequest
     {
     #nullable disable

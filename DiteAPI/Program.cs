@@ -70,6 +70,8 @@ namespace DiteAPI
                         .Select(x => MapErrorMessage(x.ErrorMessage))
                         .ToList();
 
+                    Console.Write(errors);
+
                     var result = new ValidationResultModel
                     {
                         Status = false,

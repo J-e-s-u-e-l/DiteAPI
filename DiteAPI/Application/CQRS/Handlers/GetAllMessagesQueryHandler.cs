@@ -7,10 +7,11 @@ using MediatR;
 using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using DiteAPI.Infrastructure.Data.Entities;
+using System.Collections.Generic;
 
 namespace DiteAPI.Api.Application.CQRS.Handlers
 {
-    public class GetAllMessagesQueryHandler : IRequestHandler<GetAllMessagesQuery, BaseResponse<GetAllMessagesResponse>>
+    public class GetAllMessagesQueryHandler : IRequestHandler<GetAllMessagesQuery, BaseResponse<List<GetAllMessagesResponse>>>
     {
 
         private readonly DataDBContext _dbContext;
@@ -25,7 +26,7 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
         }
 
 
-        public async Task<BaseResponse<GetAllMessagesResponse>> Handle(GetAllMessagesQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<GetAllMessagesResponse>>> Handle(GetAllMessagesQuery request, CancellationToken cancellationToken)
         {
             try
             {
@@ -33,60 +34,42 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
 
                 try
                 {
-                    /*                    var messagesQuery = _dbContext.Messages
-                                            .Where(x => x.AcademyId == request.AcademyId)
-                                            .OrderByDescending(m => m.SentAt)
-                                            .Select(async m => new
-                                            {
-                                                m.Id,
-                                                m.MessageTitle,
-                                                m.MessageBody,
-                                                m.SentAt,
-                                                m.TrackId,
-                                                Sender = await _dbContext.GenericUser.FirstOrDefaultAsync(u => u.Id == m.SenderId),
-                                                Role = await _dbContext.AcademyMembersRoles.FirstOrDefaultAsync(r => r.GenericUserId == m.SenderId && r.AcademyId == m.AcademyId),
-                                                Track = await _dbContext.Tracks.FirstOrDefaultAsync(t => t.Id == m.TrackId)
-                                            });*/
-
-
-                    var messagesQuery = _dbContext.Messages
+                    var response = await _dbContext.Messages
                         .Include(m => m.Sender)
-                        .Include(m => m.Track)
-                        .Include(m => m.Sender.AcademyMembersRoles.Where(r => r.AcademyId == request.AcademyId))
+                        .ThenInclude(s => s.AcademyMembersRoles)
+                        .ThenInclude(amr => amr.IdentityRole)
                         .Where(m => m.AcademyId == request.AcademyId)
-                        .OrderByDescending(m => m.SentAt);
-
-
-                    var totalMessages = await messagesQuery.CountAsync(cancellationToken);
-
-                    var messages = await messagesQuery
+                        .OrderByDescending(m => m.SentAt)
                         .Skip((request.PageNumber - 1) * request.PageSize)
                         .Take(request.PageSize)
-                        .Select(async m => new GetAllMessagesResponse
+                        .Select(message => new GetAllMessagesResponse
                         {
-                            MessageId = m.Id,
-                            MessageTitle = m.MessageTitle,
-                            MessageBody = m.MessageBody,
-                            SenderUsername = m.Sender.UserName,
-                            SenderRoleInAcademy = m.Sender.AcademyMembersRoles
-                                                            .Where(r => r.AcademyId == request.AcademyId)
-                                                            .Select(r => r.IdentityRole.Name)
-                                                            .FirstOrDefault(),
-                            TrackName = m.Track.TrackName,
-                            SentAt = m.SentAt,
-                        });
+                            MessageId = message.Id,
+                            MessageTitle = message.MessageTitle,
+                            MessageBody = message.MessageBody,
+                            SenderUsername = message.Sender.UserName ?? "Unknown",
+                            SenderRoleInAcademy = message.Sender.AcademyMembersRoles
+                                                                    .Where(amr => amr.AcademyId == request.AcademyId)
+                                                                    .Select(x => x.IdentityRole.Name)
+                                                                    .FirstOrDefault() ?? "Unknown",
+                            TrackName = message.Track.TrackName ?? "General",
+                            SentAt = message.SentAt
+                        })
+                        .ToListAsync();
+
+                    return new BaseResponse<List<GetAllMessagesResponse>>(true, "Academy messages retrieved succesfully", response);
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError($"GET_ALL_MESSAGES_HANDLER => Something went wrong\n {ex.StackTrace}: {ex.Message}");
-                    return new BaseResponse<GetAllMessagesResponse>(false, $"{_appSettings.ProcessingError}");
+                    return new BaseResponse<List<GetAllMessagesResponse>>(false, $"{_appSettings.ProcessingError}");
                 }
 
             }
             catch (Exception ex)
             {
                 _logger.LogError($"GET_ALL_MESSAGES_HANDLER => Something went wrong\n{ex.StackTrace}: {ex.Message}");
-                return new BaseResponse<GetAllMessagesResponse>(false, $"{_appSettings.ProcessingError}");
+                return new BaseResponse<List<GetAllMessagesResponse>>(false, $"{_appSettings.ProcessingError}");
             }
         }
 

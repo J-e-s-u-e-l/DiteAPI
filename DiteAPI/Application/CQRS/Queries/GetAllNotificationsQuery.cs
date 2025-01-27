@@ -5,18 +5,16 @@ using MediatR;
 
 namespace DiteAPI.Api.Application.CQRS.Queries
 {
-    public class GetAllMessagesQuery : IRequest<BaseResponse<List<GetAllMessagesResponse>>>
+    public class GetAllNotificationsQuery : IRequest<BaseResponse<List<GetAllNotificationsResponse>>>
     {
-        public Guid AcademyId { get; set; }
-        public int PageNumber { get; set; } = 1;
         public int PageSize { get; set; } = 10;
+        public int PageNumber { get; set; } = 1;
     }
 
-    public class GetAllMessagesQueryValidator : AbstractValidator<GetAllMessagesQuery>
+    public class GetAllNotificationsQueryValidator : AbstractValidator<GetAllNotificationsQuery>
     {
-        public GetAllMessagesQueryValidator()
+        public GetAllNotificationsQueryValidator()
         {
-            RuleFor(x => x.AcademyId).NotNull().NotEmpty().WithMessage("AcademyId is required");
             RuleFor(x => x.PageNumber).NotNull().NotEmpty().WithMessage("PageNumber is required");
             RuleFor(x => x.PageSize).NotNull().NotEmpty().WithMessage("PageSize is required");
         }

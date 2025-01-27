@@ -20,7 +20,7 @@ namespace DiteAPI.infrastructure.Data.Entities
 
         // Navigation properties
         public virtual Academy Academy { get; set; }        // MANY courses TO 1 Academy
-        public virtual List<AcademyMembersRoles> AcademyMembersRoles { get; set; }               // 1 TrackName TO MANY AcademyMembersRoles
+        public virtual List<AcademyMembersRoles> AcademyMembersRoles { get; set; }      // 1 TrackName TO MANY AcademyMembersRoles
 
     }
 }
