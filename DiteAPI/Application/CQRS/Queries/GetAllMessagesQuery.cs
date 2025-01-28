@@ -5,7 +5,7 @@ using MediatR;
 
 namespace DiteAPI.Api.Application.CQRS.Queries
 {
-    public class GetAllMessagesQuery : IRequest<BaseResponse<List<GetAllMessagesResponse>>>
+    public class GetAllMessagesQuery : IRequest<BaseResponse<GetAllMessagesResponse>>
     {
         public Guid AcademyId { get; set; }
         public int PageNumber { get; set; } = 1;

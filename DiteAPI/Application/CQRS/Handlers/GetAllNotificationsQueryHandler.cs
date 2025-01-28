@@ -35,18 +35,34 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                 {
                     var userId = (Guid)_httpContextAccessor.HttpContext.Items["UserId"];
 
+
+                    // Adequate pagination will be implemented...
+
+                    /*                    var response = await _dbContext.Notification
+                                            .Where(n => n.UserId == userId)
+                                            .OrderByDescending(n => n.TimeCreated)
+                                            .Skip((request.PageNumber - 1) * request.PageSize)
+                                            .Take(request.PageSize)
+                                            .Select(notification => new GetAllNotificationsResponse
+                                            {
+                                                NotificationId = notification.Id,
+                                                NotificationTitle = notification.NotificationTitle,
+                                                NotificationBody = notification.NotificationBody,
+                                                IsRead = notification.IsRead,
+                                                TimeStamp = notification.TimeCreated,
+                                            })
+                                            .ToListAsync();*/
+
                     var response = await _dbContext.Notification
                         .Where(n => n.UserId == userId)
                         .OrderByDescending(n => n.TimeCreated)
-                        .Skip((request.PageNumber - 1) * request.PageSize)
-                        .Take(request.PageSize)
                         .Select(notification => new GetAllNotificationsResponse
                         {
-                            NotificationId = notification.Id,
-                            NotificationTitle = notification.NotificationTitle,
-                            NotificationBody = notification.NotificationBody,
-                            IsRead = notification.IsRead,
-                            TimeStamp = notification.TimeCreated,
+                        NotificationId = notification.Id,
+                        NotificationTitle = notification.NotificationTitle,
+                        NotificationBody = notification.NotificationBody,
+                        IsRead = notification.IsRead,
+                        TimeStamp = notification.TimeCreated,
                         })
                         .ToListAsync();
 

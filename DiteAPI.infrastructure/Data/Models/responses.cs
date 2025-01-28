@@ -68,8 +68,8 @@ namespace DiteAPI.infrastructure.Data.Models
     {
         public Guid MessageId { get; set; }
     }
-    
-    public class GetAllMessagesResponse
+
+    /*public class GetAllMessagesResponse
     {
         public Guid MessageId { get; set; }
         public string MessageTitle{ get; set; }
@@ -78,6 +78,11 @@ namespace DiteAPI.infrastructure.Data.Models
         public string SenderRoleInAcademy { get; set; }
         public string TrackName { get; set; }
         public DateTimeOffset SentAt { get; set; }
+    }*/
+    public class GetAllMessagesResponse
+    {
+        public int RemainingMessagesCount { get; set; }
+        public List<MessageDto> Messages { get; set; }
     }
 
     public class GetAllNotificationsResponse

@@ -27,13 +27,13 @@ namespace DiteAPI.Api.Controllers
             _appSettings = options.Value;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllNotifications(GetAllNotificationsQuery request)
+        [HttpGet("get-all-notifications")]
+        public async Task<IActionResult> GetAllNotifications()
         {
             try
             {
                 _logger.LogInformation($"NOTIFICATIONS_CONTOLLER => User attempt to GET all available NOTIFICATIONS");
-                var response = await _mediator.Send(request);
+                var response = await _mediator.Send(new GetAllNotificationsQuery());
 
                 return Ok(response);
             }

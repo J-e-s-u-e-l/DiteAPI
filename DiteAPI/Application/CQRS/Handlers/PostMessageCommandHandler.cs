@@ -68,6 +68,7 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
 
                     var messageDto = new MessageDto
                     {
+                        MessageId = message.Id,
                         MessageTitle = request.MessageTitle,
                         MessageBody = request.MessageBody,
                         SenderUserName = senderDetails.senderUsername,
