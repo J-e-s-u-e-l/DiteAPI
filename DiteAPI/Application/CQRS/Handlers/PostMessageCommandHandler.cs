@@ -8,6 +8,7 @@ using Microsoft.Extensions.Options;
 using DiteAPI.Infrastructure.Data.Entities;
 using DiteAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using DiteAPI.infrastructure.Infrastructure.Services.Interfaces;
 
 namespace DiteAPI.Api.Application.CQRS.Handlers
 {
@@ -19,8 +20,9 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
         private readonly IMessageBroadcaster _messageBroadcaster;
         private readonly INotificationBroadcaster _notificationBroadcaster;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IHelperMethods _helperMethods;
 
-        public PostMessageCommandHandler(DataDBContext dbContext, ILogger<PostMessageCommandHandler> logger, IOptions<AppSettings> options, INotificationBroadcaster notificationBroadcaster, IMessageBroadcaster messageBroadcaster, IHttpContextAccessor httpContextAccessor)
+        public PostMessageCommandHandler(DataDBContext dbContext, ILogger<PostMessageCommandHandler> logger, IOptions<AppSettings> options, INotificationBroadcaster notificationBroadcaster, IMessageBroadcaster messageBroadcaster, IHttpContextAccessor httpContextAccessor, IHelperMethods helperMethods)
         {
             _dbContext = dbContext;
             _logger = logger;
@@ -28,6 +30,7 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
             _notificationBroadcaster = notificationBroadcaster;
             _messageBroadcaster = messageBroadcaster;
             _httpContextAccessor = httpContextAccessor;
+            _helperMethods = helperMethods;
         }
 
         public async Task<BaseResponse<PostMessageResponse>> Handle(PostMessageCommand request, CancellationToken cancellationToken)
@@ -74,7 +77,7 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                         SenderUserName = senderDetails.senderUsername,
                         SenderRoleInAcademy = senderDetails.senderRoleInAcademy,
                         TrackName = await _dbContext.Tracks.Where(t => t.Id == request.TrackId).Select(t => t.TrackName).FirstOrDefaultAsync(),
-                        SentAt = message.SentAt                    
+                        SentAt = _helperMethods.ToAgoFormat(message.SentAt)                    
                     };
                     //await _messageBroadcaster.BroadcastMessageAsync(message.Id, message.MessageTitle, message.MessageBody, message.TrackId, message.SenderId, message.TimeCreated);
                     await _messageBroadcaster.BroadcastMessageAsync(messageDto);

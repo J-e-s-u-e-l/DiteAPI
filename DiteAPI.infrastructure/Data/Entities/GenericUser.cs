@@ -9,7 +9,7 @@ namespace DiteAPI.Models
     public class GenericUser : IdentityUser<Guid>
     {
         /*[Required]
-        public string FirstName { get; set; }
+        public string Username { get; set; }
         [Required]
         public string LastName { get; set; }*/
         /*[Required]

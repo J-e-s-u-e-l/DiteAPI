@@ -57,7 +57,7 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
 */
                     var user = new GenericUser()
                     {
-                        //FirstName = request.FirstName,
+                        //Username = request.Username,
                         //LastName = request.LastName,
                         //MiddleName = request.MiddleName,
                         Email = request.Email,

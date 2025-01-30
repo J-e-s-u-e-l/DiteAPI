@@ -75,9 +75,7 @@ namespace DiteAPI.infrastructure.Infrastructure.Auth.JWT
             return new LoginResponse
             {
                 UserId = request.UserId,
-                Firstname = request.FirstName,
-                Lastname = request.LastName,
-                Middlename = request.MiddleName,
+                Username = request.Username,  
                 Email = request.EmailAddress,
                 Token = jwtToken,
                 Expires = expires.ToString(),

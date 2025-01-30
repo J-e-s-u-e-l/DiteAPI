@@ -8,6 +8,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using DiteAPI.Infrastructure.Data.Entities;
 using System.Collections.Generic;
+using DiteAPI.infrastructure.Infrastructure.Services.Interfaces;
 
 namespace DiteAPI.Api.Application.CQRS.Handlers
 {
@@ -17,12 +18,14 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
         private readonly DataDBContext _dbContext;
         private readonly ILogger<GetAllMembersQueryHandler> _logger;
         private readonly AppSettings _appSettings;
+        private readonly IHelperMethods _helperMethods;
 
-        public GetAllMessagesQueryHandler(DataDBContext dbContext, ILogger<GetAllMembersQueryHandler> logger, IOptions<AppSettings> options)
+        public GetAllMessagesQueryHandler(DataDBContext dbContext, ILogger<GetAllMembersQueryHandler> logger, IOptions<AppSettings> options, IHelperMethods helperMethods)
         {
             _dbContext = dbContext;
             _logger = logger;
             _appSettings = options.Value;
+            _helperMethods = helperMethods;
         }
 
 
@@ -100,7 +103,7 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                             SenderUserName = msg.SenderUsername,
                             SenderRoleInAcademy = msg.SenderRoleInAcademy,
                             TrackName = msg.TrackName,
-                            SentAt = msg.SentAt
+                            SentAt = _helperMethods.ToAgoFormat(msg.SentAt)
                         }).ToList()
                     };
 

@@ -11,7 +11,7 @@ namespace DiteAPI.Api.Application.CQRS.Commands
     public class RegistrationCommand : IRequest<BaseResponse>
     {
 #nullable disable
-        /*public string FirstName { get; set; } 
+        /*public string Username { get; set; } 
         public string LastName { get; set; } */
         //public string MiddleName { get; set; }
         //public DateOnly DateOfBirth { get; set; }
@@ -30,9 +30,9 @@ namespace DiteAPI.Api.Application.CQRS.Commands
         {
             _dbContext = dbContext;
 
-            //RuleFor(x => x.FirstName)
+            //RuleFor(x => x.Username)
             //    .NotNull()
-            //    .NotEmpty().WithMessage("Firstname is required.")
+            //    .NotEmpty().WithMessage("Username is required.")
             //    .MaximumLength(100).WithMessage("Username must not be greater than 100 characters.");
 
             //RuleFor(x => x.LastName)

@@ -128,9 +128,7 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                      var loginResponse = _jwtHandler.Create(new JwtRequest
                      {
                          UserId = user.Id,
-                         //FirstName = user.FirstName,
-                         //LastName = user.LastName,
-                         //MiddleName = user.MiddleName,
+                         Username = user.UserName,
                          EmailAddress = user.Email
                          //IsEmailVerified = user.EmailConfirmed,
                      });

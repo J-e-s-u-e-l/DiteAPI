@@ -1,5 +1,6 @@
 ﻿using DiteAPI.Infrastructure.Infrastructure.Auth;
 using Microsoft.AspNetCore.SignalR;
+using System;
 
 namespace DiteAPI.Infrastructure.Infrastructure.Hubs
 {
@@ -148,6 +149,10 @@ namespace DiteAPI.Infrastructure.Infrastructure.Hubs
     [CustomAuthorize]
     public class MessageHub : Hub
     {
+        public MessageHub() {
+
+            Console.WriteLine("THIS IS THE DISCUSSION_____HUB \n THIS IS THE DISCUSSION_____HUB\nTHIS IS THE DISCUSSION_____HUB\nTHIS IS THE DISCUSSION_____HUB\nTHIS IS THE DISCUSSION_____HUB\nTHIS IS THE DISCUSSION_____HUB\nTHIS IS THE DISCUSSION_____HUB\nTHIS IS THE DISCUSSION_____HUB\nTHIS IS THE DISCUSSION_____HUB");
+        }
 
     }
 

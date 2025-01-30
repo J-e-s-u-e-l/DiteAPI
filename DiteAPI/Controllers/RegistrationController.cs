@@ -47,7 +47,7 @@ namespace DiteAPI.Api.Controllers
             try
             {
                 var modelxfmed = new RegistrationCommand { Email = request.Email, UserName = request.UserName, };
-                //var modelxfmed = new RegistrationCommand { FirstName = request.FirstName, LastName = request.LastName, MiddleName = request.MiddleName, DateOfBirth = request.DateOfBirth, UserGender = request.UserGender, Email = request.Email, UserName = request.UserName, PhoneNumber = request.PhoneNumber };
+                //var modelxfmed = new RegistrationCommand { Username = request.Username, LastName = request.LastName, MiddleName = request.MiddleName, DateOfBirth = request.DateOfBirth, UserGender = request.UserGender, Email = request.Email, UserName = request.UserName, PhoneNumber = request.PhoneNumber };
                 var req = JsonConvert.SerializeObject(modelxfmed);
 
                 _logger.LogInformation($"REGISTRATION_CONTROLLER => User attempt to REGISTER \n{req}");

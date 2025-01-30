@@ -17,9 +17,7 @@ namespace DiteAPI.infrastructure.Data.Models
     {
         public Guid UserId { get; set; }
         public string Email { get; set; }
-        public string Firstname { get; set; }
-        public string Lastname { get; set; }
-        public string Middlename { get; set; }
+        public string Username { get; set; }
         public string Token { get; set; }
         public string Expires { get; set; }
     }
@@ -99,12 +97,15 @@ namespace DiteAPI.infrastructure.Data.Models
         public int UnreadNotificationsCount { get; set; }
     }
 
+    public class GetAcademyInfoResponse
+    {
+        public string AcademyCode { get; set; }
+    }
+
     public class JwtRequest
     {
     #nullable disable
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string MiddleName { get; set; }
+        public string Username { get; set; }
         public string EmailAddress{ get; set; }
         public Guid UserId { get; set; }
     }

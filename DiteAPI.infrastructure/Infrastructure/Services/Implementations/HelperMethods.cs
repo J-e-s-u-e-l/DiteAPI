@@ -66,6 +66,42 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Implementations
                 .Select(s => s[random.Next(s.Length)]).ToArray());
         }
 
+        public string ToAgoFormat(DateTimeOffset dateTimeOffset)
+        {
+            TimeSpan timeDifference = DateTimeOffset.UtcNow - dateTimeOffset;
+
+            if (timeDifference.TotalSeconds < 0)
+            {
+                return $"in {(int)Math.Abs(timeDifference.TotalSeconds)}s";
+            }
+
+            if (timeDifference.TotalSeconds < 60)
+            {
+                return $"{(int)timeDifference.TotalSeconds}s ago";
+            }
+            if (timeDifference.TotalMinutes < 60)
+            {
+                return $"{(int)timeDifference.TotalMinutes}m ago";
+            }
+            if (timeDifference.TotalHours < 24)
+            {
+                return $"{(int)timeDifference.TotalHours}h ago";
+            }
+            if (timeDifference.TotalDays < 7)
+            {
+                return $"{(int)timeDifference.TotalDays}d ago";
+            }
+            if (timeDifference.TotalDays < 30)
+            {
+                return $"{(int)(timeDifference.TotalDays / 7)}w ago";
+            }
+            if (timeDifference.TotalDays < 365)
+            {
+                return $"{(int)(timeDifference.TotalDays / 30)}mth ago";
+            }
+
+            return $"{(int)(timeDifference.TotalDays / 365)}y ago";
+        }
 
     }
 }
