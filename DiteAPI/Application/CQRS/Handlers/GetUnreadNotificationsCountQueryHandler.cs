@@ -30,7 +30,7 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
             {
                 var userId = (Guid)_httpContextAccessor.HttpContext!.Items["UserId"]!;
 
-                var notificationCount = await _dbContext.Notification.Where(n => n.IsRead == false).CountAsync();
+                var notificationCount = await _dbContext.Notification.Where(n => n.UserId == userId && n.IsRead == false).CountAsync();
 
                 return new BaseResponse<GetUnreadNotificationsCountResponse>(true, "Unread notifications count retrieved sucessfully", new GetUnreadNotificationsCountResponse { UnreadNotificationsCount = notificationCount });
             }

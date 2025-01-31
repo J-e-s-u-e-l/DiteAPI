@@ -3,6 +3,7 @@ using DiteAPI.infrastructure.Data.Models;
 using DiteAPI.Infrastructure.Infrastructure.Hubs;
 using DiteAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.SignalR;
+using Org.BouncyCastle.Cms;
 
 namespace DiteAPI.Infrastructure.Infrastructure.Services.Implementations
 {
@@ -15,9 +16,9 @@ namespace DiteAPI.Infrastructure.Infrastructure.Services.Implementations
             _hubContext = hubContext;
         }
 
-        public async Task BroadcastNotificationAsync(NotificationDto notificationDto)
+        public async Task BroadcastNotificationAsync(NotificationDto notificationDto, string recipientId)
         {
-            await _hubContext.Clients.All.SendAsync("ReceiveNotification", notificationDto);
+            await _hubContext.Clients.Group(recipientId.ToString()).SendAsync("ReceiveNotification", notificationDto);
         }
     }
 }

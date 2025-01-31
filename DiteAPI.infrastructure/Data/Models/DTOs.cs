@@ -52,6 +52,7 @@ namespace DiteAPI.infrastructure.Data.Models
 
     public class MessageDto
     {
+        public Guid AcademyId { get; set; }
         public Guid MessageId { get; set; }
         public string MessageTitle { get; set; }
         public string MessageBody { get; set; }
@@ -64,9 +65,10 @@ namespace DiteAPI.infrastructure.Data.Models
 
     public class NotificationDto
     {
-        public Guid RecipientId { get; set; }
+        public Guid NotificationId { get; set; }
         public string NotificationTitle { get; set; }
         public string NotificationBody { get; set; }
+        public bool IsRead { get; set; }
         public DateTimeOffset TimeStamp { get; set; }
     }
 

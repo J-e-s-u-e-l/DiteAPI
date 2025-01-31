@@ -71,6 +71,7 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
 
                     var messageDto = new MessageDto
                     {
+                        AcademyId = (Guid)message.AcademyId,
                         MessageId = message.Id,
                         MessageTitle = request.MessageTitle,
                         MessageBody = request.MessageBody,
@@ -107,13 +108,14 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                                 // Send real-time notification
                                 var notificationDto = new NotificationDto
                                 {
-                                    RecipientId = facilitator,
+                                    NotificationId = notification.Id,
                                     NotificationTitle = notification.NotificationTitle,
                                     NotificationBody = notification.NotificationBody,
+                                    IsRead = notification.IsRead,
                                     TimeStamp = notification.TimeCreated,
                                 };
 
-                                await _notificationBroadcaster.BroadcastNotificationAsync(notificationDto);
+                                await _notificationBroadcaster.BroadcastNotificationAsync(notificationDto, facilitator.ToString());
                             }
 
                             await _dbContext.SaveChangesAsync();
