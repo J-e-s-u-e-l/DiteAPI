@@ -28,9 +28,14 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                 using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
                 try
                 {
-                    await _dbContext.Notification
+                    var affectedRows = await _dbContext.Notification
                         .Where(n => n.Id == request.NotificationId)
                         .ExecuteDeleteAsync();
+
+                    if (affectedRows == 0)
+                    {
+                        return new BaseResponse(false, "Notification not found");
+                    }
 
                     return new BaseResponse(true, "Notification deleted");
                 }

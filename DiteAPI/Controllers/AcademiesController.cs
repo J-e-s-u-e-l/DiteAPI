@@ -239,7 +239,7 @@ namespace DiteAPI.Api.Controllers
         { 
             try
             {
-                var modelxfmed = new GetAcademyInfoQuery();
+                var modelxfmed = new GetAcademyInfoQuery{ AcademyId = request.AcademyId};
                 var req = JsonConvert.SerializeObject(modelxfmed);
 
                 _logger.LogInformation($"ACADEMY_CONTROLLER => User attempt to GET Academy info\n{req}");

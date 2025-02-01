@@ -152,11 +152,11 @@ namespace DiteAPI
             app.UseSession();
             app.UseRouting();
             app.UseAuthentication();
-            app.UseAuthorization();
             app.UseMiddleware<JwtMiddleware>();
             app.UseMiddleware<JsonExceptionMiddleware>();
+            app.UseAuthorization();
             app.MapHub<MessageHub>("/api/message-hub");
-            app.MapHub<NotificationHub>("/api/notification-hub");
+            //app.MapHub<NotificationHub>("/api/notification-hub");
             /*app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHub<MessageHub>("/api/discussion-hub");

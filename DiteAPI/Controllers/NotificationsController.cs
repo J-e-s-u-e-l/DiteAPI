@@ -1,6 +1,7 @@
 ﻿using DiteAPI.Api.Application.CQRS.Commands;
 using DiteAPI.Api.Application.CQRS.Queries;
 using DiteAPI.Infrastructure.Config;
+using DiteAPI.Infrastructure.Data.Entities;
 using DiteAPI.Infrastructure.Infrastructure.Auth;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -44,12 +45,15 @@ namespace DiteAPI.Api.Controllers
             }
         }
 
-        [HttpPut]
-        public async Task<IActionResult> MarkNotificationAsRead(MarkNotificationAsReadCommand request)
+        [HttpPut("{notificationId}/mark-as-read")]
+        public async Task<IActionResult> MarkNotificationAsRead([FromRoute] MarkNotificationAsReadCommand request)
         {
             try
             {
-                _logger.LogInformation($"NOTIFICATIONS_CONTOLLER => User attempt to MARK NOTIFICATION AS READ");
+                var modelxfmed = new MarkNotificationAsReadCommand { NotificationId = request.NotificationId };
+                var req = JsonConvert.SerializeObject(modelxfmed);
+
+                _logger.LogInformation($"NOTIFICATIONS_CONTOLLER => User attempt to MARK NOTIFICATION AS READ\n{req}");
                 var response = await _mediator.Send(request);
 
                 return Ok(response);
@@ -61,8 +65,8 @@ namespace DiteAPI.Api.Controllers
             }
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> DeleteNotification(DeleteNotificationCommand request)
+        [HttpDelete("{notificationId}/delete")]
+        public async Task<IActionResult> DeleteNotification([FromRoute] DeleteNotificationCommand request)
         {
             try
             {

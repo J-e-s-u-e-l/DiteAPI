@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 
 namespace DiteAPI.Infrastructure.Infrastructure.Auth.JWT
@@ -71,6 +72,16 @@ namespace DiteAPI.Infrastructure.Infrastructure.Auth.JWT
                 var userId = Guid.Parse(jwtToken.Claims.First(x => x.Type == "sub").Value);
 
                 context.Items["UserId"] = userId;
+
+                //context.WebSockets.AcceptWebSocketAsync();
+
+                //context.User.Identities.First().AddClaim(new Claim("UserId", userId.ToString()));
+                var identity = context.User.Identity as ClaimsIdentity;
+
+                if (!identity.HasClaim(c => c.Type == "UserId"))
+                {
+                    identity.AddClaim(new Claim("UserId", userId.ToString()));
+                }
             }
             catch (Exception ex)
             {

@@ -21,24 +21,27 @@ namespace DiteAPI.Infrastructure.Infrastructure.Hubs
 
         public override async Task OnConnectedAsync()
         {
-            var httpContext = _httpContextAccessor.HttpContext;
+            /*var httpContext = _httpContextAccessor.HttpContext;
 
             if (httpContext?.Items["UserId"] is string userId && !string.IsNullOrEmpty(userId))
             {
                 await Groups.AddToGroupAsync(Context.ConnectionId, userId);
-            }
+            }*/
 
-            await base.OnConnectedAsync();
+           /* var userId = _httpContextAccessor.HttpContext.User.FindFirst("UserId")?.Value;
+            await Groups.AddToGroupAsync(Context.ConnectionId, userId);*/
+
+            //await base.OnConnectedAsync();
         }
 
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
-            if (_httpContextAccessor.HttpContext?.Items["UserId"] is string userId)
+           /* if (_httpContextAccessor.HttpContext?.Items["UserId"] is string userId)
             {
                 await Groups.RemoveFromGroupAsync(Context.ConnectionId, userId);
             }
 
-            await base.OnDisconnectedAsync(exception);
+            await base.OnDisconnectedAsync(exception);*/
         }
 
         //public async Task JoinNotificationGroup(string userId)
