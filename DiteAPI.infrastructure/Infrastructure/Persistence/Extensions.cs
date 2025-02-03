@@ -1,19 +1,12 @@
 ﻿using DiteAPI.infrastructure.Data.Entities;
 using DiteAPI.infrastructure.Infrastructure.Services.Implementations;
 using DiteAPI.infrastructure.Infrastructure.Services.Interfaces;
-using DiteAPI.infrastructure.Infrastructures.Utilities.Enums;
 using DiteAPI.Infrastructure.Config;
-using DiteAPI.Infrastructure.Data.Entities;
 using DiteAPI.Infrastructure.Infrastructure.Services.Implementations;
 using DiteAPI.Infrastructure.Infrastructure.Services.Interfaces;
-using DiteAPI.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Identity.Client;
 
 namespace DiteAPI.infrastructure.Infrastructure.Persistence
 {

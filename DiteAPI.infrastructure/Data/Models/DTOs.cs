@@ -59,8 +59,8 @@ namespace DiteAPI.infrastructure.Data.Models
         public string SenderUserName { get; set; }
         public string SenderRoleInAcademy { get; set; }
         public string TrackName { get; set; }
-        //public DateTimeOffset SentAt { get; set; }
         public string SentAt { get; set; }
+        public int TotalNumberOfResponses { get; set; } = 0;
     }
 
     public class NotificationDto
@@ -86,5 +86,13 @@ namespace DiteAPI.infrastructure.Data.Models
         public string Username { get; set; }
         public string RoleName { get; set; }
         public List<Guid> assignedTracks { get; set; }
+    }
+
+    public class Response
+    {
+        public string ResponderUsername { get; set; }
+        public string ResponderRole { get; set; }
+        public string ResponseMessage { get; set; }
+        public string SentAt { get; set; }
     }
 }

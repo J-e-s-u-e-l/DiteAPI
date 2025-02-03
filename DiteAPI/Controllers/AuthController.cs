@@ -56,7 +56,7 @@ namespace DiteAPI.Api.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError($"REGISTRATION_CONTOLLER => Something went wrong\n {ex.StackTrace}: {ex.Message}");
+                _logger.LogError($"AUTH_CONTOLLER => Something went wrong\n {ex.StackTrace}: {ex.Message}");
                 return StatusCode(500, $"{_appSettings.ProcessingError}");
             }
         }

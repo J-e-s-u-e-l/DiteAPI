@@ -37,33 +37,12 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
 
                 try
                 {
-                    /*var response = await _dbContext.Messages
-                        .Include(m => m.Sender)
-                        .ThenInclude(s => s.AcademyMembersRoles)
-                        .ThenInclude(amr => amr.IdentityRole)
-                        .Where(m => m.AcademyId == request.AcademyId)
-                        .OrderByDescending(m => m.SentAt)
-                        .Skip((request.PageNumber - 1) * request.PageSize)
-                        .Take(request.PageSize)
-                        .Select(message => new GetAllMessagesResponse
-                        {
-                            MessageId = message.Id,
-                            MessageTitle = message.MessageTitle,
-                            MessageBody = message.MessageBody,
-                            SenderUsername = message.Sender.UserName ?? "Unknown",
-                            SenderRoleInAcademy = message.Sender.AcademyMembersRoles
-                                                                    .Where(amr => amr.AcademyId == request.AcademyId)
-                                                                    .Select(x => x.IdentityRole.Name)
-                                                                    .FirstOrDefault() ?? "Unknown",
-                            TrackName = message.Track.TrackName ?? "General",
-                            SentAt = message.SentAt
-                        })
-                        .ToListAsync();*/
                     var totalCountOfMessagesInAcademy = await _dbContext.Messages
                         .Where(m => m.AcademyId == request.AcademyId)
                         .CountAsync();
 
-                    var messagesInTheAcademy = await _dbContext.Messages
+                    // Get paginated message IDs
+                    var messageIds = await _dbContext.Messages
                         .Include(m => m.Sender)
                         .ThenInclude(s => s.AcademyMembersRoles)
                         .ThenInclude(amr => amr.IdentityRole)
@@ -71,20 +50,41 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                         .OrderByDescending(m => m.SentAt)
                         .Skip((request.PageNumber - 1) * request.PageSize)
                         .Take(request.PageSize)
-                        .Select(message => new 
-                        {
-                            MessageId = message.Id,
-                            MessageTitle = message.MessageTitle,
-                            MessageBody = message.MessageBody,
-                            SenderUsername = message.Sender.UserName ?? "Unknown",
-                            SenderRoleInAcademy = message.Sender.AcademyMembersRoles
-                                                                    .Where(amr => amr.AcademyId == request.AcademyId)
-                                                                    .Select(x => x.IdentityRole.Name)
-                                                                    .FirstOrDefault() ?? "Unknown",
-                            TrackName = message.Track.TrackName ?? "General",
-                            SentAt = message.SentAt
-                        })
+                        .Select(m => m.Id)
                         .ToListAsync();
+
+                    // Fetch messages with sender and track details
+                    var messages = await _dbContext.Messages
+                        .Include(m => m.Sender)
+                            .ThenInclude(s => s.AcademyMembersRoles)
+                                .ThenInclude(amr => amr.IdentityRole)
+                        .Include(m => m.Track)
+                        .Where(m => messageIds.Contains(m.Id))
+                        .ToListAsync();
+
+                    // Bulk-fetch response counts
+                    var responseCounts = await _dbContext.Messages
+                        .Where(m => messageIds.Contains(m.ParentId.Value))
+                        .GroupBy(m => m.ParentId)
+                        .Select(g => new { ParentId = g.Key, Count = g.Count() })
+                        .ToDictionaryAsync(g => g.ParentId.Value, g => g.Count);
+
+                    // Map to DTOs
+                    var messageDtos = messages.Select(message => new MessageDto
+                    {
+                        MessageId = message.Id,
+                        MessageTitle = message.MessageTitle,
+                        MessageBody = message.MessageBody,
+                        SenderUserName = message.Sender?.UserName ?? "Unkown",
+                        SenderRoleInAcademy = message.Sender?.AcademyMembersRoles
+                                                    .Where(amr => amr.AcademyId == request.AcademyId)
+                                                    .Select(x => x.IdentityRole.Name)
+                                                    .FirstOrDefault() ?? "Unkown",
+                        TrackName = message.Track?.TrackName,
+                        SentAt = _helperMethods.ToAgoFormat(message.SentAt),
+                        TotalNumberOfResponses = responseCounts.ContainsKey(message.Id) ? responseCounts[message.Id] : 0
+                    }).ToList();
+
 
                     var remainingMessagesCount = totalCountOfMessagesInAcademy - (request.PageNumber * request.PageSize);
                     if (remainingMessagesCount < 0)
@@ -95,16 +95,7 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                     var response = new GetAllMessagesResponse
                     {
                         RemainingMessagesCount = remainingMessagesCount,
-                        Messages = messagesInTheAcademy.Select(msg => new MessageDto
-                        {
-                            MessageId = msg.MessageId,
-                            MessageTitle = msg.MessageTitle,
-                            MessageBody = msg.MessageBody,
-                            SenderUserName = msg.SenderUsername,
-                            SenderRoleInAcademy = msg.SenderRoleInAcademy,
-                            TrackName = msg.TrackName,
-                            SentAt = _helperMethods.ToAgoFormat(msg.SentAt)
-                        }).ToList()
+                        Messages = messageDtos
                     };
 
                     return new BaseResponse<GetAllMessagesResponse>(true, "Academy messages retrieved succesfully", response);

@@ -149,7 +149,7 @@ namespace DiteAPI
             app.UseHttpsRedirection();
             app.UseCors("MyCorsPolicy");
             app.UseSession();
-            app.UseSession();
+            //app.UseSession();
             app.UseRouting();
             app.UseAuthentication();
             app.UseMiddleware<JwtMiddleware>();

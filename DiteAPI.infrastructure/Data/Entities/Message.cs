@@ -40,5 +40,6 @@ namespace DiteAPI.Infrastructure.Data.Entities
         // Navigation properties
         public virtual GenericUser Sender { get; set; }     // I MESSAGE to 1 USER
         public virtual Track Track { get; set; }     // I MESSAGE to 1 TRACK
+        public virtual Academy Academy { get; set; }     // I MESSAGE to 1 ACADEMY
     }
 }

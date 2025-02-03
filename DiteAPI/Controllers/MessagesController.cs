@@ -1,4 +1,5 @@
 ﻿using DiteAPI.Api.Application.CQRS.Commands;
+using DiteAPI.Api.Application.CQRS.Queries;
 using DiteAPI.Infrastructure.Config;
 using DiteAPI.Infrastructure.Infrastructure.Auth;
 using MediatR;
@@ -35,6 +36,26 @@ namespace DiteAPI.Api.Controllers
                 var req = JsonConvert.SerializeObject(modelxfmed);
 
                 _logger.LogInformation($"MESSAGE_CONTROLLER => User attempt to POST a MESSAGE \n{req}");
+                var response = await _mediator.Send(request);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"MESSAGE_CONTOLLER => Something went wrong\n {ex.StackTrace}: {ex.Message}");
+                return StatusCode(500, $"{_appSettings.ProcessingError}");
+            }
+        }
+
+        [HttpGet("{messageId}")]
+        public async Task<IActionResult> GetMessageDetails([FromRoute] GetMessageDetailsQuery request)
+        {
+            try
+            {
+                var modelxfmed = new GetMessageDetailsQuery { MessageId = request.AcademyId };
+                var req = JsonConvert.SerializeObject(modelxfmed);
+
+                _logger.LogInformation($"MESSAGE_CONTROLLER => User attempt to GET message Details \n{req}");
                 var response = await _mediator.Send(request);
 
                 return Ok(response);
