@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using DiteAPI.Infrastructure.Data.Entities;
 using System.Collections.Generic;
 using DiteAPI.infrastructure.Infrastructure.Services.Interfaces;
+using DiteAPI.Infrastructure.Infrastructure.Repositories.Interfaces;
 
 namespace DiteAPI.Api.Application.CQRS.Handlers
 {
@@ -19,13 +20,15 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
         private readonly ILogger<GetAllMembersQueryHandler> _logger;
         private readonly AppSettings _appSettings;
         private readonly IHelperMethods _helperMethods;
+        private readonly IAcademyRepository _academyRepository;
 
-        public GetAllMessagesQueryHandler(DataDBContext dbContext, ILogger<GetAllMembersQueryHandler> logger, IOptions<AppSettings> options, IHelperMethods helperMethods)
+        public GetAllMessagesQueryHandler(DataDBContext dbContext, ILogger<GetAllMembersQueryHandler> logger, IOptions<AppSettings> options, IHelperMethods helperMethods, IAcademyRepository academyRepository)
         {
             _dbContext = dbContext;
             _logger = logger;
             _appSettings = options.Value;
             _helperMethods = helperMethods;
+            _academyRepository = academyRepository;
         }
 
 
@@ -41,6 +44,7 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                         .Where(m => m.AcademyId == request.AcademyId)
                         .CountAsync();
 
+
                     // Get paginated message IDs
                     var messageIds = await _dbContext.Messages
                         .Include(m => m.Sender)
@@ -53,6 +57,10 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                         .Select(m => m.Id)
                         .ToListAsync();
 
+                    var messageDtos = await _academyRepository.GetMessageDetailsAsync(messageIds);
+
+
+                    /*
                     // Fetch messages with sender and track details
                     var messages = await _dbContext.Messages
                         .Include(m => m.Sender)
@@ -83,7 +91,7 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                         TrackName = message.Track?.TrackName,
                         SentAt = _helperMethods.ToAgoFormat(message.SentAt),
                         TotalNumberOfResponses = responseCounts.ContainsKey(message.Id) ? responseCounts[message.Id] : 0
-                    }).ToList();
+                    }).ToList(); */
 
 
                     var remainingMessagesCount = totalCountOfMessagesInAcademy - (request.PageNumber * request.PageSize);

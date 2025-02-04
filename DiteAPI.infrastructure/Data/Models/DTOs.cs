@@ -52,7 +52,7 @@ namespace DiteAPI.infrastructure.Data.Models
 
     public class MessageDto
     {
-        public Guid AcademyId { get; set; }
+        public Guid? AcademyId { get; set; }
         public Guid MessageId { get; set; }
         public string MessageTitle { get; set; }
         public string MessageBody { get; set; }
@@ -88,11 +88,12 @@ namespace DiteAPI.infrastructure.Data.Models
         public List<Guid> assignedTracks { get; set; }
     }
 
-    public class Response
+    public class MessageReplyDto
     {
+        public Guid ParentId { get; set; }
+        public string ResponseBody { get; set; }
         public string ResponderUsername { get; set; }
-        public string ResponderRole { get; set; }
-        public string ResponseMessage { get; set; }
+        public string ResponderRoleInAcademy { get; set; }
         public string SentAt { get; set; }
     }
 }

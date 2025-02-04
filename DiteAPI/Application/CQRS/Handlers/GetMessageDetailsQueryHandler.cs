@@ -7,6 +7,8 @@ using MediatR;
 using Microsoft.Extensions.Options;
 using DiteAPI.Infrastructure.Data.Entities;
 using DiteAPI.infrastructure.Infrastructure.Services.Interfaces;
+using DiteAPI.Infrastructure.Infrastructure.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace DiteAPI.Api.Application.CQRS.Handlers
 {
@@ -15,13 +17,15 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
         private readonly DataDBContext _dbContext;
         private readonly ILogger<GetMessageDetailsQueryHandler> _logger;
         private readonly AppSettings _appSettings;
+        private readonly IAcademyRepository _academyRepository;
         private readonly IHelperMethods _helperMethods;
 
-        public GetMessageDetailsQueryHandler(DataDBContext dbContext, ILogger<GetMessageDetailsQueryHandler> logger, IOptions<AppSettings> appSettings, IHelperMethods helperMethods)
+        public GetMessageDetailsQueryHandler(DataDBContext dbContext, ILogger<GetMessageDetailsQueryHandler> logger, IOptions<AppSettings> appSettings, IAcademyRepository academyRepository, IHelperMethods helperMethods)
         {
             _dbContext = dbContext;
             _logger = logger;
             _appSettings = appSettings.Value;
+            _academyRepository = academyRepository;
             _helperMethods = helperMethods;
         }
 
@@ -29,21 +33,19 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
         {
             try
             {
-                var messageDetails = await _dbContext.Messages
-                    .Where(m => m.Id == request.MessageId)
-                    .SelectMany(md => new
-                    {
-                        MessageTitle = md.MessageTitle,
-                        MessageBody = md.MessageBody,
-                        SenderUsername = md.Sender.UserName ?? "Unknown",
-                        SenderRoleInAcademy = md.Sender.AcademyMembersRoles
-                                                                    .Where(amr => amr.AcademyId == request.AcademyId)
-                                                                    .Select(x => x.IdentityRole.Name)
-                                                                    .FirstOrDefault() ?? "Unknown",
-                        TrackName = md.Track?.TrackName,
-                        SentAt = _helperMethods.ToAgoFormat(md.SentAt),
-                        TotalNumberOfResponses = responseCounts.ContainsKey(message.Id) ? responseCounts[message.Id] : 0
-                    })
+                var message = await _academyRepository.GetMessageDetailsAsync(new List<Guid> { request.MessageId });
+
+                var responsesToMessage = await _dbContext.Messages
+                                                .Where(r => r.Id == request.MessageId)
+                                                .Select(res => new MessageReplyDto
+                                                {
+                                                    ResponseBody = res.MessageBody,
+                                                    ResponderUsername = res.Sender.UserName,
+                                                    ResponderRoleInAcademy = res.Sender.AcademyMembersRoles.Select(x => x.IdentityRole.Name).FirstOrDefault(),
+                                                    SentAt = _helperMethods.ToAgoFormat(res.SentAt)
+                                                }).ToListAsync();
+
+                return new BaseResponse<GetMessageDetailsResponse>(true, "Responses to message retrieved successfully", new GetMessageDetailsResponse { Message = message, Responses = responsesToMessage });
             }
             catch (Exception ex)
             {

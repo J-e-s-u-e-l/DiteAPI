@@ -13,7 +13,7 @@ namespace DiteAPI.Infrastructure.Data.Entities
     {
         /* 
          On creating a record in the on the Message table:
-         TrackId & AcademyId can be left null IF AND ONLY IF the message is a response to another message within the same academy
+         MessageTitle, TrackId & AcademyId can be left null IF AND ONLY IF the message is a response to another message within the same academy
          ParentId can be left null IF AND ONLY IF the message is not a response to another message within the same academy
         */
         public string? MessageTitle { get; set; }

@@ -11,7 +11,6 @@ namespace DiteAPI.Api.Application.CQRS.Commands
         public string MessageBody{ get; set; }
         public Guid? TrackId { get; set; }
         public Guid? AcademyId { get; set; }
-        //public Guid SenderId { get; set; }
     }
 
     public class PostMessageCommandValidator : AbstractValidator<PostMessageCommand>
@@ -25,10 +24,6 @@ namespace DiteAPI.Api.Application.CQRS.Commands
             RuleFor(x => x.MessageBody)
                 .NotEmpty().NotNull()
                 .WithMessage("MessageBody is Required.");
-
-            /*RuleFor(x => x.SenderId)
-                .NotEmpty().NotNull()
-                .WithMessage("SenderId is Required.");*/
         }
     }
 }

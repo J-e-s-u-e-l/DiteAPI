@@ -2,6 +2,8 @@
 using DiteAPI.infrastructure.Infrastructure.Services.Implementations;
 using DiteAPI.infrastructure.Infrastructure.Services.Interfaces;
 using DiteAPI.Infrastructure.Config;
+using DiteAPI.Infrastructure.Infrastructure.Repositories.Implementations;
+using DiteAPI.Infrastructure.Infrastructure.Repositories.Interfaces;
 using DiteAPI.Infrastructure.Infrastructure.Services.Implementations;
 using DiteAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +24,7 @@ namespace DiteAPI.infrastructure.Infrastructure.Persistence
             services.AddSignalR();
             services.AddScoped<IMessageBroadcaster, MessageBroadcaster>();
             services.AddScoped<INotificationBroadcaster, NotificationBroadcaster>();
+            services.AddScoped<IAcademyRepository, AcademyRepository>();
 
             return services;
         }

@@ -152,13 +152,20 @@ namespace DiteAPI.Infrastructure.Infrastructure.Hubs
         public async Task JoinAcademyGroup(string academyId)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, academyId);
-            //await Console.Out.WriteLineAsync($"User {Context.ConnectionId} joined academy {academyId}");
         }
 
         public async Task LeaveAcademyGroup(string academyId)
         {
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, academyId);
-            //await Console.Out.WriteLineAsync($"User {Context.ConnectionId} left academy {academyId}");
+        }
+        public async Task JoinMessageGroup(string parentId)
+        {
+            await Groups.AddToGroupAsync(Context.ConnectionId, parentId);
+        }
+
+        public async Task LeaveMessageGroup(string parentId)
+        {
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, parentId);
         }
     }
 

@@ -66,17 +66,6 @@ namespace DiteAPI.infrastructure.Data.Models
     {
         public Guid MessageId { get; set; }
     }
-
-    /*public class GetAllMessagesResponse
-    {
-        public Guid MessageId { get; set; }
-        public string MessageTitle{ get; set; }
-        public string MessageBody { get; set; }
-        public string SenderUsername { get; set; }
-        public string SenderRoleInAcademy { get; set; }
-        public string TrackName { get; set; }
-        public DateTimeOffset SentAt { get; set; }
-    }*/
     public class GetAllMessagesResponse
     {
         public int RemainingMessagesCount { get; set; }
@@ -102,22 +91,10 @@ namespace DiteAPI.infrastructure.Data.Models
         public string AcademyCode { get; set; }
     }
 
-    /*public class GetMessageDetailsResponse
-    {
-        public string MessageTitle { get; set; }
-
-        public string MessageBody { get; set; }
-        public string SenderUserName { get; set; }
-        public string SenderRoleInAcademy { get; set; }
-        public string? TrackName { get; set; }
-        public string SentAt { get; set; }
-        public int TotalNumberOfResponses { get; set; }
-        public List<Response> Responses { get; set; }
-    }*/
     public class GetMessageDetailsResponse
     {
-        public MessageDto Message { get; set; }
-        public List<Response> Responses { get; set; }
+        public List<MessageDto> Message { get; set; }
+        public List<MessageReplyDto> Responses { get; set; }
     }
 
     public class JwtRequest

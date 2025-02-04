@@ -1,4 +1,6 @@
-﻿using DiteAPI.infrastructure.Infrastructure.Services.Interfaces;
+﻿using DiteAPI.infrastructure.Data.Models;
+using DiteAPI.infrastructure.Infrastructure.Services.Interfaces;
+using DiteAPI.Infrastructure.Data.Entities;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -103,5 +105,22 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Implementations
             return $"{(int)(timeDifference.TotalDays / 365)}y ago";
         }
 
+        public MessageDto MapToMessageDto(Message message, Dictionary<Guid, int> responseCounts)
+        {
+            return new MessageDto
+            {
+                AcademyId = message.AcademyId,
+                MessageId = message.Id,
+                MessageTitle = message.MessageTitle,
+                MessageBody = message.MessageBody,
+                SenderUserName = message.Sender?.AcademyMembersRoles
+                                    .Where(amr => amr.AcademyId == message.AcademyId)
+                                    .Select(x => x.IdentityRole.Name)
+                                    .FirstOrDefault() ?? "Unkown",
+                TrackName = message.Track?.TrackName,
+                SentAt = ToAgoFormat(message.SentAt),
+                TotalNumberOfResponses = responseCounts.GetValueOrDefault(message.Id, 0)
+            };
+        }
     }
 }

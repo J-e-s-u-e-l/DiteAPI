@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DiteAPI.infrastructure.Data.Models;
+using DiteAPI.Infrastructure.Data.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,5 +14,6 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Interfaces
         abstract string Generate6CharString();
         string GenerateRandomNumber(int length);
         string ToAgoFormat(DateTimeOffset dateTimeOffset);
+        MessageDto MapToMessageDto(Message message, Dictionary<Guid, int> responseCounts);
     }
 }

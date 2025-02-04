@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace DiteAPI.Infrastructure.Infrastructure.Repositories.Interfaces
 {
-    public interface IAcademy
+    public interface IAcademyRepository
     {
-        Task<MessageDto> GetMessageDetails(Guid messageId);
+        Task <List<MessageDto>> GetMessageDetailsAsync(List<Guid> messageId);
     }
 }

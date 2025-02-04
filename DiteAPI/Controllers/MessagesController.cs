@@ -52,10 +52,30 @@ namespace DiteAPI.Api.Controllers
         {
             try
             {
-                var modelxfmed = new GetMessageDetailsQuery { MessageId = request.AcademyId };
+                var modelxfmed = new GetMessageDetailsQuery { MessageId = request.MessageId };
                 var req = JsonConvert.SerializeObject(modelxfmed);
 
                 _logger.LogInformation($"MESSAGE_CONTROLLER => User attempt to GET message Details \n{req}");
+                var response = await _mediator.Send(request);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"MESSAGE_CONTOLLER => Something went wrong\n {ex.StackTrace}: {ex.Message}");
+                return StatusCode(500, $"{_appSettings.ProcessingError}");
+            }
+        }
+
+        [HttpPost("{messageId}/responses")]
+        public async Task<IActionResult> PostReplyToMessage([FromRoute] PostReplyCommand request)
+        {
+            try
+            {
+                var modelxfmed = new PostReplyCommand { ParentId = request.ParentId, ReplyBody = request.ReplyBody };
+                var req = JsonConvert.SerializeObject(modelxfmed);
+
+                _logger.LogInformation($"MESSAGE_CONTROLLER => User attempt to POST a reply to message\n{req}");
                 var response = await _mediator.Send(request);
 
                 return Ok(response);
