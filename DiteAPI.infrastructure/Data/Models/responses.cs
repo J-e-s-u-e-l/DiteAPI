@@ -94,7 +94,7 @@ namespace DiteAPI.infrastructure.Data.Models
     public class GetMessageDetailsResponse
     {
         public List<MessageDto> Message { get; set; }
-        public List<MessageReplyDto> Responses { get; set; }
+        public List<ResponseDto> Responses { get; set; }
     }
 
     public class JwtRequest

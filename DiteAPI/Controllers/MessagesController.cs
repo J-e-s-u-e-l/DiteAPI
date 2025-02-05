@@ -67,12 +67,12 @@ namespace DiteAPI.Api.Controllers
             }
         }
 
-        [HttpPost("{messageId}/responses")]
-        public async Task<IActionResult> PostReplyToMessage([FromRoute] PostReplyCommand request)
+        [HttpPost("responses")]
+        public async Task<IActionResult> PostReplyToMessage(PostReplyCommand request)
         {
             try
             {
-                var modelxfmed = new PostReplyCommand { ParentId = request.ParentId, ReplyBody = request.ReplyBody };
+                var modelxfmed = new PostReplyCommand { ParentId = request.ParentId, ResponseMessage = request.ResponseMessage };
                 var req = JsonConvert.SerializeObject(modelxfmed);
 
                 _logger.LogInformation($"MESSAGE_CONTROLLER => User attempt to POST a reply to message\n{req}");

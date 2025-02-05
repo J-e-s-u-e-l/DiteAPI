@@ -105,7 +105,7 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Implementations
             return $"{(int)(timeDifference.TotalDays / 365)}y ago";
         }
 
-        public MessageDto MapToMessageDto(Message message, Dictionary<Guid, int> responseCounts)
+        public MessageDto MapToMessageDto(Message message, Dictionary<Guid?, int> responseCounts)
         {
             return new MessageDto
             {
@@ -118,7 +118,8 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Implementations
                                     .Select(x => x.IdentityRole.Name)
                                     .FirstOrDefault() ?? "Unkown",
                 TrackName = message.Track?.TrackName,
-                SentAt = ToAgoFormat(message.SentAt),
+                SentAtAgo = ToAgoFormat(message.SentAt),
+                SentAt = message.SentAt,
                 TotalNumberOfResponses = responseCounts.GetValueOrDefault(message.Id, 0)
             };
         }

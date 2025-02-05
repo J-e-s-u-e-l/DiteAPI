@@ -40,8 +40,8 @@ namespace DiteAPI.Infrastructure.Infrastructure.Auth.JWT
                         await attachUserToContext(context, token);
                     /*else
                     {
-                        context.MessageReplyDto.StatusCode = 401;
-                        await context.MessageReplyDto.WriteAsync(JsonConvert.SerializeObject(new { message = "Authentication required. Please log in to access this resource." }));
+                        context.ResponseDto.StatusCode = 401;
+                        await context.ResponseDto.WriteAsync(JsonConvert.SerializeObject(new { message = "Authentication required. Please log in to access this resource." }));
                     }*/
                 }
 

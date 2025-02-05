@@ -7,7 +7,7 @@ namespace DiteAPI.Api.Application.CQRS.Commands
     public class PostReplyCommand : IRequest<BaseResponse>
     {
         public Guid ParentId { get; set; }
-        public string ReplyBody{ get; set; }
+        public string ResponseMessage{ get; set; }
     }
 
     public class PostReplyToMessageCommandValidator : AbstractValidator<PostReplyCommand>
@@ -18,7 +18,7 @@ namespace DiteAPI.Api.Application.CQRS.Commands
                 .NotEmpty().NotNull()
                 .WithMessage("ParentId is Required.");
 
-            RuleFor(x => x.ReplyBody)
+            RuleFor(x => x.ResponseMessage)
                 .NotEmpty().NotNull()
                 .WithMessage("ReplyBody is Required.");
         }

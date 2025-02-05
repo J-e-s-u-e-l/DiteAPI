@@ -7,6 +7,6 @@ namespace DiteAPI.Infrastructure.Infrastructure.Services.Interfaces
     {
         //Task BroadcastMessageAsync(Guid id, string messageTitle, string messageBody, Guid? trackId, Guid senderId, DateTimeOffset timeCreated);
         Task BroadcastMessageAsync(MessageDto messageDto);
-        Task BroadcastReplyAsync(MessageReplyDto replyDto);
+        Task BroadcastReplyAsync(ResponseDto replyDto, Guid parentId);
     }
 }

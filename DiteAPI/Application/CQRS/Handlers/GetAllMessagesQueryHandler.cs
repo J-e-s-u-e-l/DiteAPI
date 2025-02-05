@@ -89,7 +89,7 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                                                     .Select(x => x.IdentityRole.Name)
                                                     .FirstOrDefault() ?? "Unkown",
                         TrackName = message.Track?.TrackName,
-                        SentAt = _helperMethods.ToAgoFormat(message.SentAt),
+                        SentAtAgo = _helperMethods.ToAgoFormat(message.SentAtAgo),
                         TotalNumberOfResponses = responseCounts.ContainsKey(message.Id) ? responseCounts[message.Id] : 0
                     }).ToList(); */
 

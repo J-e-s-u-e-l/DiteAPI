@@ -3,6 +3,7 @@ using DiteAPI.infrastructure.Infrastructure.Persistence;
 using DiteAPI.infrastructure.Infrastructure.Services.Interfaces;
 using DiteAPI.Infrastructure.Infrastructure.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace DiteAPI.Infrastructure.Infrastructure.Repositories.Implementations
 {
@@ -30,11 +31,18 @@ namespace DiteAPI.Infrastructure.Infrastructure.Repositories.Implementations
                 .ToListAsync();
 
             // Bulk-fetch response counts
-            var responseCounts = await _dbContext.Messages
+            /*var responseCounts = await _dbContext.Messages
                 .Where(m => messageIds.Contains(m.Id))
                 .GroupBy(m => m.ParentId)
                 .Select(g => new { ParentId = g.Key, Count = g.Count() })
-                .ToDictionaryAsync(g => g.ParentId.Value, g => g.Count);
+                //.ToDictionaryAsync(g => g.ParentId.Value, g => g.Count);
+                .ToDictionaryAsync(g => g.ParentId, g => g.Count);*/
+            var responseCounts = await _dbContext.Messages
+                .Where(m => messageIds.Contains((Guid)m.ParentId))
+                .GroupBy(m => m.ParentId)
+                .Select(g => new { ParentId = g.Key, Count = g.Count() })
+                //.ToDictionaryAsync(g => g.ParentId.Value, g => g.Count);
+                .ToDictionaryAsync(g => g.ParentId, g => g.Count);
 
             return messages.Select(message => _helperMethods.MapToMessageDto(message, responseCounts)).ToList();
         }

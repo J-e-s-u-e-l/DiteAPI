@@ -36,13 +36,15 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                 var message = await _academyRepository.GetMessageDetailsAsync(new List<Guid> { request.MessageId });
 
                 var responsesToMessage = await _dbContext.Messages
-                                                .Where(r => r.Id == request.MessageId)
-                                                .Select(res => new MessageReplyDto
+                                                .Where(r => r.ParentId == request.MessageId)
+                                                .Select(res => new ResponseDto
                                                 {
+                                                    ResponseId = res.Id,
                                                     ResponseBody = res.MessageBody,
                                                     ResponderUsername = res.Sender.UserName,
                                                     ResponderRoleInAcademy = res.Sender.AcademyMembersRoles.Select(x => x.IdentityRole.Name).FirstOrDefault(),
-                                                    SentAt = _helperMethods.ToAgoFormat(res.SentAt)
+                                                    SentAtAgo = _helperMethods.ToAgoFormat(res.SentAt),
+                                                    SentAt = res.SentAt
                                                 }).ToListAsync();
 
                 return new BaseResponse<GetMessageDetailsResponse>(true, "Responses to message retrieved successfully", new GetMessageDetailsResponse { Message = message, Responses = responsesToMessage });

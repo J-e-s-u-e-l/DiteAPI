@@ -88,7 +88,7 @@ namespace DiteAPI.Infrastructure.Infrastructure.Hubs
                     AcademyId = academyIdInGuid,
                     TrackId = trackIdInGuid,
                     SenderId = senderId,
-                    SentAt = sentAt,
+                    SentAtAgo = sentAt,
                     IsResponse = false
                 };
                 await _dbContext.Messages.AddAsync(newMessage);
@@ -136,7 +136,7 @@ namespace DiteAPI.Infrastructure.Infrastructure.Hubs
             {
                 MessageBody = responseBody,
                 SenderId = responderId,
-                SentAt = sentAt,
+                SentAtAgo = sentAt,
                 IsResponse = true,
                 ParentId = ,
             };

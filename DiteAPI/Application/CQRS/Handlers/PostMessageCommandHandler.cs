@@ -78,7 +78,8 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                         SenderUserName = senderDetails.senderUsername,
                         SenderRoleInAcademy = senderDetails.senderRoleInAcademy,
                         TrackName = await _dbContext.Tracks.Where(t => t.Id == request.TrackId).Select(t => t.TrackName).FirstOrDefaultAsync(),
-                        SentAt = _helperMethods.ToAgoFormat(message.SentAt)
+                        SentAtAgo = _helperMethods.ToAgoFormat(message.SentAt),
+                        SentAt = message.SentAt,
                     };
                     //await _messageBroadcaster.BroadcastMessageAsync(message.Id, message.MessageTitle, message.MessageBody, message.TrackId, message.SenderId, message.TimeCreated);
                     await _messageBroadcaster.BroadcastMessageAsync(messageDto);

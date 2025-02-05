@@ -43,20 +43,21 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                 {
                     var userId = (Guid)_httpContextAccessor.HttpContext!.Items["UserId"]!;
 
-                    // Persist reply
-                    var reply = new Message
+                    // Persist response
+                    var response = new Message
                     {
                         SenderId = userId,
-                        MessageBody = request.ReplyBody,
+                        MessageBody = request.ResponseMessage,
+                        ParentId = request.ParentId,
                         SentAt = DateTimeOffset.UtcNow,
                         IsResponse = true,
                     };
 
-                    await _dbContext.Messages.AddAsync(reply);
+                    await _dbContext.Messages.AddAsync(response);
                     await _dbContext.SaveChangesAsync(cancellationToken);
 
 
-                    // Broadcast reply in real-time
+                    // Broadcast response in real-time
                     var responderDetails = await _dbContext.GenericUser
                         .Where(x => x.Id == userId)
                         .Select(sd => new
@@ -66,29 +67,29 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                                 .Select(x => x.IdentityRole.Name).FirstOrDefault()
                         }).FirstOrDefaultAsync();
 
-                    var messageReplyDto = new MessageReplyDto
+                    var messageReplyDto = new ResponseDto
                     {
-                        ParentId = request.ParentId,
-                        ResponseBody = request.ReplyBody,
+                        ResponseBody = request.ResponseMessage,
                         ResponderUsername = responderDetails.responderUsername,
                         ResponderRoleInAcademy = responderDetails.responderRoleInAcademy,
-                        SentAt = _helperMethods.ToAgoFormat(reply.SentAt)
+                        SentAtAgo = _helperMethods.ToAgoFormat(response.SentAt),
+                        SentAt = response.SentAt
                     };
                     
-                    await _messageBroadcaster.BroadcastReplyAsync(messageReplyDto);
+                    await _messageBroadcaster.BroadcastReplyAsync(messageReplyDto, request.ParentId);
 
                     // Send Notification to Message owner
                     var notificationDetails = await _dbContext.Messages
                                                                 .Where(x => x.Id == request.ParentId)
-                                                                .Select(x => new
+                                                                .Select(y => new
                                                                 {
-                                                                    SenderId = x.SenderId,
-                                                                    AcademyName = x.Academy.AcademyName
+                                                                    SenderOfParentMessage = y.SenderId,
+                                                                    AcademyName = y.Academy.AcademyName
                                                                 }).FirstOrDefaultAsync();
 
                     var notification = new Notification
                     {
-                        UserId = notificationDetails.SenderId,
+                        UserId = notificationDetails.SenderOfParentMessage,
                         NotificationTitle = notificationDetails.AcademyName,
                         NotificationBody = $"Someone responded to your message"
                     };
@@ -106,11 +107,11 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                         TimeStamp = notification.TimeCreated,
                     };
 
-                    await _notificationBroadcaster.BroadcastNotificationAsync(notificationDto, notificationDto.NotificationId.ToString());
+                    await _notificationBroadcaster.BroadcastNotificationAsync(notificationDto, notificationDetails.SenderOfParentMessage.ToString());
 
                     await transaction.CommitAsync(cancellationToken);
 
-                    return new BaseResponse(true, "Replay has been sent");
+                    return new BaseResponse(true, "Response has been sent");
                 }
                 catch (Exception ex)
                 {

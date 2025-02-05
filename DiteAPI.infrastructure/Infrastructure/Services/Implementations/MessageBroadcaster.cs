@@ -22,9 +22,9 @@ namespace DiteAPI.Infrastructure.Infrastructure.Services.Implementations
             await _hubContext.Clients.Group(messageDto.AcademyId.ToString()).SendAsync("ReceiveMessage", messageDto);
         }
 
-        public async Task BroadcastReplyAsync(MessageReplyDto replyDto)
+        public async Task BroadcastReplyAsync(ResponseDto replyDto, Guid parentId)
         {
-            await _hubContext.Clients.Group(replyDto.ParentId.ToString()).SendAsync("ReceiveReply", replyDto);
+            await _hubContext.Clients.Group(parentId.ToString()).SendAsync("ReceiveReply", replyDto);
         }
     }
 }
