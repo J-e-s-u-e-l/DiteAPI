@@ -1,0 +1,58 @@
+﻿using DiteAPI.Infrastructure.Infrastructure.Services.Interfaces;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DiteAPI.Infrastructure.Infrastructure.Services.Implementations
+{
+    public class FileService : IFileService
+    {
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly string _uploadPath;
+
+        public FileService(IWebHostEnvironment webHostEnvironment)
+        {
+            _webHostEnvironment = webHostEnvironment;
+            _uploadPath = Path.Combine(_webHostEnvironment.ContentRootPath, "UploadedResources");
+        }
+    
+        //private readonly string _uploadPath = Path.Combine(, "UploadedResources");
+        public async Task<string> SaveFileAsync(IFormFile file, Guid academyId)
+        {
+            var academyFolder = Path.Combine(_webHostEnvironment.ContentRootPath, academyId.ToString());
+
+            Directory.CreateDirectory(academyFolder);
+
+            var filePath = Path.Combine(academyFolder, Guid.NewGuid() + Path.GetExtension(file.FileName));
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            return filePath;
+        }
+
+        public async Task<FileStream> GetFileAsync(string filePath)
+        {
+            if (!File.Exists(filePath))
+            {
+                throw new FileNotFoundException("File not found", filePath);
+            }
+
+            return new FileStream(filePath, FileMode.Open, FileAccess.Read);
+        }
+
+        public void DeleteFile(string filePath)
+        {
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+        }
+    }
+}

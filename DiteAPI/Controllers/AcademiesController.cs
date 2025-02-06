@@ -215,7 +215,8 @@ namespace DiteAPI.Api.Controllers
         }
 
         [HttpGet("messages")]
-        public async Task<IActionResult> GetAllMessagesInAcademy([FromQuery] GetAllMessagesQuery request)
+        //public async Task<IActionResult> GetAllMessagesInAcademy([FromRoute] GetAllMessagesQuery request)
+        public async Task<IActionResult> GetAllMessagesInAcademy(GetAllMessagesQuery request)
         { 
             try
             {
@@ -243,6 +244,86 @@ namespace DiteAPI.Api.Controllers
                 var req = JsonConvert.SerializeObject(modelxfmed);
 
                 _logger.LogInformation($"ACADEMY_CONTROLLER => User attempt to GET Academy info\n{req}");
+                var response = await _mediator.Send(request);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"ACADEMY_CONTOLLER => Something went wrong\n {ex.StackTrace}: {ex.Message}");
+                return StatusCode(500, $"{_appSettings.ProcessingError}");
+            }
+        }
+
+        [HttpPost("uploadResource")]
+        public async Task<IActionResult> UploadResource(UploadResourceCommand request)
+        { 
+            try
+            {
+                var modelxfmed = new UploadResourceCommand { AcademyId = request.AcademyId, NewResource = request.NewResource};
+                var req = JsonConvert.SerializeObject(modelxfmed);
+
+                _logger.LogInformation($"ACADEMY_CONTROLLER => User attempt to UPLOAD a resource to the Academy resource repo\n{req}");
+                var response = await _mediator.Send(request);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"ACADEMY_CONTOLLER => Something went wrong\n {ex.StackTrace}: {ex.Message}");
+                return StatusCode(500, $"{_appSettings.ProcessingError}");
+            }
+        }
+
+        [HttpGet("{academyId}/get-all-resources")]
+        public async Task<IActionResult> GetAllResourcesInAcademyRepo([FromRoute] GetAllResourcesInAcademyRepoQuery request)
+        { 
+            try
+            {
+                var modelxfmed = new GetAllResourcesInAcademyRepoQuery { AcademyId = request.AcademyId };
+                var req = JsonConvert.SerializeObject(modelxfmed);
+
+                _logger.LogInformation($"ACADEMY_CONTROLLER => User attempt to GET all available resources in the Academy resource repo\n{req}");
+                var response = await _mediator.Send(request);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"ACADEMY_CONTOLLER => Something went wrong\n {ex.StackTrace}: {ex.Message}");
+                return StatusCode(500, $"{_appSettings.ProcessingError}");
+            }
+        }
+
+        [HttpDelete("{resourceId}")]
+        public async Task<IActionResult> DeleteResourceInAcademyRepo([FromQuery] DeleteResourceInAcademyRepoCommand request)
+        { 
+            try
+            {
+                var modelxfmed = new DeleteResourceInAcademyRepoCommand { ResourceId = request.ResourceId };
+                var req = JsonConvert.SerializeObject(modelxfmed);
+
+                _logger.LogInformation($"ACADEMY_CONTROLLER => User attempt to DELETE resource from the Academy resource repo\n{req}");
+                var response = await _mediator.Send(request);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"ACADEMY_CONTOLLER => Something went wrong\n {ex.StackTrace}: {ex.Message}");
+                return StatusCode(500, $"{_appSettings.ProcessingError}");
+            }
+        }
+
+        [HttpDelete("{resourceId}/download")]
+        public async Task<IActionResult> DownloadResourceInAcademyRepo([FromQuery] DownloadResourceInAcademyRepoCommand request)
+        { 
+            try
+            {
+                var modelxfmed = new DeleteResourceInAcademyRepoCommand { ResourceId = request.ResourceId };
+                var req = JsonConvert.SerializeObject(modelxfmed);
+
+                _logger.LogInformation($"ACADEMY_CONTROLLER => User attempt to DOWNLOAD resource from the Academy resource repo\n{req}");
                 var response = await _mediator.Send(request);
 
                 return Ok(response);

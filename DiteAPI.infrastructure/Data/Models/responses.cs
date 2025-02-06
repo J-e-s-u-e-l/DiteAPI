@@ -97,6 +97,21 @@ namespace DiteAPI.infrastructure.Data.Models
         public List<ResponseDto> Responses { get; set; }
     }
 
+    public class UploadResourceResponse
+    {
+        public ResourceDto NewResource { get; set; }
+    }
+
+    public class GetAllResourcesInAcademyRepoResponse
+    {
+        public List<ResourceDto> Resources { get; set; }
+    }
+
+    public class DownloadResourceInAcademyRepoResponse
+    {
+        public Stream Resource { get; set; }
+    }
+
     public class JwtRequest
     {
     #nullable disable

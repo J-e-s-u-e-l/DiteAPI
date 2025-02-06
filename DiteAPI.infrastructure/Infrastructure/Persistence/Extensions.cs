@@ -25,6 +25,7 @@ namespace DiteAPI.infrastructure.Infrastructure.Persistence
             services.AddScoped<IMessageBroadcaster, MessageBroadcaster>();
             services.AddScoped<INotificationBroadcaster, NotificationBroadcaster>();
             services.AddScoped<IAcademyRepository, AcademyRepository>();
+            services.AddScoped<IFileService, FileService>();
 
             return services;
         }

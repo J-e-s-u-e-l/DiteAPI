@@ -98,4 +98,11 @@ namespace DiteAPI.infrastructure.Data.Models
         public string SentAtAgo { get; set; }
         public DateTimeOffset SentAt { get; set; }
     }
+
+    public class ResourceDto
+    {
+        public Guid ResourceId { get; set; }
+        public string ResourceName { get; set; }
+        public string ResourceType { get; set; }
+    }
 }

@@ -66,8 +66,8 @@ namespace DiteAPI
                     var errors = context.ModelState
                         .Where(e => e.Value!.Errors.Count > 0)
                         .SelectMany(x => x.Value!.Errors)
-                        //.Select(x => x.ErrorMessage)
-                        .Select(x => MapErrorMessage(x.ErrorMessage))
+                        .Select(x => x.ErrorMessage)
+                        //.Select(x => MapErrorMessage(x.ErrorMessage))
                         .ToList();
 
                     var result = new ValidationResultModel
