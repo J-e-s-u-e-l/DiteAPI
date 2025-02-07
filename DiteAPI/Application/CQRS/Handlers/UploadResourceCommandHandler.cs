@@ -45,11 +45,14 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                     var resource = new Resources
                     {
                         AcademyId = request.AcademyId,
-                        ResourceName = request.NewResource.ResourceName,
-                        ResourceType = request.NewResource.ResourceType,
+                        ResourceName = request.ResourceName,
+                        ResourceType = request.ResourceType,
                         ResourcePath = resourcePath,
                         UploadedBy = userId,
                     };
+
+                    await _dbContext.Resources.AddAsync(resource);
+                    await _dbContext.SaveChangesAsync(cancellationToken);
 
                     var newRresource = new ResourceDto
                     {
@@ -62,9 +65,6 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                     {
                         NewResource = newRresource,
                     };
-
-                    await _dbContext.Resources.AddAsync(resource);
-                    await _dbContext.SaveChangesAsync(cancellationToken);
                     await transaction.CommitAsync(cancellationToken);
 
                     return new BaseResponse<UploadResourceResponse>(true, "Resource uploaded successfully", response);

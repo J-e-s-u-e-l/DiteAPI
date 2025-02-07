@@ -12,5 +12,6 @@ namespace DiteAPI.Infrastructure.Infrastructure.Services.Interfaces
         Task<string> SaveFileAsync(IFormFile file, Guid academyId);
         Task<FileStream> GetFileAsync(string filePath);
         void DeleteFile(string filePath);
+        string GetContentType(string path);
     }
 }

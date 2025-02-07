@@ -7,6 +7,7 @@ using MediatR;
 using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using DiteAPI.Infrastructure.Infrastructure.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DiteAPI.Api.Application.CQRS.Handlers
 {
@@ -14,11 +15,11 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
     {
 
         private readonly DataDBContext _dbContext;
-        private readonly ILogger<GetAllTracksQueryHandler> _logger;
+        private readonly ILogger<DownloadResourceInAcademyRepoCommandHandler> _logger;
         private readonly AppSettings _appSettings;
         private readonly IFileService _fileService;
 
-        public DownloadResourceInAcademyRepoCommandHandler(DataDBContext dbContext, ILogger<GetAllTracksQueryHandler> logger, IOptions<AppSettings> appSettings, IFileService fileService)
+        public DownloadResourceInAcademyRepoCommandHandler(DataDBContext dbContext, ILogger<DownloadResourceInAcademyRepoCommandHandler> logger, IOptions<AppSettings> appSettings, IFileService fileService)
         {
             _dbContext = dbContext;
             _logger = logger;
@@ -32,11 +33,19 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
             {
                 var resourceToBeRetrieved = await _dbContext.Resources.FirstOrDefaultAsync(x => x.Id == request.ResourceId);
 
-                var fileStream = await _fileService.GetFileAsync(resourceToBeRetrieved.ResourcePath);
+                if (resourceToBeRetrieved == null)
+                    throw new FileNotFoundException("Resource not found.");
 
-                DownloadResourceInAcademyRepoResponse response = new DownloadResourceInAcademyRepoResponse
+
+                var fileStream = await _fileService.GetFileAsync(resourceToBeRetrieved.ResourcePath);
+                
+                var contentType = _fileService.GetContentType(resourceToBeRetrieved.ResourcePath);
+
+                var response = new DownloadResourceInAcademyRepoResponse
                 {
-                    Resource = fileStream
+                    Resource = fileStream,
+                    ContentType = contentType,
+                    FileName = resourceToBeRetrieved.ResourceName
                 };
 
                 return new BaseResponse<DownloadResourceInAcademyRepoResponse>(true, "Resource downloding...", response);
@@ -47,11 +56,6 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                 _logger.LogError($"DOWNLOAD_RESOURCE_IN_ACADEMY_HANDLER => Something went wrong\n{ex.StackTrace}: {ex.Message}");
                 return new BaseResponse<DownloadResourceInAcademyRepoResponse>(false, $"{_appSettings.ProcessingError}");
             }
-        }
-
-        Task<BaseResponse<DownloadResourceInAcademyRepoResponse>> IRequestHandler<DownloadResourceInAcademyRepoCommand, BaseResponse<DownloadResourceInAcademyRepoResponse>>.Handle(DownloadResourceInAcademyRepoCommand request, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
         }
     }
 }

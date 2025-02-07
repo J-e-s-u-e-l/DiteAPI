@@ -33,7 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\Assets\UploadedAcademyResources\" />
+    <Folder Include="UploadedAcademyResources\" />
   </ItemGroup>
 
 </Project>

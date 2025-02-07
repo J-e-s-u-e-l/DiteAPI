@@ -2,6 +2,7 @@
 using DiteAPI.infrastructure.Data.Models;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DiteAPI.Api.Application.CQRS.Commands
 {

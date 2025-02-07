@@ -110,6 +110,8 @@ namespace DiteAPI.infrastructure.Data.Models
     public class DownloadResourceInAcademyRepoResponse
     {
         public Stream Resource { get; set; }
+        public string ContentType { get; set; }
+        public string FileName { get; set; }
     }
 
     public class JwtRequest

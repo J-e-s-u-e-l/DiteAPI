@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace DiteAPI.Api.Controllers
 {
@@ -256,11 +257,11 @@ namespace DiteAPI.Api.Controllers
         }
 
         [HttpPost("uploadResource")]
-        public async Task<IActionResult> UploadResource(UploadResourceCommand request)
+        public async Task<IActionResult> UploadResource([FromForm]UploadResourceCommand request)
         { 
             try
             {
-                var modelxfmed = new UploadResourceCommand { AcademyId = request.AcademyId, NewResource = request.NewResource};
+                var modelxfmed = new UploadResourceCommand { AcademyId = request.AcademyId, ResourceName = request.ResourceName, ResourceType = request.ResourceType, File = request.File};
                 var req = JsonConvert.SerializeObject(modelxfmed);
 
                 _logger.LogInformation($"ACADEMY_CONTROLLER => User attempt to UPLOAD a resource to the Academy resource repo\n{req}");
@@ -296,7 +297,7 @@ namespace DiteAPI.Api.Controllers
         }
 
         [HttpDelete("{resourceId}")]
-        public async Task<IActionResult> DeleteResourceInAcademyRepo([FromQuery] DeleteResourceInAcademyRepoCommand request)
+        public async Task<IActionResult> DeleteResourceInAcademyRepo([FromRoute] DeleteResourceInAcademyRepoCommand request)
         { 
             try
             {
@@ -315,8 +316,8 @@ namespace DiteAPI.Api.Controllers
             }
         }
 
-        [HttpDelete("{resourceId}/download")]
-        public async Task<IActionResult> DownloadResourceInAcademyRepo([FromQuery] DownloadResourceInAcademyRepoCommand request)
+        [HttpGet("{resourceId}/download")]
+        public async Task<IActionResult> DownloadResourceInAcademyRepo([FromRoute] DownloadResourceInAcademyRepoCommand request)
         { 
             try
             {
@@ -326,7 +327,13 @@ namespace DiteAPI.Api.Controllers
                 _logger.LogInformation($"ACADEMY_CONTROLLER => User attempt to DOWNLOAD resource from the Academy resource repo\n{req}");
                 var response = await _mediator.Send(request);
 
-                return Ok(response);
+                //return File(response.Data.Resource, response.Data.ContentType, response.Data.FileName);
+                return new FileStreamResult(response.Data.Resource, response.Data.ContentType)
+                {
+                    FileDownloadName = response.Data.FileName
+                };
+
+                //return Ok(response);
             }
             catch (Exception ex)
             {
