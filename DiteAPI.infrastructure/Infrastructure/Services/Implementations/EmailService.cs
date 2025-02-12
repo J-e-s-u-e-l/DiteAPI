@@ -28,7 +28,7 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Implementations
             _mailkitService = mailkitService;
         }
 
-     /*   public async Task<BaseResponse> CheckDisposableEmailAsync(string email)
+     /*   public async Tasks<BaseResponse> CheckDisposableEmailAsync(string email)
         {
             _logger.LogInformation($"EMAIL_SERVICE => Checkinig disposable email | Email - {email}");
 

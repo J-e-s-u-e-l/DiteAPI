@@ -20,7 +20,7 @@ namespace DiteAPI.Infrastructure.Infrastructure.Hubs
             _appSettings = appSettings.Value;
         }
 
-        public override async Task OnConnectedAsync()
+        public override async Tasks OnConnectedAsync()
         {
             try
             {
@@ -43,7 +43,7 @@ namespace DiteAPI.Infrastructure.Infrastructure.Hubs
             }
         }
 
-        public async Task SendMessage(string academyIdInString, string trackIdInString, string messageTitle, string messageBody)
+        public async Tasks SendMessage(string academyIdInString, string trackIdInString, string messageTitle, string messageBody)
         {
             try
             {
@@ -107,7 +107,7 @@ namespace DiteAPI.Infrastructure.Infrastructure.Hubs
             }
         }
 
-        public async Task SendMessageResponse(string academyIdInString, string responseBody)
+        public async Tasks SendMessageResponse(string academyIdInString, string responseBody)
         {
             if (string.IsNullOrWhiteSpace(responseBody))
             {

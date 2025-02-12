@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -104,5 +105,15 @@ namespace DiteAPI.infrastructure.Data.Models
         public Guid ResourceId { get; set; }
         public string ResourceName { get; set; }
         public string ResourceType { get; set; }
+    }
+
+    public class TasksDto
+    {
+        public Guid TaskId { get; set; }
+        public string TaskTitle { get; set; }
+        public string TaskDescription { get; set; }
+        public DateTime TaskDueDate { get; set; }
+        public string TaskCourseTag { get; set; }
+        public string TaskStatus{ get; set; }
     }
 }

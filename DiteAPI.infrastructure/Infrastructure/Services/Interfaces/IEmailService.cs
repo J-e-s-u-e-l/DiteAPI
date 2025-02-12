@@ -10,7 +10,7 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Interfaces
 {
     public interface IEmailService
     {
-        //Task<BaseResponse> CheckDisposableEmailAsync(string email);
+        //Tasks<BaseResponse> CheckDisposableEmailAsync(string email);
         Task<BaseResponse> SendEmailAsync(SingleEmailRequest request);
         Task<BaseResponse> SendMultipleEmailAsync(MultipleEmailRequest request);
         Task<string> GetTemplateFileAsync(string folderName, string fileName);

@@ -44,8 +44,8 @@ namespace DiteAPI.Infrastructure.Infrastructure.Hubs
             await base.OnDisconnectedAsync(exception);*/
         }
 
-        //public async Task JoinNotificationGroup(string userId)
-        /*public async Task JoinNotificationGroup()
+        //public async Tasks JoinNotificationGroup(string userId)
+        /*public async Tasks JoinNotificationGroup()
         {
             //var userId = _httpContextAccessor.HttpContext!.Items["UserId"].ToString();
 
@@ -55,7 +55,7 @@ namespace DiteAPI.Infrastructure.Infrastructure.Hubs
             await Groups.AddToGroupAsync(Context.ConnectionId, userId);
         }*/
 
-        /*public async Task LeaveNotificationGroup()
+        /*public async Tasks LeaveNotificationGroup()
         {
             var userId = _httpContextAccessor.HttpContext.Items["UserId"].ToString();
 

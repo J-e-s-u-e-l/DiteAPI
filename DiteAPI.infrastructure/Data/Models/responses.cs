@@ -114,6 +114,26 @@ namespace DiteAPI.infrastructure.Data.Models
         public string FileName { get; set; }
     }
 
+    public class AddNewTaskResponse
+    {
+        public Guid TaskId { get; set; }
+        public string TaskTitle { get; set; }
+        public string TaskDescription { get; set; }
+        public DateTimeOffset TaskDueDate { get; set; }
+        public string TaskCourseTag { get; set; }
+        public string TaskStatus { get; set; }
+    }
+
+    public class GetTaskStatusEnumValuesResponse
+    {
+        public List<String> TaskStatuses { get; set; }
+    }
+
+    public class GetAllTasksResponse
+    {
+        public List<TasksDto> Tasks { get; set; }
+    }
+
     public class JwtRequest
     {
     #nullable disable

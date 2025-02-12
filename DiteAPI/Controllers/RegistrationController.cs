@@ -41,7 +41,7 @@ namespace DiteAPI.Api.Controllers
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]*/
 
         [HttpPost("user")]
-        //public async Task<IActionResult> RegisterNewUser([FromForm] RegistrationCommand request)
+        //public async Tasks<IActionResult> RegisterNewUser([FromForm] RegistrationCommand request)
         public async Task<IActionResult> RegisterNewUser(RegistrationCommand request)
         {
             try

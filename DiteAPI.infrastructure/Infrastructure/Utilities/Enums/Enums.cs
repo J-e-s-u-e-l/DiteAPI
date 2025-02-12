@@ -61,6 +61,16 @@ namespace DiteAPI.infrastructure.Infrastructures.Utilities.Enums
         Invalidated
     }
 
+    public enum TaskStatusEnum
+    {
+        [Description("Pending")]
+        Pending = 1,
+        [Description("InProgress")]
+        InProgress,
+        [Description("Completed")]
+        Completed
+    }
+
     public static class Enums 
     {
         public static string GetDescription(this Enum GenericEnum)
@@ -78,6 +88,16 @@ namespace DiteAPI.infrastructure.Infrastructures.Utilities.Enums
             }
 
             return GenericEnum.ToString();
+        }
+    }
+
+    public static class EnumHelper
+    {
+        public static string GetDescription(Enum value)
+        {
+            var field = value.GetType().GetField(value.ToString());
+            var attribute = field?.GetCustomAttribute<DescriptionAttribute>();
+            return attribute?.Description ?? value.ToString();
         }
     }
 }

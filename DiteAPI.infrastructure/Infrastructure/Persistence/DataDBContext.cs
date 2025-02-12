@@ -22,6 +22,7 @@ namespace DiteAPI.infrastructure.Infrastructure.Persistence
         public DbSet<Notification> Notification { get; set; }
         public DbSet<AcademyMembersRoles> AcademyMembersRoles { get; set; }
         public DbSet<Resources> Resources { get; set; }
+        public DbSet<Tasks> Tasks { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelbuilder)
         {

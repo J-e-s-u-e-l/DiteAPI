@@ -1,17 +1,11 @@
 ﻿using DiteAPI.Api.Application.CQRS.Commands;
 using DiteAPI.Api.Application.CQRS.Queries;
-using DiteAPI.infrastructure.Data.Entities;
 using DiteAPI.Infrastructure.Config;
 using DiteAPI.Infrastructure.Infrastructure.Auth;
-using DiteAPI.Infrastructure.Infrastructure.Services.Implementations;
-using DiteAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using System.IO;
 
 namespace DiteAPI.Api.Controllers
 {
@@ -216,8 +210,7 @@ namespace DiteAPI.Api.Controllers
         }
 
         [HttpGet("messages")]
-        //public async Task<IActionResult> GetAllMessagesInAcademy([FromRoute] GetAllMessagesQuery request)
-        public async Task<IActionResult> GetAllMessagesInAcademy(GetAllMessagesQuery request)
+        public async Task<IActionResult> GetAllMessagesInAcademy([FromQuery] GetAllMessagesQuery request)
         { 
             try
             {
@@ -320,7 +313,7 @@ namespace DiteAPI.Api.Controllers
         public async Task<IActionResult> DownloadResourceInAcademyRepo([FromRoute] DownloadResourceInAcademyRepoCommand request)
         { 
             try
-            {
+            {   
                 var modelxfmed = new DeleteResourceInAcademyRepoCommand { ResourceId = request.ResourceId };
                 var req = JsonConvert.SerializeObject(modelxfmed);
 

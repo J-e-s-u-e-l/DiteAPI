@@ -29,7 +29,7 @@ namespace DiteAPI.Api.Controllers
         }
 
         [HttpPost("verify-otp")]
-        //public async Task<IActionResult> VerifyOtp([FromForm] VerifyOtpCommand request)
+        //public async Tasks<IActionResult> VerifyOtp([FromForm] VerifyOtpCommand request)
         public async Task<IActionResult> VerifyOtp(VerifyOtpCommand request)
         {
             try
@@ -50,7 +50,7 @@ namespace DiteAPI.Api.Controllers
         }
 
         [HttpPost("send-otp")]
-        //public async Task<IActionResult> SendOtpCode([FromBody] SendOtpCommand request)
+        //public async Tasks<IActionResult> SendOtpCode([FromBody] SendOtpCommand request)
         public async Task<IActionResult> SendOtpCode(SendOtpCommand request)
         {
             try
