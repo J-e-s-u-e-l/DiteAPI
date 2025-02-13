@@ -29,13 +29,16 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                 try
                 {
                     var affectedRows = await _dbContext.Notification
-                        .Where(n => n.Id == request.NotificationId)
-                        .ExecuteDeleteAsync();
+                                                        .Where(n => n.Id == request.NotificationId)
+                                                        .ExecuteDeleteAsync(cancellationToken);
 
                     if (affectedRows == 0)
                     {
                         return new BaseResponse(false, "Notification not found");
                     }
+
+                    await _dbContext.SaveChangesAsync(cancellationToken);
+                    await transaction.CommitAsync();
 
                     return new BaseResponse(true, "Notification deleted");
                 }

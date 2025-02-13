@@ -5,6 +5,7 @@ using DiteAPI.Infrastructure.Infrastructure.Auth;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
 namespace DiteAPI.Api.Controllers
@@ -18,11 +19,11 @@ namespace DiteAPI.Api.Controllers
         ILogger<TaskManagerController> _logger;
         private readonly AppSettings _appSettings;
 
-        public TaskManagerController(IMediator mediator, ILogger<TaskManagerController> logger, AppSettings appSettings)
+        public TaskManagerController(IMediator mediator, ILogger<TaskManagerController> logger, IOptions<AppSettings> appSettings)
         {
             _mediator = mediator;
             _logger = logger;
-            _appSettings = appSettings;
+            _appSettings = appSettings.Value;
         }
 
 
@@ -47,12 +48,12 @@ namespace DiteAPI.Api.Controllers
         }
 
         [HttpGet("tasks-statuses")]
-        public async Task<IActionResult> GetTaskStatusEnumValues(GetTaskStatusEnumValuesQuery request)
+        public async Task<IActionResult> GetTaskStatusEnumValues()
         {
             try
             {
                 _logger.LogInformation($"TASK_MANAGER_CONTROLLER => User attempt to GET all available Task Status Enum values");
-                var response = await _mediator.Send(request);
+                var response = await _mediator.Send(new GetTaskStatusEnumValuesQuery());
 
                 return Ok(response);
             }
@@ -64,11 +65,31 @@ namespace DiteAPI.Api.Controllers
         }
 
         [HttpGet("all-tasks")]
-        public async Task<IActionResult> GetAllTasks(GetAllTasksQuery request)
+        public async Task<IActionResult> GetAllTasks()
         {
             try
             {
                 _logger.LogInformation($"TASK_MANAGER_CONTROLLER => User attempt to GET all available Task Status Enum values");
+                var response = await _mediator.Send(new GetAllTasksQuery());
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"TASK_MANAGER_CONTROLLER => Something went wrong\n {ex.StackTrace}: {ex.Message}");
+                return StatusCode(500, $"{_appSettings.ProcessingError}");
+            }
+        }
+
+        [HttpDelete("{taskId}")]
+        public async Task<IActionResult> DeleteTask([FromRoute]DeleteTaskCommand request)
+        {
+            try
+            {
+                var modelxfmed = new DeleteTaskCommand { TaskId = request.TaskId };
+                var req = JsonConvert.SerializeObject(modelxfmed);
+
+                _logger.LogInformation($"TASK_MANAGER_CONTROLLER => User attempt to DELETE an existing TASK\n{req}");
                 var response = await _mediator.Send(request);
 
                 return Ok(response);

@@ -6,6 +6,7 @@ using DiteAPI.infrastructure.Infrastructure.Persistence;
 using DiteAPI.Infrastructure.Data.Entities;
 using MediatR;
 using DiteAPI.infrastructure.Infrastructures.Utilities.Enums;
+using Microsoft.Extensions.Options;
 
 namespace DiteAPI.Api.Application.CQRS.Handlers
 {
@@ -15,6 +16,14 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
         private readonly ILogger<AddNewTaskCommandHandler> _logger;
         private readonly AppSettings _appSettings;
         private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public AddNewTaskCommandHandler(DataDBContext dbContext, ILogger<AddNewTaskCommandHandler> logger, IOptions<AppSettings> appSettings, IHttpContextAccessor httpContextAccessor)
+        {
+            _dbContext = dbContext;
+            _logger = logger;
+            _appSettings = appSettings.Value;
+            _httpContextAccessor = httpContextAccessor;
+        }
 
         public async Task<BaseResponse<AddNewTaskResponse>> Handle(AddNewTaskCommand request, CancellationToken cancellationToken)
         {
@@ -32,6 +41,7 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                         DueDate = DateTimeOffset.Parse(request.TaskDueDate),
                         CourseTag = request.TaskCourseTag,
                         Status = TaskStatusEnum.Pending,
+                        UserId = userId,
                     };
 
                     await _dbContext.AddAsync(newTask);

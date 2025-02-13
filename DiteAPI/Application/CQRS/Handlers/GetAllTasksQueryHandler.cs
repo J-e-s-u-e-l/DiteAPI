@@ -5,21 +5,22 @@ using DiteAPI.Infrastructure.Config;
 using DiteAPI.infrastructure.Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace DiteAPI.Api.Application.CQRS.Handlers
 {
     public class GetAllTasksQueryHandler : IRequestHandler<GetAllTasksQuery, BaseResponse<GetAllTasksResponse>>
     {
         private readonly DataDBContext _dbContext;
-        private readonly ILogger<GetTaskStatusEnumValuesQueryHandler> _logger;
+        private readonly ILogger<GetAllTasksQueryHandler> _logger;
         private readonly AppSettings _appSettings;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public GetAllTasksQueryHandler(DataDBContext dbContext, ILogger<GetTaskStatusEnumValuesQueryHandler> logger, AppSettings appSettings, IHttpContextAccessor httpContextAccessor)
+        public GetAllTasksQueryHandler(DataDBContext dbContext, ILogger<GetAllTasksQueryHandler> logger, IOptions<AppSettings> appSettings, IHttpContextAccessor httpContextAccessor)
         {
             _dbContext = dbContext;
             _logger = logger;
-            _appSettings = appSettings;
+            _appSettings = appSettings.Value;
             _httpContextAccessor = httpContextAccessor;
         }
 

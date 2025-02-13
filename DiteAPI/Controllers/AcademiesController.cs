@@ -15,10 +15,10 @@ namespace DiteAPI.Api.Controllers
     public class AcademiesController : ControllerBase
     {
         private readonly IMediator _mediator;
-        ILogger<AuthController> _logger;
+        ILogger<AcademiesController> _logger;
         private readonly AppSettings _appSettings;
 
-        public AcademiesController(IMediator mediator, ILogger<AuthController> logger, IOptions<AppSettings> options)
+        public AcademiesController(IMediator mediator, ILogger<AcademiesController> logger, IOptions<AppSettings> options)
         {
             _mediator = mediator;
             _logger = logger;

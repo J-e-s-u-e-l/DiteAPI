@@ -5,6 +5,7 @@ using DiteAPI.infrastructure.Data.Entities;
 using DiteAPI.Api.Application.CQRS.Queries;
 using DiteAPI.infrastructure.Data.Models;
 using DiteAPI.infrastructure.Infrastructures.Utilities.Enums;
+using Microsoft.Extensions.Options;
 
 namespace DiteAPI.Api.Application.CQRS.Handlers
 {
@@ -13,10 +14,10 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
         private readonly ILogger<GetTaskStatusEnumValuesQueryHandler> _logger;
         private readonly AppSettings _appSettings;
 
-        public GetTaskStatusEnumValuesQueryHandler(ILogger<GetTaskStatusEnumValuesQueryHandler> logger, AppSettings appSettings)
+        public GetTaskStatusEnumValuesQueryHandler(ILogger<GetTaskStatusEnumValuesQueryHandler> logger, IOptions<AppSettings> appSettings)
         {
             _logger = logger;
-            _appSettings = appSettings;
+            _appSettings = appSettings.Value;
         }
 
         public async Task<BaseResponse<GetTaskStatusEnumValuesResponse>> Handle(GetTaskStatusEnumValuesQuery request, CancellationToken cancellationToken)

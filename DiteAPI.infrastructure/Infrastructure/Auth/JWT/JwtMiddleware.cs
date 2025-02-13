@@ -85,7 +85,7 @@ namespace DiteAPI.Infrastructure.Infrastructure.Auth.JWT
             }
             catch (Exception ex)
             {
-                _logger.LogInformation($"JWT_MIDDLEWARE => Something went wrong\n{ex.StackTrace}: {ex.Message}");
+                _logger.LogError($"JWT_MIDDLEWARE => Something went wrong\n{ex.StackTrace}: {ex.Message}");
             }
         }
     }
