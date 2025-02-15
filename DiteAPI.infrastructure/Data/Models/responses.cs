@@ -134,6 +134,11 @@ namespace DiteAPI.infrastructure.Data.Models
         public List<TasksDto> Tasks { get; set; }
     }
 
+    public class GetTaskCompletionRateResponse
+    {
+        public float CompletionRate { get; set; }
+    }
+
     public class JwtRequest
     {
     #nullable disable

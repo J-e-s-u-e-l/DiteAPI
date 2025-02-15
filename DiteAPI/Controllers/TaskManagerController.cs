@@ -100,5 +100,45 @@ namespace DiteAPI.Api.Controllers
                 return StatusCode(500, $"{_appSettings.ProcessingError}");
             }
         }
+
+        [HttpPatch("update-task")]
+        public async Task<IActionResult> UpdateTask(UpdateTaskCommand request)
+        {
+            try
+            {
+                var modelxfmed = new UpdateTaskCommand { TaskId = request.TaskId, TaskTitle = request.TaskTitle, TaskDescription = request.TaskDescription, TaskDueDate = request.TaskDueDate, TaskCourseTag = request.TaskCourseTag };
+                var req = JsonConvert.SerializeObject(modelxfmed);
+
+                _logger.LogInformation($"TASK_MANAGER_CONTROLLER => User attempt to EDIT an existing TASK\n{req}");
+                var response = await _mediator.Send(request);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"TASK_MANAGER_CONTROLLER => Something went wrong\n {ex.StackTrace}: {ex.Message}");
+                return StatusCode(500, $"{_appSettings.ProcessingError}");
+            }
+        }
+
+        [HttpGet("completion-rate")]
+        public async Task<IActionResult> GetTaskCompletionRate([FromQuery] GetTaskCompletionRateQuery request)
+        {
+            try
+            {
+                var modelxfmed = new GetTaskCompletionRateQuery { TimeFilter = request.TimeFilter};
+                var req = JsonConvert.SerializeObject(modelxfmed);
+
+                _logger.LogInformation($"TASK_MANAGER_CONTROLLER => User attempt to GET TASK_COMPLETION_RATE\n{req}");
+                var response = await _mediator.Send(request);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"TASK_MANAGER_CONTROLLER => Something went wrong\n {ex.StackTrace}: {ex.Message}");
+                return StatusCode(500, $"{_appSettings.ProcessingError}");
+            }
+        }
     }
 }
