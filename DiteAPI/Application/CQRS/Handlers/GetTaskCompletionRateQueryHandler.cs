@@ -59,10 +59,16 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                 int totalTasks = tasks.Count;
                 int completedTasks = tasks.Count(t => t.Status == TaskStatusEnum.Completed);
 
-                var response = new GetTaskCompletionRateResponse
+                var response = new GetTaskCompletionRateResponse();
+
+                if (totalTasks <= 0)
                 {
-                    CompletionRate = completedTasks / totalTasks,
-                };
+                    response.CompletionRate = 0;
+                }
+                else 
+                { 
+                    response.CompletionRate = (completedTasks / totalTasks) * 100;
+                } 
 
                 return new BaseResponse<GetTaskCompletionRateResponse>(true, "Completion rate retrieved successfully", response);
             }

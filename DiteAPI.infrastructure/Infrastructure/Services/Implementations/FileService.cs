@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.StaticFiles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -61,7 +62,17 @@ namespace DiteAPI.Infrastructure.Infrastructure.Services.Implementations
             {
                 if (File.Exists(filePath))
                 {
+                    using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.None))
+                    {
+                        stream.Close();
+                    }
+
                     FileInfo fileInfo = new FileInfo(filePath);
+
+                    /*// Ensure full permissions
+                    FileSecurity fileSecurity = fileInfo.GetAccessControl();
+                    fileSecurity.SetAccessRule(new FileSystemAccessRule("Everyone", FileSystemRights.FullControl, AccessControlType.Allow));
+                    fileInfo.SetAccessControl(fileSecurity);*/
 
                     // Remove read-only attribute if set
                     if(fileInfo.IsReadOnly)
