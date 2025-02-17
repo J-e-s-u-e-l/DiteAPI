@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,13 +16,16 @@ namespace DiteAPI.Infrastructure.Infrastructure.Services.Implementations
     {
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly string _uploadPath;
+        private readonly ILogger<FileService> _logger;
 
-        public FileService(IWebHostEnvironment webHostEnvironment)
+
+        public FileService(IWebHostEnvironment webHostEnvironment, ILogger<FileService> logger)
         {
             _webHostEnvironment = webHostEnvironment;
             _uploadPath = Path.Combine(_webHostEnvironment.ContentRootPath, "UploadedResources");
+            _logger = logger;
         }
-    
+
         //private readonly string _uploadPath = Path.Combine(, "UploadedResources");
         public async Task<string> SaveFileAsync(IFormFile file, Guid academyId)
         {
@@ -38,24 +42,32 @@ namespace DiteAPI.Infrastructure.Infrastructure.Services.Implementations
 
             return filePath;
         }
+        /*
+                public async Task<FileStream> GetFileAsync(string filePath)
+                {
+                    if (!File.Exists(filePath))
+                    {
+                        throw new FileNotFoundException("File not found", filePath);
+                    }
 
-        public async Task<FileStream> GetFileAsync(string filePath)
+                    return new FileStream(filePath, FileMode.Open, FileAccess.Read);
+                }*/
+        public async Task<MemoryStream> GetFileAsync(string filePath)
         {
             if (!File.Exists(filePath))
             {
                 throw new FileNotFoundException("File not found", filePath);
             }
 
-            return new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            using (FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                MemoryStream memoryStream = new MemoryStream();
+                await fileStream.CopyToAsync(memoryStream);
+                memoryStream.Position = 0;
+                return memoryStream;
+            }
         }
 
-        /*public void DeleteFile(string filePath)
-        {
-            if (File.Exists(filePath))
-            {
-                File.Delete(filePath);
-            }
-        }*/
         public void DeleteFile(string filePath)
         {
             try
@@ -69,25 +81,25 @@ namespace DiteAPI.Infrastructure.Infrastructure.Services.Implementations
 
                     FileInfo fileInfo = new FileInfo(filePath);
 
-                    /*// Ensure full permissions
-                    FileSecurity fileSecurity = fileInfo.GetAccessControl();
-                    fileSecurity.SetAccessRule(new FileSystemAccessRule("Everyone", FileSystemRights.FullControl, AccessControlType.Allow));
-                    fileInfo.SetAccessControl(fileSecurity);*/
-
-                    // Remove read-only attribute if set
-                    if(fileInfo.IsReadOnly)
-                    {
-                        fileInfo.IsReadOnly = false;
-                    }
-
                     File.Delete(filePath);
                 }
             }
-            catch (Exception ex)
+            catch (UnauthorizedAccessException)
             {
-                throw;
+                FileAttributes attributes = File.GetAttributes(filePath);
+                if ((attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+                {
+                    attributes &= ~FileAttributes.ReadOnly;
+                    File.SetAttributes(filePath, attributes);
+                    File.Delete(filePath);
+                }
+                else
+                {
+                    throw;
+                }
             }
         }
+
 
         public string GetContentType(string path)
         {

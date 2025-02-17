@@ -10,7 +10,8 @@ namespace DiteAPI.Infrastructure.Infrastructure.Services.Interfaces
     public interface IFileService
     {
         Task<string> SaveFileAsync(IFormFile file, Guid academyId);
-        Task<FileStream> GetFileAsync(string filePath);
+        //Task<FileStream> GetFileAsync(string filePath);
+        Task<MemoryStream> GetFileAsync(string filePath);
         void DeleteFile(string filePath);
         string GetContentType(string path);
     }
