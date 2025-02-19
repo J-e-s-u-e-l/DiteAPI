@@ -113,10 +113,15 @@ namespace DiteAPI.infrastructure.Infrastructure.Services.Implementations
                 MessageId = message.Id,
                 MessageTitle = message.MessageTitle,
                 MessageBody = message.MessageBody,
-                SenderUserName = message.Sender?.AcademyMembersRoles
+                /*SenderUserName = message.Sender?.AcademyMembersRoles
+                                    .Where(amr => amr.AcademyId == message.AcademyId)
+                                    .Select(x => x.IdentityRole.Name)
+                                    .FirstOrDefault() ?? "Unkown",*/
+                SenderRoleInAcademy = message.Sender?.AcademyMembersRoles
                                     .Where(amr => amr.AcademyId == message.AcademyId)
                                     .Select(x => x.IdentityRole.Name)
                                     .FirstOrDefault() ?? "Unkown",
+                SenderUserName = message.Sender.UserName,
                 TrackName = message.Track?.TrackName,
                 SentAtAgo = ToAgoFormat(message.SentAt),
                 SentAt = message.SentAt,
