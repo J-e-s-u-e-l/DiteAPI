@@ -34,7 +34,7 @@ namespace DiteAPI.infrastructure.Infrastructure.Persistence
         {
             services.AddCors(options =>
             {
-                string[] origins = { "http://127.0.0.1:5500", "http://localhost:3000" };
+                string[] origins = { "http://127.0.0.1:5500", "http://localhost:3000", "https://dite.vercel.app", "" };
 
                 options.AddPolicy("MyCorsPolicy", builder =>
                 {

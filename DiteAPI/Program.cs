@@ -138,14 +138,22 @@ namespace DiteAPI
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
+           /* if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI(x =>
                 {
                     x.SwaggerEndpoint("/swagger/v1/swagger.json", "Dite API v1");
+                    x.RoutePrefix = string.Empty;
                 });
-            }
+            }*/
+
+            app.UseSwagger();
+            app.UseSwaggerUI(x =>
+            {
+                x.SwaggerEndpoint("/swagger/v1/swagger.json", "Dite API v1");
+                x.RoutePrefix = string.Empty;
+            });
 
             app.UseHttpsRedirection();
             app.UseCors("MyCorsPolicy");

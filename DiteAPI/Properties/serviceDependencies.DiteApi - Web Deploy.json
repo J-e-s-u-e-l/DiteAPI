@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "mssql1": {
+      "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Web/sites/DiteApi/providers/Microsoft.ServiceLinker/linkers/DBConnection_69BB0C529D",
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/diteapidbserver/databases/DiteAPI.Api_db",
+      "type": "mssql.azure",
+      "connectionId": "DBConnection",
+      "dynamicId": null
+    }
+  }
+}
