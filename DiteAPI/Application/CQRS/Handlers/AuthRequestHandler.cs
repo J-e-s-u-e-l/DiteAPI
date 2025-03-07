@@ -20,13 +20,15 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
         private readonly ILogger<AuthRequestHandler> _logger;
         private readonly IJwtHandler _jwtHandler;
         private readonly AppSettings _appSettings;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public AuthRequestHandler(SignInManager<GenericUser> signInManager,
             UserManager<GenericUser> userManager,
             DataDBContext dBContext,
             ILogger<AuthRequestHandler> logger,
             IJwtHandler jwtHandler,
-            IOptions<AppSettings> options)
+            IOptions<AppSettings> options,
+            IHttpContextAccessor httpContextAccessor)
         {
             _signInManager = signInManager;
             _userManager = userManager;
@@ -34,6 +36,7 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
             _jwtHandler = jwtHandler;
             _logger = logger;
             _appSettings = options.Value;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<BaseResponse<LoginResponse>> Handle(AuthRequest request, CancellationToken cancellationToken)
@@ -135,6 +138,18 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
 
                     await transaction.CommitAsync(cancellationToken);
                     _logger.LogInformation($"User signed in successfully at {DateTime.UtcNow}\nUser name: {user.UserName}\nUser ID: {user.Id}");
+                    
+                    var cokkieOptions = new CookieOptions
+                    {
+                        HttpOnly = true,
+                        Secure = true,
+                        SameSite = SameSiteMode.None,
+                        MaxAge = TimeSpan.FromMinutes(30),
+                        Path = "/"
+                    };
+
+                    _httpContextAccessor.HttpContext.Response.Cookies.Append("authToken", loginResponse.Token, cokkieOptions);
+
                     return new BaseResponse<LoginResponse>(true, $"{_appSettings.SingInSuccessful}", loginResponse);
                  }
                  catch (Exception ex)

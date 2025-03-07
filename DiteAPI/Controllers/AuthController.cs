@@ -24,6 +24,7 @@ namespace DiteAPI.Api.Controllers
         private readonly ISessionService _sessionService;
         ILogger<AuthController> _logger;
         private readonly AppSettings _appSettings;
+
         public AuthController(IMediator mediator, ILogger<AuthController> logger, ISessionService sessionService, IOptions<AppSettings> options)
         {
             _mediator = mediator;

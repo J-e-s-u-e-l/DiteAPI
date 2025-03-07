@@ -29,7 +29,9 @@ namespace DiteAPI.Infrastructure.Infrastructure.Auth.JWT
         {
             try
             {
-                var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+                //var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+
+                var token = context.Request.Cookies["authToken"];
 
                 if (token != null)
                     await attachUserToContext(context, token);

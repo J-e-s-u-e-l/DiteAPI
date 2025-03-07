@@ -43,6 +43,7 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                                                     ResponseBody = res.MessageBody,
                                                     ResponderUsername = res.Sender.UserName,
                                                     ResponderRoleInAcademy = res.Sender.AcademyMembersRoles.Select(x => x.IdentityRole.Name).FirstOrDefault(),
+                                                    //ResponderRoleInAcademy = res.Sender.AcademyMembersRoles.Where(x => x.AcademyId == res.AcademyId).Select(x => x.IdentityRole.Name).FirstOrDefault(),
                                                     SentAtAgo = _helperMethods.ToAgoFormat(res.SentAt),
                                                     SentAt = res.SentAt
                                                 }).ToListAsync();
