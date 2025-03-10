@@ -1,6 +1,7 @@
 using DiteAPI.infrastructure.Data.Models;
 using DiteAPI.infrastructure.Infrastructure.Auth;
 using DiteAPI.infrastructure.Infrastructure.Persistence;
+using DiteAPI.Infrastructure.Config;
 using DiteAPI.Infrastructure.Infrastructure.Auth;
 using DiteAPI.Infrastructure.Infrastructure.Auth.JWT;
 using DiteAPI.Infrastructure.Infrastructure.Hubs;
@@ -32,7 +33,7 @@ namespace DiteAPI
             builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(Program).Assembly));
             builder.Services.AddSignalR();
             builder.Services.AddHttpContextAccessor();
-            builder.Services.RegisterCors();
+            builder.Services.RegisterCors(builder.Configuration);
 
             //builder.Services.AddSingleton<SignalRCustomAuthorizeAttribute/**/, AuthorizeAttribute>();
 

@@ -31,5 +31,7 @@ namespace DiteAPI.Infrastructure.Config
         public string UserAlreadyExistInAcademy { get; set; }
         public string MessagePostedSuccessfully { get; set; }
         public string ResponsePostedSuccessfully { get; set; }
+        public string CookieDomain { get; set; }
+        public string[] AllowedOrigins { get; set; }
     }
 }

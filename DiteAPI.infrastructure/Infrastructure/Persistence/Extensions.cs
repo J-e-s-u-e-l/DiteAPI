@@ -30,11 +30,12 @@ namespace DiteAPI.infrastructure.Infrastructure.Persistence
             return services;
         }
 
-        public static IServiceCollection RegisterCors(this IServiceCollection services)
+        public static IServiceCollection RegisterCors(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddCors(options =>
             {
-                string[] origins = { "http://127.0.0.1:5500", "http://localhost:3000", "https://dite.vercel.app", "" };
+                var appSettings = configuration.GetSection("AppSettings").Get<AppSettings>();
+                string[] origins = appSettings.AllowedOrigins;
 
                 options.AddPolicy("MyCorsPolicy", builder =>
                 {

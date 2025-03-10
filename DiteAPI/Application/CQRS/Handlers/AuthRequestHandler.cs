@@ -138,8 +138,8 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
 
                     await transaction.CommitAsync(cancellationToken);
                     _logger.LogInformation($"User signed in successfully at {DateTime.UtcNow}\nUser name: {user.UserName}\nUser ID: {user.Id}");
-                    
-                    var cokkieOptions = new CookieOptions
+
+                    var cookieOptions = new CookieOptions
                     {
                         HttpOnly = true,
                         Secure = true,
@@ -148,7 +148,7 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                         Path = "/"
                     };
 
-                    _httpContextAccessor.HttpContext.Response.Cookies.Append("authToken", loginResponse.Token, cokkieOptions);
+                    _httpContextAccessor.HttpContext.Response.Cookies.Append("authToken", loginResponse.Token, cookieOptions);
 
                     return new BaseResponse<LoginResponse>(true, $"{_appSettings.SingInSuccessful}", loginResponse);
                  }

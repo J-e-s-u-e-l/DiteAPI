@@ -149,23 +149,14 @@ namespace DiteAPI.Infrastructure.Infrastructure.Hubs
     [CustomAuthorize]
     public class MessageHub : Hub
     {
-        public async Task JoinAcademyGroup(string academyId)
+        public async Task JoinGroup(string groupId)
         {
-            await Groups.AddToGroupAsync(Context.ConnectionId, academyId);
+            await Groups.AddToGroupAsync(Context.ConnectionId, groupId);
         }
 
-        public async Task LeaveAcademyGroup(string academyId)
+        public async Task LeaveGroup(string groupId)
         {
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, academyId);
-        }
-        public async Task JoinMessageGroup(string parentId)
-        {
-            await Groups.AddToGroupAsync(Context.ConnectionId, parentId);
-        }
-
-        public async Task LeaveMessageGroup(string parentId)
-        {
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, parentId);
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupId);
         }
     }
 

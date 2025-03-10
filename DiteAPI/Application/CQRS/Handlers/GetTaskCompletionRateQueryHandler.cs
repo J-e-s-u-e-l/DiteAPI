@@ -67,7 +67,7 @@ namespace DiteAPI.Api.Application.CQRS.Handlers
                 }
                 else 
                 { 
-                    response.CompletionRate = (completedTasks / totalTasks) * 100;
+                    response.CompletionRate = ((float)completedTasks / totalTasks) * 100;
                 } 
 
                 return new BaseResponse<GetTaskCompletionRateResponse>(true, "Completion rate retrieved successfully", response);
